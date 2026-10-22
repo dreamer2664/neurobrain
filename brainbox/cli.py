@@ -1,6 +1,6 @@
 """brainbox CLI: doctor | bench | serve | run | tasks | logs | kill | undo.
 
-Implemented: doctor (M0), bench (M0), serve (M1). Remaining verbs print the
+Implemented: doctor (M0), bench (M0), serve (M1), undo (M4). Remaining verbs print the
 milestone that lands them and exit 2. Nothing is faked.
 """
 
@@ -23,7 +23,6 @@ _NOT_YET = {
     "tasks": "M3 (task store per specs/task_schema.md)",
     "logs": "M3 (run records under ~/.brainbox/runs/)",
     "kill": "M6 (watch/autostart supervision)",
-    "undo": "M4 (trash/restore under ~/.brainbox/trash/)",
 }
 
 
@@ -212,6 +211,39 @@ def cmd_serve(args) -> int:
     return 0
 
 
+def cmd_undo(args) -> int:
+    from .trash import TrashError, list_trash, restore
+
+    if args.list:
+        listing = list_trash()
+        if args.json:
+            print(json.dumps(listing, indent=2))
+        elif listing:
+            for t in listing:
+                print(f"{t['task_id']}  entries={t['entries']}  bytes={t['bytes']}")
+        else:
+            print("trash is empty")
+        return 0
+    if not args.task_id:
+        print("usage: brainbox undo <task-id> | brainbox undo --list", file=sys.stderr)
+        return 2
+    try:
+        rep = restore(args.task_id, overwrite=args.force)
+    except TrashError as e:
+        print(f"brainbox undo: {e}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(rep, indent=2))
+    else:
+        for p in rep["restored"]:
+            print(f"restored {p}")
+        for f in rep["failures"]:
+            print(f"FAILED {f['path']}: {f['error']}", file=sys.stderr)
+        print(f"undo {args.task_id}: {len(rep['restored'])} restored, "
+              f"{len(rep['failures'])} failed")
+    return 0 if not rep["failures"] else 1
+
+
 def _not_yet(verb: str):
     def handler(_args) -> int:
         print(f"brainbox {verb}: not implemented yet — lands in {_NOT_YET[verb]}")
@@ -255,6 +287,14 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--ram-cap-mb", type=float, default=None,
                    help="governor hard cap (default 3800, env BRAINBOX_RAM_CAP_MB)")
     s.set_defaults(fn=cmd_serve)
+
+    u = sub.add_parser("undo", help="restore files trashed by a task (M4)")
+    u.add_argument("task_id", nargs="?")
+    u.add_argument("--list", action="store_true", help="list tasks holding trash")
+    u.add_argument("--force", action="store_true",
+                   help="overwrite paths that exist again")
+    u.add_argument("--json", action="store_true")
+    u.set_defaults(fn=cmd_undo)
 
     for verb, milestone in _NOT_YET.items():
         s = sub.add_parser(verb, help=f"({milestone})")
