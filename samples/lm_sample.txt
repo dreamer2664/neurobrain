@@ -1,55 +1,41 @@
-# checkpoint step 1000
+# checkpoint step 1800
 # prompt:
 
-LineBreak = elt('LineBreak', 0)
-Math = elt('Math', 2)
-RawInline = elt('RawInline', 2)
-Link = elt('Link', 3)
-Image = elt('Image', 3)
-Note = elt('N
+from ._pick import pick_bool
+from ._ratio import ratio_distribute, ratio_reduce
+from .align import VerticalAlignMethod
+from .jupyter import JupyterMixin
+from .measure import Measurement
+from .
 # ---- continuation ----
 
-LineBreak = elt('LineBreak', 0)
-Math = elt('Math', 2)
-RawInline = elt('RawInline', 2)
-Link = elt('Link', 3)
-Image = elt('Image', 3)
-Note = elt('Note')
-Class.set(_Class, Getime):
+from ._pick import pick_bool
+from ._ratio import ratio_distribute, ratio_reduce
+from .align import VerticalAlignMethod
+from .jupyter import JupyterMixin
+from .measure import Measurement
+from .higheric import get_migval(__asure_or_name,  # type: ignore[attr-attr]
+
+
+class _PicksWriter(types, list):
     """
-    A list of Detimes."""
-    Detimes = [
-        Button(Gtty, Getime)(Gt
+    Given a migion of the given list of ``types`` for a list of any field."""
+    if isinstance(types, list):
+        return _Into_migval(__asure_or_name)
 
-    def __init__(self):
-        """
-        A non-nested object representation of a math.
+    @types.integate
+    def _Into(fn, key):
+        return _IntoVersion.get_full()
 
-        The kernel information on the same object, returns.
-        See Alreads of the original key:
-            The war to be used for a new of class.
-
-        String:
-            Detimes: Explicitly on Class. To all the
-            plain.
-            """
-            return (
-                self._vreads,
-            self._vreads,
-            self.stder_info,
-            self.warange,
-            self.wardown,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.vreads,
-            self.stream,
-            self.vreads,
-            self.vreads,
-            self.vreads
+    @_context
+    def get_kernel(context: Callable[[T], None], key: str, key: _IntoVersion) -> None:
+        _IntoVersion.get_file_name()
+        _IntoVersion.get_name()
+        _IntoVersion.get_bindings()
+        _IntoVersion.get_event()
+        _IntoVersion.call_name()
+        _IntoVersion.get_name()
+        _IntoVersion.set_base_name()
+        _IntoVersion.call_name()
+        _IntoVersion.get_name()
+        _In

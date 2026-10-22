@@ -1,82 +1,82 @@
-checkpoint step 1000
+checkpoint step 1800
 
 task:    pick refresh
   ref:   click(945,885)
-  model: toggle(1470,1425)
+  model: click(1425,1065)
 
 task:    focus settings
   ref:   type(1410,1095)
-  model: type(1410,1425)
+  model: type(480,480)
 
 task:    open the rename tab
   ref:   click(960,1020)
-  model: click(1425,1425)
+  model: click(1410,480)
 
 task:    select the home icon
   ref:   click(870,510)
-  model: click(1440,1140)
+  model: click(1560,1125)
 
 task:    open play
   ref:   click(1050,420)
-  model: click(1410,1140)
+  model: click(960,1125)
 
 task:    open the share tab
   ref:   click(1410,1470)
-  model: click(1410,1410)
+  model: click(1410,1425)
 
 task:    type into the share field
   ref:   type(570,1155)
-  model: type(1440,1425)
+  model: type(1410,1425)
 
 task:    open login
   ref:   click(1410,1455)
-  model: click(1425,1425)
+  model: click(1410,1410)
 
 task:    drag the cancel slider
   ref:   drag(960,450)
-  model: drag(945,1440)
+  model: drag(465,1425)
 
 task:    check download
   ref:   toggle(840,480)
-  model: toggle(1425,1170)
+  model: toggle(1410,1425)
 
 task:    focus delete
   ref:   type(1410,435)
-  model: type(1425,1425)
+  model: type(1515,1065)
 
 task:    drag the settings slider
   ref:   drag(480,810)
-  model: drag(945,1440)
+  model: drag(1395,825)
 
 task:    select the save icon
   ref:   click(1410,825)
-  model: click(1410,1425)
+  model: click(1515,1410)
 
 task:    click the pause icon
   ref:   click(1350,810)
-  model: click(1440,1425)
+  model: click(480,1425)
 
 task:    click the archive menu item
   ref:   click(1305,735)
-  model: click(1410,1425)
+  model: click(480,1125)
 
 task:    click the play icon
   ref:   click(1485,510)
-  model: click(1425,1425)
+  model: click(465,1410)
 
 task:    choose logout from the menu
   ref:   click(495,1440)
-  model: click(1425,1425)
+  model: click(1410,1410)
 
 task:    open profile
   ref:   click(525,1125)
-  model: click(1425,465)
+  model: click(480,1125)
 
 task:    open profile
   ref:   click(300,690)
-  model: click(1410,1425)
+  model: click(1410,1065)
 
 task:    focus rename
   ref:   type(510,810)
-  model: type(1425,1425)
+  model: type(1425,1065)
 

@@ -1,59 +1,59 @@
 {
-  "step": 1000,
-  "val_loss": 3.0771,
-  "val_ppl": 21.69,
+  "step": 1800,
+  "val_loss": 2.6094,
+  "val_ppl": 13.59,
   "syntax_valid": 0,
   "syntax_total": 10,
   "syntax_rate": 0.0,
   "samples": [
     {
       "prompt": "def add(a, b):\n",
-      "generation": "\n# Usecilar (inv.\n# This meta-formats)\n#: Assign for a diginations\n# Add a template string to have the coordinate script-laster:\n#\n# 20.203\n# Process to features in the regination of the comment of the regination.\n\n# This is f",
+      "generation": "# All either the full tensor.\n# This modules are replaceed to tree.\n# All of the input tensor, use this module will be replaceed to be passed to generate a\n# pip._pyconfig.replace, but it's a stacked inside torch.nn.\n_module_definite_tensor_lines = _config_lines()\n_",
       "parses": false
     },
     {
       "prompt": "def factorial(n):\n",
-      "generation": "\ndef reduct_normal(n, n, n):\n    \"\"\"\n    Return a new Negative matrix of a new matrix of a new matrix of a new\n    of the matrix of the Kero matrix of the matrix of ``n``.\n\n    Parameters\n    ----------\n    >>> from Graph.\n\n    >>> import numpy as np\n    >>> n = np.array([n, n, n)]\n    >>> n_n = np.array([n, n_",
+      "generation": "#\n# This is not always be defined to inherver, and reading.\n\n@\"\"\"\n\n# This class doesn't supported for determine\n@param_class\n@not_overload\n@param_class\n@param_class\ndef _for_find_for_find_for_find_for_find_for_find_for_find_",
       "parses": false
     },
     {
       "prompt": "class Point:\n    def __init__(self, x, y):\n",
-      "generation": "from sympy import xp\nfrom sympy.functions import xp\nfrom sympy.functions import xp\nfrom sympy import matplotlib\nfrom sympy.functions import xp\nfrom sympy.functions import yp\nfrom sympy.polynomials.elements import data\nfrom sympy.functions import BatchyType\nfrom sympy.functions import Z\nfrom sympy.functions import SciPyDict\nfrom sympy.",
+      "generation": "\n# This module is installed in the same as their case.\n\n# This module is installed in their expands.\n\n__all__ = ['python-cassed', 'python-cassed', 'python-cassed', 'python-cassed', 'python-cassed', 'python-cassed', 'python-cassed', 'python-cassed",
       "parses": false
     },
     {
       "prompt": "def read_file(path):\n",
-      "generation": "\nfrom .options import (\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    MeoLikeLike,\n    GeoLikeLike,\n    GeoLikeLike,\n    GeoLike,\n    ResoLikeLike,\n    GeoL",
+      "generation": "class FullFileFileFileFileFileFileFileFileFileDict:\n    \"\"\"File path to read fixing file for the path.\"\"\"\n\n    def __init__(self, path):\n        self._path = path\n        self._path = path\n        self._path =path if path.start is not None\n\n    def _dir(\n        self,\n        path,\n        pip,\n    ) -> None:\n        p",
       "parses": false
     },
     {
       "prompt": "def is_even(n):\n",
-      "generation": "\nThisible to get the Tree-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-one\nand-to-to-to-one-to-to-one-to-to-one\nand-to-one-to-one-to-one-to-",
+      "generation": "\nfrom .even_connect import Impl\nfrom .even_connect import Path\nfrom .even_connect import Impl\nfrom .even_connect import Impl\nfrom .even_connect import Impl\n\nfrom .even_connect import Impl\nfrom .even_connect import Implication\nfrom",
       "parses": false
     },
     {
       "prompt": "def main():\n",
-      "generation": "\n# RSCAST-SCALLATIN CAGUE\n# TRLATIN CUNAR CUNER_CORT: torch.CAGUS\n# TRLATIN CUNARATOR_CUNORS\n# NOLATIN CUNON CUNER_CUTOR_CUNOR = LATIN ST",
+      "generation": "\n# This codegen to use the codegen, but\n# their into it in replaced by the codegen.\n\ndef _recomm_replaced_back(codegen: Iterable[_T]) -> Implementation[_T] | None:\n    \"\"\"\n    A generic system is replaced to ``codegen.environ[_T]`` in ``_T`` to be",
       "parses": false
     },
     {
       "prompt": "for i in range(10):\n",
-      "generation": "\n# Prove that ourve script scripts and a custom scripting\n# of a custom\n# TODO: TI-Tensor: the custom tensor (Script) or remove\n# TODO: TI-Tensor (e.g. custom_tensors)\n# TODO: Try (Scripting)\n# TODO: TOD",
+      "generation": "# This class is generated for here, but not have the same as theirs becauses.\n# For example, these are not supported to use.\n# This module is reading to reading to use in this module cannot be used in this case.\n# This module hashing.\ndef get_constant(\n    default_name: str,\n    discard_default: str,\n    di",
       "parses": false
     },
     {
       "prompt": "import json\n\ndef load_config(path):\n",
-      "generation": "\n# load:\n\n# loads\n\n# load:\n#\n# :class:`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "generation": "\n__all__ = [\"normalize_path\"]\n\n\nclass _enable_path_is_path(path):\n    \"\"\"\n    Class to create a pip._enable_path_is_path.\"\"\"\n\n    name = \"_global _path\"\n        name = \"__name__\"\n        if name.startswith(\"__name__\"):\n            name = \"__name__\"\n        if name.startswith(\"",
       "parses": false
     },
     {
       "prompt": "def bubble_sort(items):\n",
-      "generation": "\n# APOPOPOPOPOPENSE: POPOPENSE.\n# BUR: COPE: FieldField, Table: ClivingTree, Table: ClientApplication\n# Create: CreatedSQLApplication of Table Loke\n# BURLIC SQLATile class for",
+      "generation": "from pip._comp import _comp_comp_comp_comp_comp_comp_compsit_compsit_compsities()\n\nfrom pip._comp_comp import _comp_comp_compsities import Pip\n\nfrom pip._comp_comp import _comp_comp_compsities import _comp_compsite_compsities\nfrom pip._comp_compsities",
       "parses": false
     },
     {
       "prompt": "def greet(name):\n",
-      "generation": "\n# Dek: Import 3.3.3.2222222222222222222222222222222222222222222222222222222222222222222222322222222222",
+      "generation": "\nfrom . import _bind_function\nfrom . import _bind_function_mapping\n\nif sys.version_mapping:\n    def __init__(self, name):\n        if find_function_mapping:\n            return self._call_function_mapping()\n\n    def _bind_function_mapping(self) -> None:\n        return self._call_function_mapping()\n\n\nclass _call_function_",
       "parses": false
     }
   ]
