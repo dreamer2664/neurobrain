@@ -1,100 +1,50 @@
-# checkpoint step 3600
+# checkpoint step 4400
 # prompt:
-An seothach
-an sin
-An sin
-an sineach
-An sineach
-an siod
-An siod
-an siud
-An siud
-an siudach
-An siudach
-an toiseach
-An toiseach
-an uair
-An uair
-an 
+
+bhogsa-chiùil
+Bhogsa-chiùil
+bhonn-stéidh
+Bhonn-stéidh
+bhràithrean-sa
+Bhràithrean-sa
+bhuain-mhò
 # ---- continuation ----
-An seothach
-an sin
-An sin
-an sineach
-An sineach
-an siod
-An siod
-an siud
-An siud
-an siudach
-An siudach
-an toiseach
-An toiseach
-an uair
-An uair
-an uair
-An huh
-Anska
-Ansa
-Anska
-Anska
-Computation
-Anska
-Anska
-Anska
-Anska
-Anska
-Anska
-Anska
-Anska
-Anska
-Anna
-Anska
-Antiska
-Anna
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
-Antan
+
+bhogsa-chiùil
+Bhogsa-chiùil
+bhonn-stéidh
+Bhonn-stéidh
+bhràithrean-sa
+Bhràithrean-sa
+bhuain-mhòv
+bhuan-ierri
+bhuanan-eulu
+bhuan-euluan
+belel-belbera
+belele-belowk
+belele-beleli
+belel
+belele-belowk
+belele-belowk
+belele-belowk
+belele-belowk
+belele-belowk
+belis-below
+belis-belowk
+belis-belowk
+belis-belowk
+belis-belowk
+belis-belowk
+belis-belowk
+belis-belowk
+felis-belowk
+felis-belowk
+belis-belowk
+belis-belowk
+belis-belowk
+beli-belowk
+beli-belidek
+beli-belowk
+beli-beli
+beli-belowk
+beli-bel

@@ -1,12 +1,12 @@
-checkpoint step 3600
+checkpoint step 4400
 
 task:    pick refresh
   ref:   click(945,885)
-  model: click(930,1440)
+  model: click(930,495)
 
 task:    focus settings
   ref:   type(1410,1095)
-  model: type(960,1440)
+  model: type(930,1455)
 
 task:    open the rename tab
   ref:   click(960,1020)
@@ -14,15 +14,15 @@ task:    open the rename tab
 
 task:    select the home icon
   ref:   click(870,510)
-  model: click(450,1140)
+  model: click(525,1455)
 
 task:    move the play slider
   ref:   drag(1020,405)
-  model: drag(1410,1185)
+  model: drag(930,1455)
 
 task:    open the share tab
   ref:   click(1410,1470)
-  model: click(930,1440)
+  model: click(1455,465)
 
 task:    open refresh
   ref:   click(1425,495)
@@ -30,53 +30,53 @@ task:    open refresh
 
 task:    check print
   ref:   toggle(1350,1500)
-  model: toggle(1470,1425)
+  model: toggle(510,1455)
 
 task:    drag the cancel slider
   ref:   drag(960,480)
-  model: drag(1410,1410)
+  model: drag(1470,1470)
 
 task:    check download
   ref:   toggle(840,480)
-  model: toggle(1410,1455)
+  model: toggle(930,1455)
 
 task:    focus delete
   ref:   type(1410,435)
-  model: type(1410,1455)
+  model: type(930,495)
 
 task:    drag the settings slider
   ref:   drag(525,840)
-  model: drag(930,1410)
+  model: drag(1470,1455)
 
 task:    select the save icon
   ref:   click(1410,825)
-  model: click(1410,1410)
+  model: click(930,1455)
 
 task:    click the pause icon
   ref:   click(1350,810)
-  model: click(1455,1140)
+  model: click(930,1455)
 
 task:    click the archive menu item
   ref:   click(1305,735)
-  model: click(870,1440)
+  model: click(930,1455)
 
 task:    click the play icon
   ref:   click(1485,510)
-  model: click(1410,1410)
+  model: click(525,1455)
 
 task:    choose logout from the menu
   ref:   click(495,1440)
-  model: click(930,1410)
+  model: click(480,1455)
 
 task:    open profile
   ref:   click(525,1125)
-  model: click(1425,1140)
+  model: click(945,1455)
 
 task:    open profile
   ref:   click(300,690)
-  model: click(1410,1410)
+  model: click(930,1425)
 
 task:    select the share icon
   ref:   click(885,1470)
-  model: click(1425,1410)
+  model: click(1470,1455)
 
