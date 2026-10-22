@@ -1,0 +1,28 @@
+[build] profile=standard seed=23 out=/home/user/neurobrain/data/forge-A tokenizer=/home/user/neurobrain/data/tokenizer.json
+[code] 57899 candidate files under 2 roots
+[code] 3558 unique files, 38.6 MB, 3452 train / 106 val
+[code] code_train.bin: 3452 docs, 13.85M tokens, 27.7 MB
+[code] code_val.bin: 106 docs, 0.38M tokens, 0.8 MB
+[build] code: 3,558 docs in 11.0s
+[ui_protocol] ui_train.bin: 145500 docs, 16.63M tokens, 0 dupes dropped
+[ui_protocol] ui_val.bin: 4500 docs, 0.51M tokens, 0 dupes dropped
+[build] ui_protocol: 150,000 docs in 16.2s
+[drive] train: 100,000 episodes, 26.2M tokens
+[drive] train: 200,000 episodes, 52.4M tokens
+[drive] train: 300,000 episodes, 78.7M tokens
+[drive] train: 400,000 episodes, 104.9M tokens
+[drive] train: 500,000 episodes, 132.1M tokens
+[drive] train: 600,000 episodes, 158.4M tokens
+[drive] train: 700,000 episodes, 184.6M tokens
+[drive] train: 800,000 episodes, 211.8M tokens
+[drive] train: 900,000 episodes, 238.1M tokens
+[drive] drive_train.bin: 975,000 episodes, 258.44M tokens, terminal=1.0 retry_ok=1.0 failure_frac=0.989825
+[drive] drive_val.bin: 25,000 episodes, 6.63M tokens, terminal=1.0 retry_ok=1.0 failure_frac=0.9894
+[build] drive: 1,000,000 episodes in 287.3s
+[ui_seed] shard-0000.npz: 5000 samples, 2.5 MB
+[ui_seed] shard-0001.npz: 5000 samples, 2.5 MB
+[ui_seed] shard-0002.npz: 5000 samples, 2.5 MB
+[ui_seed] shard-0003.npz: 5000 samples, 2.5 MB
+[ui_seed] shard-0004.npz: 5000 samples, 2.5 MB
+[ui_seed] 25000 samples, dupes exact=0 near=164, entropy=2.2605±0.1926
+[build] ui_seed: 25,000 samples in 32.1s

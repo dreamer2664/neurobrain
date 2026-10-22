@@ -1,0 +1,110 @@
+[
+  {
+    "objective": "open chrome, research the capital of Japan, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the capital of Japan, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the tab, play"
+    ]
+  },
+  {
+    "objective": "open chrome, research the boiling point of water, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the boiling point of water, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": blocked<|retry|>that was inbox, not cancel. target the tab labelled cancel<|",
+      ": blocked<|retry|>that was inbox, not cancel. target the tab labelled cancel<|"
+    ]
+  },
+  {
+    "objective": "open chrome, research the largest planet, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the largest planet, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the tab, play"
+    ]
+  },
+  {
+    "objective": "open chrome, research the currency of Japan, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the currency of Japan, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the tab, play"
+    ]
+  },
+  {
+    "objective": "open chrome, research the symbol for oxygen, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the symbol for oxygen, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, cancel<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, cancel<|",
+      ": click landed off target<|retry|>aim at the centre of the tab, play"
+    ]
+  },
+  {
+    "objective": "open chrome, research the capital of Japan, and report the answer in google docs",
+    "feasible": true,
+    "solved": false,
+    "executed_steps": 0,
+    "terminal": null,
+    "overclaim": false,
+    "claims": [],
+    "transcript": [
+      "<|drive|>objective: open chrome, research the capital of Japan, and report the answer in google docs<|scan|>elements on screen: calculator icon at 290,600; chrome icon at 290,360; docs icon at 590,360; files icon at 890,360; mail icon at 590,600; photos icon at 890,600",
+      "; play icon at 930,1155; print icon at 945,1455; save icon at 14",
+      ": wrong element<|retry|>that was inbox, not profile. target the icon labelled profile<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the icon, inbox<|",
+      ": click landed off target<|retry|>aim at the centre of the tab, play"
+    ]
+  }
+]

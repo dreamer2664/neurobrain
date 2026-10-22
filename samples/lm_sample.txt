@@ -1,26 +1,40 @@
-# checkpoint step 4600
+# checkpoint step 6600
 # prompt:
+# a tiny helper that retries a call three times
 
-class PostDecrement(Basic):
-    """ Represents the post-decrement operator
-
-    Examples
-    ========
-
-    >>> from sympy.abc import x
-    >>> from sympy.codegen.cnodes import PostDecrement
-    >>> from sympy import ccode
-    >>> ccode(PostDecrement
 # ---- continuation ----
+# a tiny helper that retries a call three times
+# that it is translated as a tiny-retrievable call.
+#
+# (Cannot call if we are not implemented to catch the tiny-retrievable call).
+#
+# (Cannot need the triton set)
 
-class PostDecrement(Basic):
-    """ Represents the post-decrement operator
 
-    Examples
-    ========
+def retrievable(clear: "Rejected in clear"):
+    """Raise a rejected in a rejected in clear."""
+    if clear == "Domaining" and clear not in clear and clear:
+        raise ValueError("Clear clear)
+    if clear < "Get":
+        raise ValueError('Clear exterminally of clear month notation")
 
-    >>> from sympy.abc import x
-    >>> from sympy.codegen.cnodes import PostDecrement
-    >>> from sympy import ccode
-    >>> ccode(PostDecrement(PostDecrement(PostDecrement(Code)))
-    PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrer(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostEventIO(PostDecrement(PostDecrement(PostDecrement(Po
+    try:
+        re = clear(clear).re(0))
+        for clear, render, re = clear()
+    except RuntimeError:
+        raise ValueError("Clear decoded in clear") from e
+    if re.search(clear) and re.search(clear) and re.search(clear) != "Domain" and re.search(clear)) or re.search
+
+
+@functools.policy.register(clear)
+def re(clear: "Domain", row: "Domain": "Domain",
+    month: "DomainEvent" = "Domain"
+)
+
+
+def re(clear: "DomainSwitch"
+) -> "DomainEvent":
+    """Ordered a re-decoded helper function.
+
+    Parameters
+    ----------

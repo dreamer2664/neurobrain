@@ -4,7 +4,17 @@ __pycache__/
 .venv/
 data/*.bin
 data/*.npy
+checkpoints/
+data/*.npz
+data/**/*.npz
 checkpoints/*.pt
 samples/*.png
 /tmp/
 reports/train_stdout.log
+checkpoints/*/weights*.pt
+.brainbox/
+*.egg-info/
+data/forge*/
+dist/
+*.pyz
+build/

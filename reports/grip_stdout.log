@@ -290,3 +290,66 @@
 [grip] eval @ 750: hit_widget 0.484  hit_point 0.484  action_acc 0.977  click_iou 0.068
 [grip] step 775/24000 loss 2.7657 ce 2.9681 off 0.056 act 0.0002 elapsed 472s
 [grip] step 800/24000 loss 2.8684 ce 2.9684 off 0.079 act 0.0014 elapsed 487s
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 775/24000 loss 2.7885 ce 2.8181 off 0.098 act 0.0002 elapsed 18s
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 775/24000 loss 2.7885 ce 2.8181 off 0.098 act 0.0002 elapsed 19s
+[grip] step 800/24000 loss 2.7758 ce 2.6249 off 0.069 act 0.0711 elapsed 37s
+[grip] step 825/24000 loss 2.8209 ce 2.6822 off 0.048 act 0.0007 elapsed 55s
+[grip] step 850/24000 loss 2.8000 ce 2.8799 off 0.081 act 0.0000 elapsed 73s
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] resumed from step 1000
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 1025/24000 loss 2.7272 ce 2.6343 off 0.077 act 0.0000 elapsed 18s
+[grip] step 1050/24000 loss 2.6810 ce 2.6312 off 0.060 act 0.0001 elapsed 34s
+[grip] step 1075/24000 loss 2.6315 ce 2.4389 off 0.071 act 0.0003 elapsed 50s
+[grip] step 1100/24000 loss 2.6284 ce 2.7384 off 0.068 act 0.0004 elapsed 67s
+[grip] step 1125/24000 loss 2.6787 ce 2.5410 off 0.071 act 0.0000 elapsed 82s
+[grip] step 1150/24000 loss 2.5871 ce 2.5509 off 0.041 act 0.0000 elapsed 99s
+[grip] step 1175/24000 loss 2.5639 ce 2.3638 off 0.046 act 0.0001 elapsed 116s
+[grip] step 1200/24000 loss 2.4978 ce 2.4603 off 0.069 act 0.0001 elapsed 132s
+[grip] step 1225/24000 loss 2.5488 ce 2.4857 off 0.044 act 0.0001 elapsed 149s
+[grip] step 1250/24000 loss 2.4888 ce 2.2570 off 0.086 act 0.0004 elapsed 165s
+[grip] eval @ 1250: hit_widget 0.688  hit_point 0.688  action_acc 1.000  click_iou 0.098
+[grip] step 1275/24000 loss 2.4764 ce 2.5639 off 0.043 act 0.0001 elapsed 185s
+[grip] step 1300/24000 loss 2.5500 ce 2.4691 off 0.054 act 0.0000 elapsed 202s
+[grip] step 1325/24000 loss 2.5386 ce 2.6678 off 0.132 act 0.0001 elapsed 218s
+[grip] step 1350/24000 loss 2.4090 ce 2.4030 off 0.045 act 0.0002 elapsed 234s
+[grip] step 1375/24000 loss 2.4327 ce 2.3980 off 0.039 act 0.0002 elapsed 251s
+[grip] step 1400/24000 loss 2.3605 ce 2.3660 off 0.047 act 0.0001 elapsed 268s
+[grip] step 1425/24000 loss 2.4163 ce 2.2675 off 0.077 act 0.0000 elapsed 286s
+[grip] time budget reached, stopping
+[grip] done: {"hit_widget": 0.805, "hit_point": 0.805, "action_acc": 1.0, "click_iou": 0.11319192793738247}

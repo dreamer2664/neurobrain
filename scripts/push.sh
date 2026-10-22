@@ -14,7 +14,10 @@ if [ -z "${GIT_TOKEN:-}" ]; then
   exit 0
 fi
 
-git add -A
+# Only artifacts. `git add -A` used to sweep whatever source edit happened to be
+# in flight into a training commit (one half-resolved merge went out this way).
+git add -A -- reports samples
+[ -n "${EXTRA_PATHS:-}" ] && git add -A -- $EXTRA_PATHS
 if git diff --cached --quiet; then
   echo "[push] nothing to commit"
 else

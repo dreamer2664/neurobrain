@@ -9,85 +9,85 @@
     {
       "task": "turn on save",
       "ref": "toggle(390,1170)",
-      "pred": "toggle(1440,1425)",
+      "pred": "toggle(1485,495)",
       "inside": false
     },
     {
       "task": "click the settings button",
       "ref": "click(1335,1185)",
-      "pred": "click(1455,1425)",
+      "pred": "click(1440,1425)",
       "inside": false
     },
     {
       "task": "check print",
       "ref": "toggle(360,420)",
-      "pred": "toggle(1425,795)",
+      "pred": "toggle(1440,1110)",
       "inside": false
     },
     {
       "task": "hit the login button",
       "ref": "click(420,870)",
-      "pred": "click(1440,1110)",
+      "pred": "click(495,1485)",
       "inside": false
     },
     {
       "task": "press delete",
       "ref": "click(420,1050)",
-      "pred": "click(1485,450)",
+      "pred": "click(1425,1110)",
       "inside": false
     },
     {
       "task": "hit the logout button",
       "ref": "click(1500,510)",
-      "pred": "click(1545,1110)",
-      "inside": false
+      "pred": "click(1545,495)",
+      "inside": true
     },
     {
       "task": "select the rename icon",
       "ref": "click(510,585)",
-      "pred": "click(1485,1425)",
+      "pred": "click(1545,1440)",
       "inside": false
     },
     {
       "task": "focus export",
       "ref": "type(855,780)",
-      "pred": "type(450,1485)",
+      "pred": "type(495,1125)",
       "inside": false
     },
     {
       "task": "click the cart icon",
       "ref": "click(1455,1410)",
-      "pred": "click(1425,1125)",
+      "pred": "click(1440,450)",
       "inside": false
     },
     {
       "task": "click the archive button",
       "ref": "click(900,1200)",
-      "pred": "click(1485,1110)",
+      "pred": "click(1425,1125)",
       "inside": false
     },
     {
       "task": "adjust submit",
       "ref": "drag(810,525)",
-      "pred": "drag(1485,1125)",
+      "pred": "drag(945,1110)",
       "inside": false
     },
     {
       "task": "select the pause icon",
       "ref": "click(885,1200)",
-      "pred": "click(1440,1425)",
+      "pred": "click(1425,1110)",
       "inside": false
     },
     {
       "task": "toggle the search checkbox",
       "ref": "toggle(570,465)",
-      "pred": "toggle(1485,1110)",
+      "pred": "toggle(1440,450)",
       "inside": false
     },
     {
       "task": "click the save tab",
       "ref": "click(360,375)",
-      "pred": "click(1485,1110)",
+      "pred": "click(1440,1440)",
       "inside": false
     },
     {
@@ -99,13 +99,13 @@
     {
       "task": "click the cancel button",
       "ref": "click(1020,450)",
-      "pred": "click(1485,1425)",
+      "pred": "click(945,1425)",
       "inside": false
     },
     {
       "task": "open the export tab",
       "ref": "click(570,840)",
-      "pred": "click(1485,1125)",
+      "pred": "click(1545,495)",
       "inside": false
     },
     {
@@ -117,13 +117,13 @@
     {
       "task": "turn on delete",
       "ref": "toggle(465,1155)",
-      "pred": "toggle(1545,1455)",
+      "pred": "toggle(1440,1110)",
       "inside": false
     },
     {
       "task": "hit the pause button",
       "ref": "click(1395,870)",
-      "pred": "click(495,1425)",
+      "pred": "click(1485,1110)",
       "inside": false
     }
   ]

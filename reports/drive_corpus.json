@@ -1,0 +1,50 @@
+{
+  "built": "2026-10-22T20:40Z",
+  "generator": "neurobrain.drive (honest terminals, retry always followed by an attempt)",
+  "drive_train": {
+    "episodes": 390000,
+    "tokens": 86222891,
+    "terminal_rate": 1.0,
+    "retry_after_failure_rate": 1.0,
+    "failure_fraction": 0.940008,
+    "mean_retries": 1.506,
+    "mix": {
+      "ui": 0.4806,
+      "code": 0.3609,
+      "plan": 0.1585
+    },
+    "retry_hist": [
+      23397,
+      175331,
+      171670,
+      9733,
+      9869,
+      0,
+      0,
+      0
+    ]
+  },
+  "drive_val": {
+    "episodes": 10000,
+    "tokens": 2219919,
+    "terminal_rate": 1.0,
+    "retry_after_failure_rate": 1.0,
+    "failure_fraction": 0.9398,
+    "mean_retries": 1.513,
+    "mix": {
+      "ui": 0.4764,
+      "code": 0.3621,
+      "plan": 0.1615
+    },
+    "retry_hist": [
+      602,
+      4493,
+      4365,
+      251,
+      289,
+      0,
+      0,
+      0
+    ]
+  }
+}

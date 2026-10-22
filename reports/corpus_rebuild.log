@@ -1,0 +1,97 @@
+[corpus] scanning 2 roots
+[corpus] collected 17465 python files, 160.0 MB
+[corpus] ui transcripts: 146227 train / 4508 val (46.2 MB) in 5.0s
+[corpus] learning BPE: 10.6MB code + 1.8MB ui
+[bpe] 12.5M chars, 60,934 unique pre-tokens, 1792 merges to learn
+[bpe] merge 512/1792  best_count=2293  vocab=768
+[bpe] merge 1024/1792  best_count=900  vocab=1280
+[bpe] merge 1536/1792  best_count=498  vocab=1792
+[corpus] tokenizer saved: vocab 2052
+[corpus] code-train: 2000/16942 docs, 6.36M tokens, 2026k tok/s
+[corpus] code-train: 4000/16942 docs, 13.06M tokens, 2082k tok/s
+[corpus] code-train: 6000/16942 docs, 19.44M tokens, 2134k tok/s
+[corpus] code-train: 8000/16942 docs, 25.91M tokens, 2122k tok/s
+[corpus] code-train: 10000/16942 docs, 31.91M tokens, 2145k tok/s
+[corpus] code-train: 12000/16942 docs, 37.72M tokens, 2170k tok/s
+[corpus] code-train: 14000/16942 docs, 44.27M tokens, 2189k tok/s
+[corpus] code-train: 16000/16942 docs, 50.18M tokens, 2185k tok/s
+[corpus] ui-train: 2000/146227 docs, 0.41M tokens, 1693k tok/s
+[corpus] ui-train: 4000/146227 docs, 0.64M tokens, 1709k tok/s
+[corpus] ui-train: 6000/146227 docs, 0.87M tokens, 1722k tok/s
+[corpus] ui-train: 8000/146227 docs, 1.10M tokens, 1727k tok/s
+[corpus] ui-train: 10000/146227 docs, 1.33M tokens, 1719k tok/s
+[corpus] ui-train: 12000/146227 docs, 1.56M tokens, 1743k tok/s
+[corpus] ui-train: 14000/146227 docs, 1.80M tokens, 1746k tok/s
+[corpus] ui-train: 16000/146227 docs, 2.03M tokens, 1754k tok/s
+[corpus] ui-train: 18000/146227 docs, 2.26M tokens, 1736k tok/s
+[corpus] ui-train: 20000/146227 docs, 2.49M tokens, 1743k tok/s
+[corpus] ui-train: 22000/146227 docs, 2.72M tokens, 1755k tok/s
+[corpus] ui-train: 24000/146227 docs, 2.95M tokens, 1764k tok/s
+[corpus] ui-train: 26000/146227 docs, 3.18M tokens, 1766k tok/s
+[corpus] ui-train: 28000/146227 docs, 3.42M tokens, 1763k tok/s
+[corpus] ui-train: 30000/146227 docs, 3.65M tokens, 1770k tok/s
+[corpus] ui-train: 32000/146227 docs, 3.88M tokens, 1774k tok/s
+[corpus] ui-train: 34000/146227 docs, 4.11M tokens, 1766k tok/s
+[corpus] ui-train: 36000/146227 docs, 4.34M tokens, 1734k tok/s
+[corpus] ui-train: 38000/146227 docs, 4.57M tokens, 1726k tok/s
+[corpus] ui-train: 40000/146227 docs, 4.80M tokens, 1720k tok/s
+[corpus] ui-train: 42000/146227 docs, 5.03M tokens, 1726k tok/s
+[corpus] ui-train: 44000/146227 docs, 5.26M tokens, 1729k tok/s
+[corpus] ui-train: 46000/146227 docs, 5.50M tokens, 1730k tok/s
+[corpus] ui-train: 48000/146227 docs, 5.73M tokens, 1722k tok/s
+[corpus] ui-train: 50000/146227 docs, 5.96M tokens, 1725k tok/s
+[corpus] ui-train: 52000/146227 docs, 6.19M tokens, 1728k tok/s
+[corpus] ui-train: 54000/146227 docs, 6.42M tokens, 1718k tok/s
+[corpus] ui-train: 56000/146227 docs, 6.65M tokens, 1711k tok/s
+[corpus] ui-train: 58000/146227 docs, 6.89M tokens, 1710k tok/s
+[corpus] ui-train: 60000/146227 docs, 7.12M tokens, 1713k tok/s
+[corpus] ui-train: 62000/146227 docs, 7.35M tokens, 1714k tok/s
+[corpus] ui-train: 64000/146227 docs, 7.58M tokens, 1719k tok/s
+[corpus] ui-train: 66000/146227 docs, 7.81M tokens, 1722k tok/s
+[corpus] ui-train: 68000/146227 docs, 8.05M tokens, 1727k tok/s
+[corpus] ui-train: 70000/146227 docs, 8.28M tokens, 1731k tok/s
+[corpus] ui-train: 72000/146227 docs, 8.51M tokens, 1736k tok/s
+[corpus] ui-train: 74000/146227 docs, 8.74M tokens, 1741k tok/s
+[corpus] ui-train: 76000/146227 docs, 8.97M tokens, 1745k tok/s
+[corpus] ui-train: 78000/146227 docs, 9.20M tokens, 1748k tok/s
+[corpus] ui-train: 80000/146227 docs, 9.44M tokens, 1738k tok/s
+[corpus] ui-train: 82000/146227 docs, 9.67M tokens, 1738k tok/s
+[corpus] ui-train: 84000/146227 docs, 9.90M tokens, 1738k tok/s
+[corpus] ui-train: 86000/146227 docs, 10.13M tokens, 1739k tok/s
+[corpus] ui-train: 88000/146227 docs, 10.36M tokens, 1742k tok/s
+[corpus] ui-train: 90000/146227 docs, 10.59M tokens, 1745k tok/s
+[corpus] ui-train: 92000/146227 docs, 10.82M tokens, 1745k tok/s
+[corpus] ui-train: 94000/146227 docs, 11.05M tokens, 1748k tok/s
+[corpus] ui-train: 96000/146227 docs, 11.29M tokens, 1751k tok/s
+[corpus] ui-train: 98000/146227 docs, 11.52M tokens, 1754k tok/s
+[corpus] ui-train: 100000/146227 docs, 11.75M tokens, 1757k tok/s
+[corpus] ui-train: 102000/146227 docs, 11.98M tokens, 1759k tok/s
+[corpus] ui-train: 104000/146227 docs, 12.21M tokens, 1761k tok/s
+[corpus] ui-train: 106000/146227 docs, 12.44M tokens, 1764k tok/s
+[corpus] ui-train: 108000/146227 docs, 12.68M tokens, 1765k tok/s
+[corpus] ui-train: 110000/146227 docs, 12.91M tokens, 1766k tok/s
+[corpus] ui-train: 112000/146227 docs, 13.14M tokens, 1766k tok/s
+[corpus] ui-train: 114000/146227 docs, 13.37M tokens, 1766k tok/s
+[corpus] ui-train: 116000/146227 docs, 13.60M tokens, 1766k tok/s
+[corpus] ui-train: 118000/146227 docs, 13.83M tokens, 1767k tok/s
+[corpus] ui-train: 120000/146227 docs, 14.06M tokens, 1767k tok/s
+[corpus] ui-train: 122000/146227 docs, 14.30M tokens, 1768k tok/s
+[corpus] ui-train: 124000/146227 docs, 14.53M tokens, 1769k tok/s
+[corpus] ui-train: 126000/146227 docs, 14.76M tokens, 1769k tok/s
+[corpus] ui-train: 128000/146227 docs, 14.99M tokens, 1771k tok/s
+[corpus] ui-train: 130000/146227 docs, 15.22M tokens, 1771k tok/s
+[corpus] ui-train: 132000/146227 docs, 15.45M tokens, 1772k tok/s
+[corpus] ui-train: 134000/146227 docs, 15.69M tokens, 1774k tok/s
+[corpus] ui-train: 136000/146227 docs, 15.92M tokens, 1775k tok/s
+[corpus] ui-train: 138000/146227 docs, 16.15M tokens, 1776k tok/s
+[corpus] ui-train: 140000/146227 docs, 16.38M tokens, 1776k tok/s
+[corpus] ui-train: 142000/146227 docs, 16.61M tokens, 1776k tok/s
+[corpus] ui-train: 144000/146227 docs, 16.84M tokens, 1778k tok/s
+[corpus] ui-train: 146000/146227 docs, 17.08M tokens, 1779k tok/s
+[corpus] ui-val: 2000/4508 docs, 0.23M tokens, 1945k tok/s
+[corpus] ui-val: 4000/4508 docs, 0.46M tokens, 1942k tok/s
+[corpus] wrote code_train.bin: 53.14M tokens
+[corpus] wrote code_val.bin: 2.01M tokens
+[corpus] wrote ui_train.bin: 17.10M tokens
+[corpus] wrote ui_val.bin: 0.52M tokens
+[corpus] report: {"code_files": 17465, "code_bytes": 160003341, "tokens": {"code_train": 53142798, "code_val": 2005442, "ui_train": 17102195, "ui_val": 523286}, "vocab_size": 2052, "code_bytes_per_token": 2.902, "ui_examples": 150735, "sdist_roots": []}

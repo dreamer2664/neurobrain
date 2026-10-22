@@ -1,0 +1,289 @@
+{
+  "grip_step": 750,
+  "n": 20,
+  "hit_rate": 0.55,
+  "verified_rate": 1.0,
+  "display_px": 512,
+  "rows": [
+    {
+      "task": "choose export from the menu",
+      "pred_128": [
+        61.4,
+        75.0
+      ],
+      "screen": [
+        245,
+        299
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.341
+    },
+    {
+      "task": "adjust pause",
+      "pred_128": [
+        34.0,
+        53.1
+      ],
+      "screen": [
+        135,
+        212
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.549
+    },
+    {
+      "task": "check pause",
+      "pred_128": [
+        97.8,
+        28.2
+      ],
+      "screen": [
+        391,
+        112
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.415
+    },
+    {
+      "task": "open logout",
+      "pred_128": [
+        64.3,
+        55.0
+      ],
+      "screen": [
+        257,
+        219
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.467
+    },
+    {
+      "task": "toggle the profile checkbox",
+      "pred_128": [
+        98.4,
+        33.4
+      ],
+      "screen": [
+        393,
+        133
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.341
+    },
+    {
+      "task": "choose delete from the menu",
+      "pred_128": [
+        93.4,
+        30.8
+      ],
+      "screen": [
+        373,
+        123
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.513
+    },
+    {
+      "task": "click the refresh button",
+      "pred_128": [
+        29.2,
+        33.2
+      ],
+      "screen": [
+        116,
+        132
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.504
+    },
+    {
+      "task": "press profile",
+      "pred_128": [
+        97.9,
+        97.2
+      ],
+      "screen": [
+        391,
+        388
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.51
+    },
+    {
+      "task": "click the upload icon",
+      "pred_128": [
+        90.5,
+        77.0
+      ],
+      "screen": [
+        362,
+        308
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.456
+    },
+    {
+      "task": "press print",
+      "pred_128": [
+        66.1,
+        53.2
+      ],
+      "screen": [
+        264,
+        212
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.428
+    },
+    {
+      "task": "open pause",
+      "pred_128": [
+        93.3,
+        97.0
+      ],
+      "screen": [
+        373,
+        388
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.528
+    },
+    {
+      "task": "click the home button",
+      "pred_128": [
+        92.2,
+        33.2
+      ],
+      "screen": [
+        368,
+        132
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.504
+    },
+    {
+      "task": "click the refresh button",
+      "pred_128": [
+        97.9,
+        97.2
+      ],
+      "screen": [
+        391,
+        388
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.421
+    },
+    {
+      "task": "choose cart from the menu",
+      "pred_128": [
+        30.5,
+        53.2
+      ],
+      "screen": [
+        122,
+        212
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.442
+    },
+    {
+      "task": "click the filter menu item",
+      "pred_128": [
+        56.2,
+        92.4
+      ],
+      "screen": [
+        224,
+        369
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.513
+    },
+    {
+      "task": "switch to save",
+      "pred_128": [
+        92.2,
+        49.3
+      ],
+      "screen": [
+        368,
+        197
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.455
+    },
+    {
+      "task": "press submit",
+      "pred_128": [
+        29.9,
+        92.3
+      ],
+      "screen": [
+        119,
+        369
+      ],
+      "hit": true,
+      "click_ok": true,
+      "screen_delta": 0.421
+    },
+    {
+      "task": "type into the settings field",
+      "pred_128": [
+        93.7,
+        72.4
+      ],
+      "screen": [
+        374,
+        289
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.513
+    },
+    {
+      "task": "toggle the home checkbox",
+      "pred_128": [
+        97.2,
+        72.2
+      ],
+      "screen": [
+        388,
+        288
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.415
+    },
+    {
+      "task": "turn on login",
+      "pred_128": [
+        94.2,
+        53.3
+      ],
+      "screen": [
+        376,
+        213
+      ],
+      "hit": false,
+      "click_ok": true,
+      "screen_delta": 0.342
+    }
+  ]
+}
