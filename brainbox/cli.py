@@ -1,6 +1,6 @@
 """brainbox CLI: doctor | bench | serve | run | tasks | logs | kill | undo.
 
-Implemented: doctor (M0), bench (M0), serve (M1), undo (M4). Remaining verbs print the
+Implemented: doctor, bench, serve, run, tasks, logs, undo. Remaining verbs print the
 milestone that lands them and exit 2. Nothing is faked.
 """
 
@@ -19,9 +19,6 @@ _T0 = time.time()  # process-start marker, before any torch import
 from . import __version__  # noqa: E402
 
 _NOT_YET = {
-    "run": "M3 (drive loop per specs/drive.md)",
-    "tasks": "M3 (task store per specs/task_schema.md)",
-    "logs": "M3 (run records under ~/.brainbox/runs/)",
     "kill": "M6 (watch/autostart supervision)",
 }
 
@@ -244,6 +241,124 @@ def cmd_undo(args) -> int:
     return 0 if not rep["failures"] else 1
 
 
+def cmd_run(args) -> int:
+    import random as _random
+
+    from .drive import (DriveLoop, LMPlanner, OracleGrounder, RealGrounder,
+                        ScriptedPlanner, ShellWorld, SimulatedDesktop, TaskStore)
+
+    store = TaskStore()
+    budget = {}
+    if args.max_steps:
+        budget["max_steps"] = args.max_steps
+    if args.max_seconds:
+        budget["max_seconds"] = args.max_seconds
+
+    grounder = None
+    if args.script:
+        with open(args.script) as f:
+            spec = json.load(f)
+        planner = ScriptedPlanner(spec.get("steps", []),
+                                  replan_script=spec.get("replan_steps"),
+                                  shell_steps=spec.get("shell_steps"),
+                                  decompose_steps=spec.get("decompose_steps"))
+        task = store.create(args.instruction, budget=budget or None,
+                            checks=spec.get("checks"),
+                            workspace=spec.get("workspace"))
+        if spec.get("world", "shell") == "shell":
+            world = ShellWorld(spec["workspace"], spec.get("checks", []))
+        else:
+            from neurobrain import ui_world
+
+            ex = ui_world.sample_example(_random.Random(spec.get("seed", 0)))
+            world = SimulatedDesktop(ex, **spec.get("world_options", {}))
+            grounder = OracleGrounder(world)  # scripted == loop mechanics
+            task["world"] = "simulated (scripted, oracle grounder)"
+    else:
+        from neurobrain import ui_world
+
+        from .host import BrainHost
+
+        host = BrainHost(checkpoint=args.checkpoint, threads=args.threads)
+        host.boot()
+        planner = LMPlanner(host)
+        task = store.create(args.instruction, budget=budget or None)
+        ex = ui_world.sample_example(_random.Random(0))
+        world = SimulatedDesktop(ex)
+        task["world"] = "simulated desktop (no real display attached)"
+        try:
+            from .grip import Grounder
+
+            grounder = RealGrounder(Grounder.find(args.grip_checkpoint))
+        except Exception as e:
+            print(f"brainbox run: no grip checkpoint ({e}); oracle grounder",
+                  file=sys.stderr)
+            grounder = OracleGrounder(world)
+
+    out = DriveLoop(store).run_until_settled(task, world, planner, grounder)
+    rec = {"id": out["id"], "status": out["status"], "result": out["result"],
+           "metrics": out["metrics"], "world": out.get("world"),
+           "history_len": len(out["history"])}
+    if args.json:
+        print(json.dumps(rec, indent=2))
+    else:
+        m = rec["metrics"]
+        print(f"{rec['id']}: {rec['status']}  progress="
+              f"{(rec['result'] or {}).get('progress')}  attempts={m['steps_used']}  "
+              f"max_rung={m['max_rung']}  recovered={m['recovered']}")
+        if rec["world"]:
+            print(f"world: {rec['world']}")
+    return 0 if out["status"] == "done" else 1
+
+
+def cmd_tasks(args) -> int:
+    from .drive import TaskStore
+
+    tasks = TaskStore().list()
+    rows = [{"id": t["id"], "status": t["status"],
+             "instruction": t["instruction"],
+             "attempts": t["metrics"]["steps_used"],
+             "max_rung": t["metrics"]["max_rung"]} for t in tasks]
+    if args.json:
+        print(json.dumps(rows, indent=2))
+    else:
+        for r in rows:
+            print(f"{r['id']}  {r['status']:<12}  attempts={r['attempts']}  "
+                  f"rung<={r['max_rung']}  {r['instruction'][:60]}")
+        if not rows:
+            print("no tasks yet")
+    return 0
+
+
+def cmd_logs(args) -> int:
+    from .drive import TaskStore
+
+    store = TaskStore()
+    if not args.task_id:
+        names = sorted(f[:-5] for f in os.listdir(store.runs_dir)
+                       if f.endswith(".json"))
+        print(json.dumps(names, indent=2) if args.json else "\n".join(names))
+        return 0
+    run_path = os.path.join(store.runs_dir, f"{args.task_id}.json")
+    try:
+        if os.path.exists(run_path):
+            with open(run_path) as f:
+                rec = json.load(f)
+        else:
+            rec = store.load(args.task_id)
+    except Exception as e:
+        print(f"brainbox logs: {e}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(rec, indent=2))
+    else:
+        print(f"{rec['id']}: {rec['status']} — {rec['instruction']}")
+        for h in rec["history"]:
+            print(f"  step {h['step']} rung {h['rung']} {h['verdict']}: "
+                  f"{h['intent'][:50]} ({h['note'][:60]})")
+    return 0
+
+
 def _not_yet(verb: str):
     def handler(_args) -> int:
         print(f"brainbox {verb}: not implemented yet — lands in {_NOT_YET[verb]}")
@@ -295,6 +410,27 @@ def build_parser() -> argparse.ArgumentParser:
                    help="overwrite paths that exist again")
     u.add_argument("--json", action="store_true")
     u.set_defaults(fn=cmd_undo)
+
+    r = sub.add_parser("run", help="run a task through the drive loop (M3)")
+    r.add_argument("instruction")
+    r.add_argument("--script", default=None,
+                   help="JSON scripted task {world, workspace, checks, steps...}")
+    r.add_argument("--checkpoint", default=None)
+    r.add_argument("--grip-checkpoint", default=None)
+    r.add_argument("--threads", type=int, default=2)
+    r.add_argument("--max-steps", type=int, default=None)
+    r.add_argument("--max-seconds", type=int, default=None)
+    r.add_argument("--json", action="store_true")
+    r.set_defaults(fn=cmd_run)
+
+    t = sub.add_parser("tasks", help="list tasks and their status (M3)")
+    t.add_argument("--json", action="store_true")
+    t.set_defaults(fn=cmd_tasks)
+
+    lg = sub.add_parser("logs", help="show a task's run record / history (M3)")
+    lg.add_argument("task_id", nargs="?")
+    lg.add_argument("--json", action="store_true")
+    lg.set_defaults(fn=cmd_logs)
 
     for verb, milestone in _NOT_YET.items():
         s = sub.add_parser(verb, help=f"({milestone})")
