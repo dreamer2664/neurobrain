@@ -8,6 +8,10 @@ checkpoints/
 samples/*.png
 /tmp/
 reports/train_stdout.log
+<<<<<<< HEAD
 checkpoints/*/weights*.pt
 .brainbox/
 *.egg-info/
+=======
+data/forge*/
+>>>>>>> refs/remotes/origin/agent-05

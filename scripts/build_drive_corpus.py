@@ -42,10 +42,11 @@ def main() -> None:
         """
         from array import array
         path = os.path.join(args.data, f"{name}.bin")
+        tmp = path + ".tmp"
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
         buf = array("H")
         total = 0
-        with open(path, "wb") as f:
+        with open(tmp, "wb") as f:
             for i, ep in enumerate(drive_corpus(n, seed)):
                 buf.extend(tok.encode(ep))
                 buf.append(eot)
@@ -59,6 +60,7 @@ def main() -> None:
             if buf:
                 buf.tofile(f)
                 total += len(buf)
+        os.replace(tmp, path)   # atomic: a running trainer keeps its old inode
         print(f"[drive] {name}.bin {total/1e6:.2f}M tokens")
 
     build(args.episodes - n_val, args.seed, "drive_train")
