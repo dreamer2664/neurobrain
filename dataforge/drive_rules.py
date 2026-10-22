@@ -23,8 +23,13 @@ MARKERS = {
     "step": "<|step|>", "act": "<|act|>", "obs": "<|obs|>", "check": "<|check|>",
     "retry": "<|retry|>", "done": "<|done|>", "try": "<|try|>", "err": "<|err|>",
     "ok": "<|ok|>", "code": "<|code|>", "run": "<|run|>", "think": "<|think|>",
+    "scan": "<|scan|>", "budget": "<|budget|>",
     "endoftext": "<|endoftext|>",
 }
+
+# The runtime's vocabulary (brainbox/lm_drive.py: TERMINALS). Anything else after
+# <|done|> is a protocol violation, not a style choice.
+OUTCOMES = ("success", "failed", "blocked", "impossible")
 
 
 def classify(text: str) -> dict:

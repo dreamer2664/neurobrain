@@ -192,6 +192,10 @@ def scan(arr: np.ndarray, tok, sample_docs: int | None = None) -> dict:
         "mean_retries": round(float(n_retry.mean()), 3),
         "failure_fraction": round(n_with_failure / total, 6),
         "retry_fraction": round(n_with_retry / total, 6),
+        # desktop episodes are the ones with a screen; code episodes have no
+        # scan by design, so the gate applies to ui + plan only
+        "scan_fraction": round(float(np.mean(count_in("scan")[np.asarray(ui | plan)] > 0))
+                               if (ui | plan).any() else 1.0, 4),
         "mix": {"ui": round(float(ui.sum()) / total, 4),
                 "code": round(float(code.sum()) / total, 4),
                 "plan": round(float(plan.sum()) / total, 4)},
@@ -223,7 +227,7 @@ def sample_bad_retry_episodes(retry_pos, acts, eots, bounds, limit=5) -> list[in
     return out
 
 
-OUTCOMES = ["success", "success-partial", "budget-exhausted", "failed"]
+OUTCOMES = list(drive_rules.OUTCOMES)
 
 
 def terminal_mix(arr: np.ndarray, tok, done_pos: np.ndarray) -> dict:

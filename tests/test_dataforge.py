@@ -476,9 +476,69 @@ def test_terminal_mix_counts_impossible_objectives(tmp_path: Path):
     mix = tokenscan.scan(arr, tok)["terminal_mix"]
     raw = {}
     for e in eps:
-        k = e.rsplit("<|done|>", 1)[-1]
+        tail = e.rsplit("<|done|>", 1)[-1]
+        k = tail.split(":")[0].strip().split()[0]
         raw[k] = raw.get(k, 0) + 1
     n = len(eps)
     for k, v in raw.items():
         assert abs(mix[k] - v / n) < 0.002, (k, mix[k], v / n)
     assert mix["failed"] > 0.01
+
+
+# ------------------------------------------------- protocol: runtime dialect
+def test_scan_line_matches_the_runtime(tmp_path: Path):
+    """The corpus scan must be byte-identical in shape to what the runtime
+    hands the model (brainbox/lm_drive.py: scan_from_obs). If these drift, the
+    model learns a language nothing at runtime speaks."""
+    import importlib.util
+    import random as _random
+
+    src = ROOT / "brainbox" / "lm_drive.py"
+    if not src.exists():
+        # brainbox lives on main; fetch it if this branch does not carry it
+        got = subprocess.run(["git", "show", "origin/main:brainbox/lm_drive.py"],
+                             cwd=str(ROOT), capture_output=True, text=True)
+        if got.returncode != 0:
+            pytest.skip("brainbox/lm_drive.py not available")
+        (ROOT / "brainbox").mkdir(exist_ok=True)
+        (ROOT / "brainbox" / "lm_drive.py").write_text(got.stdout)
+        (ROOT / "brainbox" / "__init__.py").write_text("")
+    from brainbox.lm_drive import scan_from_obs
+    from neurobrain.drive import scan_line
+    from neurobrain.ui_world import SCALE, make_layout
+
+    rng = _random.Random(3)
+    for _ in range(25):
+        layout = make_layout(rng)
+        obs = {"elements": [{"label": e.label, "role": e.role, "cx": e.cx, "cy": e.cy}
+                            for e in layout.elements]}
+        assert scan_line(layout) == scan_from_obs(obs), "scan formats diverged"
+
+
+def test_every_terminal_is_one_the_runtime_parses():
+    from brainbox.lm_drive import TERMINALS as RUNTIME_TERMINALS
+    from neurobrain.drive import drive_corpus, SCAN_TERMINALS
+    assert tuple(SCAN_TERMINALS) == tuple(RUNTIME_TERMINALS)
+    for ep in drive_corpus(600, seed=21):
+        tail = ep.rsplit("<|done|>", 1)[-1]
+        word = tail.split(":")[0].strip().split()[0]
+        assert word in RUNTIME_TERMINALS, (word, ep[-120:])
+
+
+def test_desktop_episodes_carry_a_scan_before_acting():
+    from neurobrain.drive import drive_corpus
+    for ep in drive_corpus(600, seed=22):
+        if ep.startswith("<|drive|>"):
+            head = ep.split("<|step|>", 1)[0]
+            assert "<|scan|>elements on screen: " in head, ep[:200]
+
+
+def test_scan_coordinates_are_clickable():
+    """Every coordinate the scan advertises must be a legal action coordinate."""
+    import re
+    import random as _random
+    from neurobrain.drive import drive_corpus
+    pat = re.compile(r"at (\d+),(\d+)")
+    for ep in drive_corpus(300, seed=23):
+        for x, y in pat.findall(ep.split("<|step|>", 1)[0]):
+            assert 0 <= int(x) <= 1920 and 0 <= int(y) <= 1920

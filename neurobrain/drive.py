@@ -43,7 +43,7 @@ from __future__ import annotations
 
 import random
 
-from .ui_world import SCALE, LABELS, make_layout, TASKS, ACTION_OF_ROLE
+from .ui_world import SCALE, LABELS, ROLES, make_layout, TASKS, ACTION_OF_ROLE
 
 # --------------------------------------------------------------------- helpers
 
@@ -68,6 +68,13 @@ def _near_miss(el, rng: random.Random) -> tuple[int, int]:
 
 
 # ------------------------------------------------------------------ ui episode
+# Protocol (agent 01, brainbox/lm_drive.py on main): the runtime hands the model
+# a scan of the screen -- "label role at x,y" in the same 0..1920 space the
+# actions use -- and accepts exactly four terminals: success | failed | blocked |
+# impossible. The corpus must speak that dialect or the model learns a language
+# nothing at runtime speaks.
+SCAN_TERMINALS = ("success", "failed", "blocked", "impossible")
+
 OBS_BY_ROLE = {
     "button": "button {label} highlighted",
     "field": "caret blinking in {label} field",
@@ -96,146 +103,197 @@ LADDER = {
     "escalate": "park the task for the next idle window",
 }
 UI_FAILS = [
-    ("wrong element", "that was {other}, not {label}.", "retry_shifted"),
-    ("click landed off target", "aim at the centre of the {role}, {label}", "retry_shifted"),
-    ("element scrolled out of view", "scroll {label} into view first", "retry_exact"),
-    ("modal dialog blocked the click", "dismiss the dialog, then act on {label}", "retry_exact"),
-    ("focus stayed in another window", "focus the window that owns {label}", "replan"),
-    ("double activation toggled it twice", "act once on {label}", "retry_exact"),
-    ("window repainted late", "wait for the repaint, then act on {label}", "retry_exact"),
+    ("wrong element", "retry_shifted"),
+    ("click landed off target", "retry_shifted"),
+    ("element scrolled out of view", "retry_exact"),
+    ("modal dialog blocked the click", "retry_exact"),
+    ("focus stayed in another window", "replan"),
+    ("double activation toggled it twice", "retry_exact"),
+    ("window repainted late", "retry_exact"),
+]
+BLOCKERS = [
+    ("a permission prompt appeared and cannot be dismissed from here", "escalate"),
+    ("the window is not responding to synthetic input", "tool_switch"),
+    ("the operation needs admin rights this session does not have", "escalate"),
+    ("a modal dialog is waiting for a human decision", "escalate"),
 ]
 
 
-TERMINALS = ["success"] * 86 + ["success-partial"] * 6 + ["budget-exhausted"] * 8
+def scan_line(layout) -> str:
+    """The element inventory the runtime hands the model before it acts.
 
-
-IMPOSSIBLE = [
-    "the {label} button is not on this screen",
-    "no {label} field exists in this window",
-    "the {label} menu is greyed out and stays greyed out",
-    "this screen has no {label} control at all",
-]
-
-
-def _scan(layout) -> str:
-    """The element list the loop actually observes, on every episode.
-
-    Always emitted -- not only on impossible objectives -- so a model cannot
-    learn the shortcut "a scan means the task is impossible". That shortcut has
-    bitten this fleet once already (agent 01, 20:51).
+    Byte-identical in shape to ``brainbox.lm_drive.scan_from_obs``:
+    ``<|scan|>elements on screen: <label> <role> at <x>,<y>; ...`` sorted by
+    label, coordinates in canvas pixels times SCALE (0..1920). Every episode
+    carries one -- solvable, blocked, exhausted or impossible -- so the marker
+    never predicts the answer.
     """
-    return "<|scan|>" + " ".join(f"{e.role}[{e.label}]" for e in layout.elements)
+    items = sorted(layout.elements, key=lambda e: e.label)
+    return ("<|scan|>elements on screen: "
+            + "; ".join(f"{e.label} {e.role} at {int(e.cx) * SCALE},{int(e.cy) * SCALE}"
+                        for e in items))
+
+
+def _scan_centre(el) -> tuple[int, int]:
+    return int(el.cx) * SCALE, int(el.cy) * SCALE
+
+
+def _coords(el, rng: random.Random) -> tuple[int, int]:
+    """A click on the widget. 70% of the time it copies the coordinate the scan
+    advertises (the centre), because that is the behaviour the runtime needs:
+    read the scan, click what it says. The rest is a human-ish point inside the
+    box, so the model does not learn that only the exact centre is legal."""
+    if rng.random() < 0.70:
+        return _scan_centre(el)
+    x = int(rng.uniform(el.x + el.w * 0.25, el.x + el.w * 0.75)) * SCALE
+    y = int(rng.uniform(el.y + el.h * 0.25, el.y + el.h * 0.75)) * SCALE
+    return x, y
+
+
+def _near_miss(el, rng: random.Random) -> tuple[int, int]:
+    """A click that misses: lands just outside the widget, like a real slip."""
+    side = rng.choice("udlr")
+    pad = rng.randint(4, 14)
+    if side == "u":
+        return (int(el.cx) * SCALE, max(0, (el.y - pad)) * SCALE)
+    if side == "d":
+        return (int(el.cx) * SCALE, (el.y + el.h + pad) * SCALE)
+    if side == "l":
+        return (max(0, el.x - pad) * SCALE, int(el.cy) * SCALE)
+    return ((el.x + el.w + pad) * SCALE, int(el.cy) * SCALE)
+
+
+def _act(el, x: int, y: int) -> str:
+    return f"<|act|>{ACTION_OF_ROLE[el.role]}({x},{y})"
 
 
 def ui_episode(rng: random.Random) -> str:
-    """Wrong first attempt -> near miss -> recovery, or an honest park.
+    """One desktop episode, ending in exactly one of the four runtime terminals.
 
-    The failure sequence is drawn from UI_FAILS and each failure names the
-    ladder rung it belongs to, so the retry text always says *what changes*.
+    Mix (measured by `dataforge stats`):
+      success    ~71%  wrong attempt -> near miss -> recovery, or clean
+      failed     ~18%  attempts exhaust the step budget -> <|budget|> -> failed
+      blocked    ~5%   an obstruction only a human can clear -> blocked (parked)
+      impossible ~6%   the objective names something the scan does not contain
     """
     layout = make_layout(rng)
+    r = rng.random()
+    if r < 0.06:
+        return impossible_episode(rng, layout)
+    if r < 0.11:
+        return blocked_episode(rng, layout)
+    if r < 0.34:
+        return exhausted_episode(rng, layout)
+    return _success_episode(rng, layout)
+
+
+def _success_episode(rng: random.Random, layout) -> str:
     target = rng.choice(layout.elements)
     task = rng.choice(TASKS[target.role]).format(label=target.label)
-    action = ACTION_OF_ROLE[target.role]
     others = [e for e in layout.elements if e is not target]
-
-    impossible = rng.random() < 0.08
-    if impossible:
-        # the objective must name something that is NOT in the scan, otherwise
-        # "impossible" would be a lie the model can catch for the wrong reason
-        present = {e.label for e in layout.elements}
-        missing = [l for l in LABELS if l not in present]
-        if missing:
-            task = rng.choice(TASKS[target.role]).format(label=rng.choice(missing))
-        else:
-            impossible = False
-    parts = [f"<|drive|>objective: {task}", _scan(layout)]
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
     step = 0
-    fails: list[tuple[str, str, str]] = []
 
-    if impossible:
-        # nothing on this screen can satisfy it: the honest end is a failure,
-        # reported in one terminal token, after the attempts the loop would make
-        n_try = rng.randint(2, 4)
-        for i in range(1, n_try + 1):
-            step += 1
-            px, py = _coords(rng.choice(layout.elements), rng)
-            parts.append(f"<|step|>{step}<|act|>click({px},{py})")
-            parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
-            parts.append("<|check|>objective not satisfied: element not in the scan")
-            if i < n_try:
-                parts.append(f"<|retry|>{rng.choice(['the target is not on this screen',
-                                                     'no element matches the instruction',
-                                                     'scan again: still nothing matches'])}")
-        step += 1
-        parts.append(f"<|step|>{step}<|act|>{LADDER['escalate'].replace(' ', '_')}()")
-        parts.append("<|obs|>no element on this screen can satisfy the objective")
-        parts.append(f"<|check|>objective impossible: {rng.choice(IMPOSSIBLE).format(label=target.label)}")
-        parts.append("<|done|>failed")
-        return "".join(parts)
-
-    if others and rng.random() < 0.6:
+    if others and rng.random() < 0.60:
         distractor = rng.choice(others)
-        fails.append(("wrong element", distractor.label, "retry_shifted"))
+        step += 1
+        dx, dy = _coords(distractor, rng)
+        parts.append(f"<|step|>{step}{_act(distractor, dx, dy)}")
+        parts.append(f"<|obs|>{OBS_BY_ROLE[distractor.role].format(label=distractor.label, state='off', pct=0)}")
+        parts.append("<|check|>objective not satisfied: wrong element")
+        parts.append(f"<|retry|>that was {distractor.label}, not {target.label}. "
+                     f"target the {target.role} labelled {target.label}")
     if rng.random() < 0.85:
-        fails.append((rng.choice([f[0] for f in UI_FAILS[1:]]), None, "retry_shifted"))
-    if rng.random() < 0.25:
-        fails.append((rng.choice([f[0] for f in UI_FAILS]), None, "retry_exact"))
-
-    terminal = rng.choice(TERMINALS)
-    # a parked episode stops early: it ran out of budget, not out of ideas.
-    # Every <|retry|> still gets an attempt before the episode ends (invariant 2),
-    # so the park is reported through <|check|> + <|done|>, never after a retry.
-    park_at = rng.randint(1, len(fails)) if (fails and terminal != "success") else 10**6
-
-    for i, (why, other, rung) in enumerate(fails, 1):
+        why, rung = rng.choice(UI_FAILS[1:])
         step += 1
-        if other:
-            el = next((e for e in others if e.label == other), target)
-            px, py = _coords(el, rng)
-            parts.append(f"<|step|>{step}<|act|>{ACTION_OF_ROLE[el.role]}({px},{py})")
-            parts.append(f"<|obs|>{OBS_BY_ROLE[el.role].format(label=el.label, state='off', pct=0)}")
-            parts.append("<|check|>objective not satisfied: wrong element")
-        elif why == "click landed off target":
+        if why == "click landed off target":
             nx, ny = _near_miss(target, rng)
-            parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
-            parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
-            parts.append("<|check|>objective not satisfied: click landed off target")
         else:
-            px, py = _coords(target, rng)
-            parts.append(f"<|step|>{step}<|act|>{action}({px},{py})")
-            parts.append(f"<|obs|>{why}")
-            parts.append(f"<|check|>objective not satisfied: {why}")
-        fix = (f"that was {other}, not {target.label}. target the {target.role} labelled {target.label}"
-               if other else
-               f"aim at the centre of the {target.role}, {target.label}" if why == "click landed off target"
-               else f"{why}: {LADDER[rung]}")
-        parts.append(f"<|retry|>{fix}")
-        if i >= park_at:
-            break
+            nx, ny = _coords(target, rng)
+        parts.append(f"<|step|>{step}{_act(target, nx, ny)}")
+        parts.append(f"<|obs|>{rng.choice(NO_CHANGE) if why == 'click landed off target' else why}")
+        parts.append(f"<|check|>objective not satisfied: {why}")
+        parts.append(f"<|retry|>aim at the centre of the {target.role}, {target.label} "
+                     f"({_scan_centre(target)[0]},{_scan_centre(target)[1]})"
+                     if why == "click landed off target" else
+                     f"<|retry|>{why}: {LADDER[rung]}, then use the scan coordinate")
 
-    if len(fails) and park_at <= len(fails):
-        step += 1
-        parts.append(f"<|step|>{step}<|act|>{LADDER['escalate'].replace(' ', '_')}()")
-        parts.append("<|obs|>task parked with the last screenshot attached")
-        parts.append("<|check|>objective not satisfied: budget reached")
-        parts.append(f"<|done|>{terminal}")
-        return "".join(parts)
-
-    # one honest near-miss on the right element, then the exact hit
     step += 1
-    if rng.random() < 0.5:
-        nx, ny = _near_miss(target, rng)
-        parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
-        parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
-        parts.append("<|check|>objective not satisfied: click landed off target")
-        parts.append(f"<|retry|>aim at the centre of the {target.role}, {target.label}")
-        step += 1
     gx, gy = _coords(target, rng)
-    parts.append(f"<|step|>{step}<|act|>{action}({gx},{gy})")
+    parts.append(f"<|step|>{step}{_act(target, gx, gy)}")
     parts.append(f"<|obs|>{OBS_BY_ROLE[target.role].format(label=target.label, state='on', pct=rng.randint(20, 90))}")
     parts.append("<|check|>objective satisfied")
     parts.append("<|done|>success")
+    return "".join(parts)
+
+
+def exhausted_episode(rng: random.Random, layout) -> str:
+    """The loop spends its step budget and says so. `<|done|>failed`, never a
+    fabricated success -- that is the overclaim the fleet measured at 1.0."""
+    target = rng.choice(layout.elements)
+    task = rng.choice(TASKS[target.role]).format(label=target.label)
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
+    n = rng.randint(2, 4)
+    for step in range(1, n + 1):
+        other = rng.choice([e for e in layout.elements if e is not target] or layout.elements)
+        x, y = _coords(other, rng)
+        parts.append(f"<|step|>{step}{_act(other, x, y)}")
+        parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
+        parts.append(f"<|check|>objective not satisfied: {other.label} is not {target.label}")
+        if step < n:
+            parts.append(f"<|retry|>target the {target.role} labelled {target.label}, not {other.label}")
+    parts.append("<|budget|>steps exhausted")
+    parts.append("<|done|>failed: retries exhausted, objective not reached")
+    return "".join(parts)
+
+
+def blocked_episode(rng: random.Random, layout) -> str:
+    """An obstruction a human has to clear. The honest end is `blocked`, and the
+    episode is parked rather than dropped (specs/drive.md, rung 6)."""
+    target = rng.choice(layout.elements)
+    task = rng.choice(TASKS[target.role]).format(label=target.label)
+    reason, rung = rng.choice(BLOCKERS)
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
+    x, y = _coords(target, rng)
+    parts.append(f"<|step|>1{_act(target, x, y)}")
+    parts.append(f"<|obs|>{reason}")
+    parts.append(f"<|check|>objective not satisfied: {reason}")
+    parts.append(f"<|retry|>{reason}: {LADDER[rung]}")
+    x2, y2 = _coords(target, rng)
+    parts.append(f"<|step|>2{_act(target, x2, y2)}")
+    parts.append("<|obs|>the obstruction is still there")
+    parts.append("<|check|>objective not satisfied: blocked")
+    parts.append("<|done|>blocked: parked for the next idle window")
+    return "".join(parts)
+
+
+def impossible_episode(rng: random.Random, layout=None) -> str:
+    """Objective names something that is not on this screen.
+
+    Two shapes, both honest: read the scan and say so immediately (the behaviour
+    the runtime wants), or waste one attempt and then say so. Neither clicks
+    around hopefully and neither claims success.
+    """
+    layout = layout or make_layout(rng)
+    present = {e.label for e in layout.elements}
+    missing = [l for l in LABELS if l not in present]
+    label = rng.choice(missing)
+    role = rng.choice(ROLES)
+    task = rng.choice(TASKS[role]).format(label=label)
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
+    if rng.random() < 0.30:
+        # one honest attempt, no <|retry|> before the terminal (invariant 2)
+        other = rng.choice(layout.elements)
+        x, y = _coords(other, rng)
+        parts.append(f"<|step|>1{_act(other, x, y)}")
+        parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
+        parts.append(f"<|check|>objective not satisfied: {label} is not in the scan")
+        parts.append(f"<|step|>2{_act(other, x, y)}")
+        parts.append("<|obs|>no visible change")
+        parts.append(f"<|check|>{label} is not present on this screen")
+    else:
+        parts.append(f"<|check|>{label} is not present on this screen")
+    parts.append(f"<|done|>impossible: no {role} labelled {label} exists here")
     return "".join(parts)
 
 
@@ -320,15 +378,35 @@ WHY = [
 ERRORS = ["AssertionError", "TypeError", "ValueError", "IndexError", "NameError"]
 
 
-def _mutate(body: str, rng: random.Random) -> str:
-    """A plausible wrong variant, so repeated attempts are not identical."""
-    swaps = [(" + ", " - "), (" - ", " + "), (" > ", " >= "), (" < ", " <= "),
-             ("max(", "min("), ("[0]", "[-1]"), ("True", "False"), ("**", "*"),
-             ("len(", "sum(")]
-    for a, b in rng.sample(swaps, k=len(swaps)):
+SWAPS = [
+    (" + ", " - ", "wrong operator: it subtracts where it should add"),
+    (" - ", " + ", "wrong operator: it adds where it should subtract"),
+    (" > ", " >= ", "the comparison is inclusive where it must be strict"),
+    (" < ", " <= ", "the comparison is inclusive where it must be strict"),
+    ("max(", "min(", "it takes the minimum while the test asks for the maximum"),
+    ("[0]", "[-1]", "off by one in the index: last element instead of first"),
+    ("True", "False", "the success flag is inverted"),
+    ("**", "*", "exponentiation where multiplication was meant"),
+    ("len(", "sum(", "it sums the values instead of counting them"),
+]
+
+
+def _mutate(body: str, rng: random.Random, avoid: set[str] | None = None) -> tuple[str, str]:
+    """A plausible wrong variant, plus WHY it is wrong.
+
+    The reason is emitted as the <|think|> line, so the corpus teaches
+    "error -> diagnosis -> patch" rather than a random sentence next to a
+    random body. Variants already used in this episode are skipped, so attempt
+    2 and attempt 3 are different bugs on the same function.
+    """
+    avoid = avoid or set()
+    for a, b, why in rng.sample(SWAPS, k=len(SWAPS)):
         if a in body:
-            return body.replace(a, b, 1)
-    return body.replace("return", "return not", 1)
+            cand = body.replace(a, b, 1)
+            if cand not in avoid:
+                return cand, why
+    cand = body.replace("return", "return not", 1)
+    return cand, "the guard is inverted: it returns the negation"
 
 
 def code_episode(rng: random.Random) -> str:
@@ -341,19 +419,23 @@ def code_episode(rng: random.Random) -> str:
     attempts = rng.randint(2, 4)  # never zero failures: I3 is a hard invariant
     err_kind = rng.choices(ERRORS, weights=[70, 8, 8, 7, 7])[0]
     parts = [f"<|task|>make the tests pass for {name}()"]
+    used: set[str] = {bad}
+    why = ""
     for attempt in range(1, attempts + 1):
         if attempt == attempts:
             body = good
         elif attempt == 1:
             body = bad
+            why = "wrong operator" if body != good else why
         else:
-            body = _mutate(bad, rng)
+            body, why = _mutate(bad, rng, avoid=used)
+            used.add(body)
         parts.append(f"<|try|>{attempt}")
         parts.append(f"<|code|>{sig}\n{body}")
         parts.append("<|run|>pytest -q")
         if attempt < attempts:
             parts.append(f"<|err|>{assertion}  ->  {err_kind}")
-            parts.append(f"<|think|>{rng.choice(WHY)}")
+            parts.append(f"<|think|>{why or rng.choice(WHY)}")
             parts.append(f"<|retry|>attempt {attempt} failed, patch the logic and rerun")
         else:
             parts.append(f"<|ok|>1 passed in {rng.uniform(0.01, 0.9):.2f}s")
@@ -396,16 +478,19 @@ OBSTACLES = [
 
 
 def plan_episode(rng: random.Random) -> str:
+    layout = make_layout(rng)
     objective = rng.choice(OBJECTIVES)(rng)
     steps = rng.sample(STEPS, k=rng.randint(4, 6))
     n_obs = 1 if rng.random() < 0.55 else 2
 
-    parts = [f"<|drive|>objective: {objective}", "<|plan|>"]
+    parts = [f"<|drive|>objective: {objective}", scan_line(layout), "<|plan|>"]
     for i, s in enumerate(steps, 1):
         parts.append(f"{i}.{s} ")
     hits = sorted(rng.sample(range(2, max(3, len(steps) + 1)), k=min(n_obs, max(1, len(steps) - 1))))
     for i, s in enumerate(steps, 1):
-        parts.append(f"<|step|>{i}<|act|>{s.replace(' ', '_')}()")
+        el = layout.elements[(i - 1) % len(layout.elements)]
+        x, y = _coords(el, rng)
+        parts.append(f"<|step|>{i}{_act(el, x, y)}")
         if i in hits:
             obstacle_fn, fix = rng.choice(OBSTACLES)
             obstacle = obstacle_fn(rng)
@@ -413,16 +498,18 @@ def plan_episode(rng: random.Random) -> str:
             parts.append("<|check|>objective not satisfied: blocked")
             parts.append(f"<|retry|>{fix}")
             fix_tok = "".join(c if c.isalnum() or c == "_" else "_" for c in fix.replace(" ", "_"))
-            parts.append(f"<|step|>{i}b<|act|>{fix_tok}()")
+            fx, fy = _coords(el, rng)
+            parts.append(f"<|step|>{i}b{_act(el, fx, fy)}")
             parts.append("<|obs|>step completed")
             if len(hits) > 1 and i == hits[0]:
                 parts.append(f"<|retry|>{LADDER['tool_switch']}")
-                parts.append(f"<|step|>{i}c<|act|>shell_equivalent_of_{s.replace(' ', '_')}()")
+                sx, sy = _coords(el, rng)
+                parts.append(f"<|step|>{i}c{_act(el, sx, sy)}")
                 parts.append("<|obs|>step completed without the GUI")
         else:
             parts.append(f"<|obs|>step completed ({rng.randint(1, 60)} items)")
     parts.append("<|check|>objective satisfied")
-    parts.append(f"<|done|>{rng.choices(['success', 'success-partial'], weights=[88, 12])[0]}")
+    parts.append(f"<|done|>{rng.choices(['success', 'failed'], weights=[90, 10])[0]}")
     return "".join(parts)
 
 
@@ -445,10 +532,11 @@ def drive_stats(n: int = 2000, seed: int = 0) -> dict:
     retries = sum(e.count("<|retry|>") for e in eps)
     done = sum(e.count("<|done|>") for e in eps)
     fails = sum(1 for e in eps if "<|retry|>" in e)
-    terms = {"success": 0, "success-partial": 0, "budget-exhausted": 0, "other": 0}
+    terms = {t: 0 for t in SCAN_TERMINALS} | {"other": 0}
     for e in eps:
         tail = e.rsplit("<|done|>", 1)[-1] if "<|done|>" in e else "other"
-        terms[tail] = terms.get(tail, 0) + 1
+        word = tail.split(":")[0].strip().split()[0] if tail.strip() else "other"
+        terms[word] = terms.get(word, 0) + 1
     return {
         "episodes": len(eps),
         "mean_retries": round(retries / len(eps), 2),

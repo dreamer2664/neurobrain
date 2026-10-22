@@ -396,7 +396,9 @@ def _merge_invariants(invs: list[dict]) -> dict:
         "bad_retries": sum(i.get("bad_retries", 0) for i in invs),
         "terminal_mix": {k: round(sum(i["terminal_mix"].get(k, 0) * i["episodes"] for i in invs)
                                   / max(1, eps), 4)
-                         for k in ("success", "success-partial", "budget-exhausted", "failed")},
+                         for k in drive_rules.OUTCOMES},
+        "scan_fraction": round(sum(i.get("scan_fraction", 0) * i["episodes"] for i in invs)
+                               / max(1, eps), 4),
         "failures": {"terminal": [], "retry_gap": []},
     }
     merged["violations"] = drive_rules.check(merged)
@@ -460,11 +462,12 @@ def render(report: dict) -> str:
                          f"retry_after_failure={inv['retry_after_failure_rate']:.3f}  "
                          f"failure_frac={inv['failure_fraction']:.3f}  retry/ep={inv['mean_retries']:.2f}  "
                          f"mix ui/code/plan {mix['ui']:.2f}/{mix['code']:.2f}/{mix['plan']:.2f}  "
-                         f"terminals ok/partial/exhausted/failed "
+                         f"terminals ok/failed/blocked/impossible "
                          f"{inv['terminal_mix']['success']:.2f}/"
-                         f"{inv['terminal_mix']['success-partial']:.2f}/"
-                         f"{inv['terminal_mix']['budget-exhausted']:.2f}/"
-                         f"{inv['terminal_mix'].get('failed', 0):.2f}  "
+                         f"{inv['terminal_mix']['failed']:.2f}/"
+                         f"{inv['terminal_mix']['blocked']:.2f}/"
+                         f"{inv['terminal_mix']['impossible']:.2f}  "
+                         f"scan {inv.get('scan_fraction', 0):.2f}  "
                          f"{'OK' if not inv['violations'] else 'FAIL'}")
     if ui:
         co = ui[0]["coordinate"]

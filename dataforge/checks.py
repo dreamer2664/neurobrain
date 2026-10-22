@@ -39,7 +39,11 @@ RANGES = {
     "terminal_rate_min": 1.0,
     "retry_after_failure_min": 1.0,
     "failure_fraction_min": 0.50,
-    # format sanity
+    # protocol: the runtime only parses these four terminals, and every
+    # desktop episode must carry a scan of the screen before it acts
+    "terminal_other_max": 0.0,
+    "scan_fraction_min": 0.99,
+    "format_sanity": None,
     "image_black_share_max": 0.60,     # a shard of near-blank screens is broken
 }
 
@@ -179,4 +183,10 @@ def check_dataset(d: dict) -> list[str]:
                        f"{r['retry_after_failure_min']}")
         if inv["failure_fraction"] < r["failure_fraction_min"]:
             bad.append(f"I3 failure_fraction {inv['failure_fraction']} < {r['failure_fraction_min']}")
+        mix = inv.get("terminal_mix", {})
+        if mix.get("other", 0) > r["terminal_other_max"]:
+            bad.append(f"terminal_mix: {mix['other']:.4f} episodes end in a word the runtime "
+                       f"cannot parse (must be one of {drive_rules.OUTCOMES})")
+        if inv.get("scan_fraction", 1.0) < r["scan_fraction_min"]:
+            bad.append(f"scan_fraction {inv.get('scan_fraction')} < {r['scan_fraction_min']}")
     return bad
