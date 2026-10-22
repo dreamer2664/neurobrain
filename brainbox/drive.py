@@ -326,6 +326,29 @@ class SimulatedDesktop:
         got = sum(1 for e in self.required if self._idx(e) in self.activated)
         return got / max(1, len(self.required))
 
+    def snapshot(self) -> dict:
+        return {"activated": sorted(self.activated),
+                "positions": [[e.x, e.y] for e in self.layout.elements],
+                "ignore_left": self.ignore_left,
+                "relocate_pending": self.relocate_pending,
+                "required_idx": [self._idx(e) for e in self.required],
+                "unreachable": self.unreachable,
+                "unreachable_labels": sorted(self.unreachable_labels)}
+
+    def restore(self, snap: dict) -> None:
+        if not snap:
+            return
+        self.activated = set(snap.get("activated", []))
+        for e, (x, y) in zip(self.layout.elements, snap.get("positions", [])):
+            e.x, e.y = x, y
+        self.ignore_left = snap.get("ignore_left", self.ignore_left)
+        self.relocate_pending = snap.get("relocate_pending", False)
+        idxs = snap.get("required_idx")
+        if idxs:
+            self.required = [self.layout.elements[i] for i in idxs]
+        self.unreachable = snap.get("unreachable", self.unreachable)
+        self.unreachable_labels = set(snap.get("unreachable_labels", []))
+
 
 class ShellWorld:
     """File operations in a workspace, verified against declarative checks.
@@ -388,6 +411,10 @@ class ShellWorld:
         op = a.get("op")
         try:
             if op == "write_file":
+                if a.get("delay_ms"):
+                    import time as _time
+
+                    _time.sleep(int(a["delay_ms"]) / 1000)  # slow FS/device
                 p = self._safe(a["path"])
                 os.makedirs(os.path.dirname(p) or ".", exist_ok=True)
                 with open(p, "w") as f:
@@ -416,11 +443,54 @@ class ShellWorld:
             return "wrong", f"checks regressed {b}->{a}"
         if not act_result.get("ok"):
             return "no-op", act_result.get("detail", "act failed")
+        if before.get("files") != after.get("files"):
+            return "progress", "workspace state changed toward the step intent"
         return "no-op", "no check changed"
 
     def progress(self) -> float:
         state = self.checks_state()
         return sum(state) / max(1, len(state)) if state else 0.0
+
+    def snapshot(self) -> dict:
+        return {}  # the workspace filesystem is the state
+
+    def restore(self, snap: dict) -> None:
+        pass
+
+
+def build_scripted_run(store: TaskStore, instruction: str, spec: dict,
+                       budget: dict | None = None, inbox_file: str | None = None):
+    """(task, world, planner, grounder) from a script/inbox JSON spec."""
+    planner = ScriptedPlanner(spec.get("steps", []),
+                              replan_script=spec.get("replan_steps"),
+                              shell_steps=spec.get("shell_steps"),
+                              decompose_steps=spec.get("decompose_steps"))
+    task = store.create(instruction, budget=budget,
+                        checks=spec.get("checks"), workspace=spec.get("workspace"))
+    task["spec"] = spec
+    if inbox_file:
+        task["inbox_file"] = inbox_file
+    if spec.get("world", "shell") == "shell":
+        world = ShellWorld(spec["workspace"], spec.get("checks", []),
+                           home=store.home)
+        grounder = None
+        task["world"] = "shell workspace"
+    else:
+        import random as _random
+
+        from neurobrain import ui_world
+
+        ex = ui_world.sample_example(_random.Random(spec.get("seed", 0)))
+        world = SimulatedDesktop(ex, **spec.get("world_options", {}))
+        for s in spec.get("steps", []):
+            t = s.get("target") or {}
+            for e in world.layout.elements:
+                if e.label == t.get("label") and e.role == t.get("role"):
+                    world.require(e)
+        grounder = OracleGrounder(world)
+        task["world"] = "simulated (scripted, oracle grounder)"
+    store.save(task)
+    return task, world, planner, grounder
 
 
 # ---------------------------------------------------------------------- loop
@@ -513,6 +583,8 @@ class DriveLoop:
                             for i, s in enumerate(plan)]
             task["plan_index"] = 0
         task["status"] = "acting"
+        if task.get("world_state") and hasattr(world, "restore"):
+            world.restore(task["world_state"])
         self.store.save(task)
 
         while task["plan_index"] < len(task["plan"]):
@@ -565,6 +637,8 @@ class DriveLoop:
         if frame is not None:
             rel = self._save_frame(task, frame, idx, rung, m["steps_used"])
             obs_after["screenshot"] = rel
+        if hasattr(world, "snapshot"):
+            task["world_state"] = world.snapshot()
         task["history"].append({
             "step": idx + 1, "rung": rung, "intent": step.get("intent", ""),
             "observation_before": before,
