@@ -85,6 +85,17 @@ NO_CHANGE = [
 ]
 
 
+def scan_line(layout) -> str:
+    """The element inventory the runtime hands the model before it acts.
+
+    Every UI episode carries one, solvable or not. Without that, "<|scan|>"
+    would only ever appear in impossible episodes and the model could learn the
+    marker instead of the fact -- and then refuse a task on a real screen just
+    because the runtime described the screen to it.
+    """
+    return "<|scan|>elements on screen: " + ", ".join(sorted(e.label for e in layout.elements))
+
+
 def ui_episode(rng: random.Random) -> str:
     layout = make_layout(rng)
     if rng.random() < 0.18:
@@ -94,7 +105,7 @@ def ui_episode(rng: random.Random) -> str:
     action = ACTION_OF_ROLE[target.role]
     fails_first = rng.random() < 0.6
 
-    parts = [f"<|drive|>objective: {task}"]
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
     step = 0
 
     if fails_first:
@@ -132,7 +143,7 @@ def _exhausted_episode(rng: random.Random, layout) -> str:
     """
     target = rng.choice(layout.elements)
     task = rng.choice(TASKS[target.role]).format(label=target.label)
-    parts = [f"<|drive|>objective: {task}"]
+    parts = [f"<|drive|>objective: {task}", scan_line(layout)]
     for step in range(1, rng.randint(3, 5)):
         other = rng.choice(layout.elements)
         x, y = _coords(other, rng)
@@ -161,8 +172,7 @@ def impossible_episode(rng: random.Random) -> str:
     label = rng.choice(missing)
     role = rng.choice(ROLES)
     task = rng.choice(TASKS[role]).format(label=label)
-    parts = [f"<|drive|>objective: {task}",
-             "<|scan|>elements on screen: " + ", ".join(sorted(present)),
+    parts = [f"<|drive|>objective: {task}", scan_line(layout),
              f"<|check|>{label} is not present on this screen",
              "<|done|>impossible: no {0} labelled {1} exists here".format(role, label)]
     return "".join(parts)

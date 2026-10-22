@@ -20,7 +20,7 @@ import random
 
 import torch
 
-from .drive import impossible_episode
+from .drive import impossible_episode, scan_line
 from .sample import load
 from .ui_world import CANVAS, LABELS, ROLES, make_layout, sample_example, TASKS
 
@@ -30,7 +30,10 @@ def objectives(n: int, seed: int = 0) -> list[str]:
     out = []
     for _ in range(n):
         ex = sample_example(rng)
-        out.append(f"<|drive|>objective: {rng.choice(TASKS[ex.target.role]).format(label=ex.target.label)}")
+        # solvable prompts carry the same scan every UI training episode starts
+        # with, so "impossible" has to be judged from the content, not the marker
+        out.append(f"<|drive|>objective: {rng.choice(TASKS[ex.target.role]).format(label=ex.target.label)}"
+                   + scan_line(ex.layout))
     return out
 
 
