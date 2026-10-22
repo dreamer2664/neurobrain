@@ -47,11 +47,13 @@ def build_rope(head_dim: int, ctx: int, base: float = 10000.0) -> tuple[torch.Te
     return freqs.cos(), freqs.sin()
 
 
-def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
-    # x: (B, H, T, D)
+def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor,
+               offset: int = 0) -> torch.Tensor:
+    # x: (B, H, T, D); offset = absolute position of the first token in x
+    # (needed by the KV-cache decode path, where x holds only new tokens)
     x1, x2 = x[..., ::2], x[..., 1::2]
     T = x.shape[2]
-    c, s = cos[:T][None, None], sin[:T][None, None]
+    c, s = cos[offset:offset + T][None, None], sin[offset:offset + T][None, None]
     o1 = x1 * c - x2 * s
     o2 = x1 * s + x2 * c
     out = torch.stack((o1, o2), dim=-1)
@@ -85,6 +87,32 @@ class Attention(nn.Module):
         y = y.transpose(1, 2).contiguous().view(B, T, C)
         return self.proj(y)
 
+    def forward_cached(self, x: torch.Tensor, past: tuple | None,
+                       pos0: int) -> tuple[torch.Tensor, tuple]:
+        """Incremental attention for generation. `past` is (k, v) of shape
+        (B, H, S, hd) already rotated at their absolute positions; `pos0` is
+        the absolute position of x's first token. Returns (out, new_past)."""
+        B, T, C = x.shape
+        q, k, v = self.qkv(x).split(C, dim=2)
+        q = q.view(B, T, self.n_head, self.head_dim).transpose(1, 2)
+        k = k.view(B, T, self.n_head, self.head_dim).transpose(1, 2)
+        v = v.view(B, T, self.n_head, self.head_dim).transpose(1, 2)
+        q = apply_rope(q, self.cos, self.sin, offset=pos0)
+        k = apply_rope(k, self.cos, self.sin, offset=pos0)
+        if past is not None:
+            k = torch.cat((past[0], k), dim=2)
+            v = torch.cat((past[1], v), dim=2)
+        S = k.shape[2]
+        if T == S:
+            y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
+        else:
+            # decode step(s): each query at absolute pos p attends keys <= p
+            mask = torch.ones(T, S, dtype=torch.bool,
+                              device=q.device).tril(diagonal=S - T)
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask)
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
+        return self.proj(y), (k, v)
+
 
 class SwiGLU(nn.Module):
     def __init__(self, d: int, mult: float = 4.0):
@@ -112,6 +140,14 @@ class Block(nn.Module):
         x = x + self.drop(self.attn(self.norm1(x)))
         x = x + self.drop(self.mlp(self.norm2(x)))
         return x
+
+    def forward_cached(self, x: torch.Tensor, past: tuple | None,
+                       pos0: int) -> tuple[torch.Tensor, tuple]:
+        # eval-only path (no dropout): used by GPT.forward_cached
+        a, kv = self.attn.forward_cached(self.norm1(x), past, pos0)
+        x = x + a
+        x = x + self.mlp(self.norm2(x))
+        return x, kv
 
 
 class GPT(nn.Module):
@@ -162,8 +198,53 @@ class GPT(nn.Module):
         return logits, loss
 
     @torch.no_grad()
+    def forward_cached(self, idx: torch.Tensor,
+                       cache: list | None = None) -> tuple[torch.Tensor, list]:
+        """Forward over only the NEW tokens in idx, reusing `cache`
+        (per-block (k, v) tuples). Returns (logits, new_cache). Requires
+        eval mode semantics (no dropout); callers must keep total length
+        <= cfg.ctx since cached keys cannot slide out of the window."""
+        B, T = idx.shape
+        pos0 = 0 if cache is None else cache[0][0].shape[2]
+        assert pos0 + T <= self.cfg.ctx, "cached forward would exceed ctx"
+        x = self.tok_emb(idx)
+        new_cache = []
+        for i, blk in enumerate(self.blocks):
+            past = None if cache is None else cache[i]
+            x, kv = blk.forward_cached(x, past, pos0)
+            new_cache.append(kv)
+        x = self.norm_f(x)
+        return self.lm_head(x), new_cache
+
+    @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new_tokens: int, temperature: float = 0.8,
                  top_k: int | None = 50, eos_id: int | None = None) -> torch.Tensor:
+        if idx.shape[1] + max_new_tokens > self.cfg.ctx:
+            # prompt + budget overflows the window: fall back to the sliding
+            # (cacheless) path, which re-runs the full forward per token
+            return self._generate_slow(idx, max_new_tokens, temperature, top_k, eos_id)
+        cache = None
+        new = idx
+        out = idx
+        for _ in range(max_new_tokens):
+            logits, cache = self.forward_cached(new, cache)
+            logits = logits[:, -1, :] / max(temperature, 1e-6)
+            if top_k is not None:
+                k = min(top_k, logits.size(-1))
+                v, _ = torch.topk(logits, k)
+                logits[logits < v[:, [-1]]] = -float("inf")
+            probs = F.softmax(logits, dim=-1)
+            nxt = torch.multinomial(probs, num_samples=1)
+            out = torch.cat((out, nxt), dim=1)
+            new = nxt
+            if eos_id is not None and (nxt == eos_id).all():
+                break
+        return out
+
+    @torch.no_grad()
+    def _generate_slow(self, idx: torch.Tensor, max_new_tokens: int,
+                       temperature: float = 0.8, top_k: int | None = 50,
+                       eos_id: int | None = None) -> torch.Tensor:
         for _ in range(max_new_tokens):
             ctx = idx[:, -self.cfg.ctx:]
             logits, _ = self(ctx)
