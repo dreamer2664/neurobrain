@@ -57,25 +57,12 @@ class Grounder:
 
     @classmethod
     def find(cls, explicit: str | None = None) -> "Grounder":
-        path = explicit or os.environ.get("BRAINBOX_GRIP_CHECKPOINT")
-        if path:
-            if os.path.isdir(path):
-                return cls.from_dir(path)
-            if os.path.exists(path):
-                return cls.from_legacy(path)
-            raise ckmod.CheckpointError(f"grip checkpoint not found: {path}")
-        roots = [os.path.join(os.getcwd(), "checkpoints"),
-                 os.path.join(ckmod.repo_root(), "checkpoints"),
-                 os.path.expanduser("~/.brainbox/checkpoints")]
-        for root in roots:
-            d = os.path.join(root, "grip")
-            if os.path.isdir(d) and os.path.exists(os.path.join(d, "config.json")):
-                return cls.from_dir(d)
-            pt = os.path.join(root, "grip_best.pt")
-            if os.path.exists(pt):
-                return cls.from_legacy(pt)
-        raise ckmod.CheckpointError(
-            "no grip checkpoint found (checkpoints/grip/ or grip_best.pt)")
+        found = ckmod.find_grip_checkpoint(explicit)
+        if found is None:
+            raise ckmod.CheckpointError(
+                "no grip checkpoint found (checkpoints/grip/ or grip_best.pt)")
+        path, fmt = found
+        return cls.from_dir(path) if fmt == "dir" else cls.from_legacy(path)
 
     def describe(self) -> dict:
         return {"step": self.step, "source": self.source, "stub": self.stub,

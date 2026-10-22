@@ -1,0 +1,12 @@
+{
+  "kind": "grip",
+  "char_vocab": 40,
+  "max_len": 48,
+  "d": 64,
+  "grid": 32,
+  "step": 750,
+  "stub": false,
+  "char_vocab_string": "abcdefghijklmnopqrstuvwxyz0123456789 -",
+  "params": 441256,
+  "weights_sha256": "d18df3cd23d7b438a95ae5c90928d3b8dc4256e208d374c01652aaa050e88157"
+}

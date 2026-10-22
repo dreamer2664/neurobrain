@@ -24,14 +24,20 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("pt", nargs="?", help="legacy .pt to migrate")
     ap.add_argument("--tokenizer", default=None)
-    ap.add_argument("--out", default="checkpoints/lm")
+    ap.add_argument("--out", default=None,
+                    help="output dir (default: checkpoints/lm or checkpoints/grip)")
+    ap.add_argument("--kind", choices=("auto", "lm", "grip"), default="auto",
+                    help="auto: filenames containing 'grip' migrate as grounder")
     ap.add_argument("--make-stub", default=None, metavar="DIR",
                     help="instead of migrating, write a stub checkpoint dir")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
+    kind = args.kind
+    if kind == "auto":
+        kind = "grip" if args.pt and "grip" in os.path.basename(args.pt) else "lm"
     tok = args.tokenizer or ckmod.default_tokenizer_path()
-    if not tok:
+    if kind == "lm" and not tok:
         print("no tokenizer.json found", file=sys.stderr)
         return 1
     if args.make_stub:
@@ -41,8 +47,12 @@ def main() -> int:
     if not args.pt:
         ap.print_usage()
         return 2
-    info = ckmod.migrate_legacy(args.pt, tok, args.out)
-    print(f"migrated {args.pt} (step {info.step}) -> {info.path}")
+    out = args.out or f"checkpoints/{kind}"
+    if kind == "grip":
+        info = ckmod.migrate_grip_legacy(args.pt, out)
+    else:
+        info = ckmod.migrate_legacy(args.pt, tok, out)
+    print(f"migrated {args.pt} ({kind}, step {info.step}) -> {info.path}")
     return 0
 
 

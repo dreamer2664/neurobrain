@@ -70,19 +70,39 @@ def cmd_doctor(args) -> int:
     found = ckmod.find_checkpoint()
     if found and found[1] == "dir":
         checkpoint = {"found": True, "format": "dir",
+                      "verified": ckmod.verify_checkpoint_dir(found[0]),
                       **{k: v for k, v in ckmod.inspect_checkpoint_dir(found[0]).items()
                          if k != "config"}}
     elif found:
         checkpoint = {"found": True, "format": "legacy-pt", "path": found[0],
-                      "sha256": ckmod.sha256_file(found[0]), "stub": False}
+                      "sha256": ckmod.sha256_file(found[0]), "stub": False,
+                      "verified": None}
     else:
-        checkpoint = {"found": False, "stub": True,
+        checkpoint = {"found": False, "stub": True, "verified": None,
                       "note": "no checkpoint published; bench/serve fall back to a "
                               "seeded stub of the real architecture (see card.md)"}
 
+    try:
+        gfound = ckmod.find_grip_checkpoint()
+    except ckmod.CheckpointError as e:
+        gfound = None
+        grip_checkpoint = {"found": False, "verified": None, "note": str(e)}
+    if gfound and gfound[1] == "dir":
+        grip_checkpoint = {"found": True, "format": "dir",
+                           "verified": ckmod.verify_checkpoint_dir(gfound[0]),
+                           **{k: v for k, v in ckmod.inspect_checkpoint_dir(gfound[0]).items()
+                              if k != "config"}}
+    elif gfound:
+        grip_checkpoint = {"found": True, "format": "legacy-pt", "path": gfound[0],
+                           "sha256": ckmod.sha256_file(gfound[0]), "verified": None}
+    elif "grip_checkpoint" not in dir():
+        grip_checkpoint = {"found": False, "verified": None}
+
     disk = shutil.disk_usage(os.path.expanduser("~"))
+    intact = checkpoint.get("verified") is not False and \
+        grip_checkpoint.get("verified") is not False
     report = {
-        "ok": bool(torch_ok and tokenizer["found"]),
+        "ok": bool(torch_ok and tokenizer["found"] and intact),
         "versions": versions,
         "torch_import_s": torch_import_s,
         "cpu_count": os.cpu_count(),
@@ -92,6 +112,7 @@ def cmd_doctor(args) -> int:
         "peak_rss_mb": round(peak_rss_mb(), 1),
         "tokenizer": tokenizer,
         "checkpoint": checkpoint,
+        "grip_checkpoint": grip_checkpoint,
         "uptime_s": round(time.time() - _T0, 3),
     }
     if args.json:
@@ -104,9 +125,14 @@ def cmd_doctor(args) -> int:
         print(f"tokenizer  {'ok vocab=' + str(tokenizer.get('vocab_size')) + ' ' + str(tokenizer.get('path')) if tokenizer['found'] else 'MISSING'}")
         if checkpoint["found"]:
             print(f"checkpoint {checkpoint['path']} step={checkpoint.get('step')} "
-                  f"stub={checkpoint.get('stub')}")
+                  f"stub={checkpoint.get('stub')} verified={checkpoint.get('verified')}")
         else:
             print(f"checkpoint NONE FOUND — stub fallback active")
+        if grip_checkpoint["found"]:
+            print(f"grip       {grip_checkpoint['path']} step={grip_checkpoint.get('step')} "
+                  f"verified={grip_checkpoint.get('verified')}")
+        else:
+            print("grip       NONE FOUND (/ground will 503)")
         print(f"rss        {report['rss_mb']} MB (peak {report['peak_rss_mb']} MB)")
         print("doctor:", "OK" if report["ok"] else "FAIL")
     return 0 if report["ok"] else 1
