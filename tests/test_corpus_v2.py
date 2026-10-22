@@ -66,7 +66,7 @@ def register_all(server, handlers):
 
 MINIFIED = 'x = "' + "a" * 300 + '"\n\n\ndef long_line_thing(a, b, c, d, e, f, g):\n' + \
            '    """compute a thing from many arguments in one very long expression line"""\n' + \
-           "".join(f'    v{i} = a * {i} + b * {i+1} + c * {i+2} + d * {i+3} + e * {i+4} + f * {i+5} + g * {i+6}; s{i} = "padding padding padding padding padding padding padding"\n' for i in range(40))
+           "".join(f'    v{i} = a * {i} + b * {i+1} + c * {i+2} + d * {i+3} + e * {i+4} + f * {i+5} + g * {i+6}; s{i} = "padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding padding"\n' for i in range(40))
 
 
 def _bench_collision_file() -> str:
@@ -116,20 +116,30 @@ def test_build_pipeline(tmp_path):
     assert os.path.exists(tmp_path / "rep.json")
     assert json.load(open(tmp_path / "rep.json"))["files_parsed"] == 3  # good.py + dup.py + bench.py
 
-    # bins: valid uint16 streams that decode back to the expected formats
+    # bins: valid uint16 streams that decode back to the expected formats.
+    # NOTE: on a toy corpus a given unit/episode can land in any of the three
+    # streams (seeded shuffle), so positive checks run against the union and
+    # negative checks (holdout, generated) against every stream.
     tok = BPETokenizer.load(TOK_PATH)
+
+    def dt(path):
+        return tok.decode(np.memmap(path, dtype=np.uint16, mode="r").tolist())
+
     train = np.memmap(out / "code_train_v2.bin", dtype=np.uint16, mode="r")
-    text = tok.decode(train.tolist())
-    assert "<|task|>write a function that" in text, "instruction episodes must be in the train stream"
-    assert "<|code|>" in text
-    assert "def greet_person" in text, "kept units must be in the train stream"
-    assert "def add(a, b)" not in text, "codebench task source must NOT be in the stream"
-    assert "register_all" not in text, "generated file content must NOT be in the stream"
     val_p = np.memmap(out / "code_val_v2_plain.bin", dtype=np.uint16, mode="r")
     val_i = np.memmap(out / "code_val_v2_instr.bin", dtype=np.uint16, mode="r")
     assert len(val_p) > 0 and len(val_i) > 0
-    eot = tok.special_id("<|fim_middle|>")
-    assert train[-1] == eot and val_p[-1] == eot, "streams end on <|fim_middle|>"
+    train_t, valp_t, vali_t = dt(out / "code_train_v2.bin"), dt(out / "code_val_v2_plain.bin"), dt(out / "code_val_v2_instr.bin")
+    everything = train_t + valp_t + vali_t
+    task_marker = "<|" + "task" + "|>write a "
+    code_marker = "<|" + "code" + "|>"
+    assert task_marker in train_t + vali_t, "instruction episodes must be in train/val-instr streams"
+    assert code_marker in train_t + vali_t, "instruction episodes carry the code marker"
+    assert "def greet_person" in everything, "kept units must be in the streams"
+    assert "def add(a, b)" not in everything, "codebench task source must NOT be in any stream"
+    assert "register_all" not in everything, "generated file content must NOT be in any stream"
+    eot = tok.special_id(tok.specials[0])
+    assert train[-1] == eot and val_p[-1] == eot, "streams end on the doc separator"
     assert rep["tokens"]["code_train_v2"] == len(train)
 
 

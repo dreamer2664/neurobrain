@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import ast
 import hashlib
+from collections import defaultdict
 import json
 import os
 import random
@@ -154,19 +155,24 @@ def iter_units(roots: list[str], report: dict, holdout_needles: set[str]):
                         seg = ast.get_source_segment(src, node)
                     except Exception:  # noqa: BLE001
                         seg = None
-                    if seg is None or not (MIN_UNIT <= len(seg) <= MAX_UNIT):
+                    if seg is None:
                         report["units_drop"]["size"] += 1
                         continue
                     h_src = _sha1(_norm(seg))
+                    # holdout first and unconditional: a bench task never enters
+                    # training, whatever its size or duplicate status
+                    if h_src in holdout_needles:
+                        report["units_drop"]["holdout"] += 1
+                        continue
+                    if not (MIN_UNIT <= len(seg) <= MAX_UNIT):
+                        report["units_drop"]["size"] += 1
+                        continue
                     h_ast = _sha1(ast.dump(node, annotate_fields=False, include_attributes=False))
                     if h_src in seen_src:
                         report["units_drop"]["dup_source"] += 1
                         continue
                     if h_ast in seen_ast:
                         report["units_drop"]["dup_ast"] += 1
-                        continue
-                    if h_src in holdout_needles:
-                        report["units_drop"]["holdout"] += 1
                         continue
                     seen_src.add(h_src)
                     seen_ast.add(h_ast)
@@ -188,7 +194,7 @@ def build(roots: list[str], out_dir: str, tokenizer_path: str, seed: int = 11,
     from neurobrain.tokenizer import BPETokenizer
 
     tok = BPETokenizer.load(tokenizer_path)
-    eot = tok.special_id("<|fim_middle|>")
+    eot = tok.special_id(tok.specials[0])  # derived from the tokenizer, never typed
     pack_sep = "<|code|>"
     rng = random.Random(seed)
 
@@ -201,7 +207,8 @@ def build(roots: list[str], out_dir: str, tokenizer_path: str, seed: int = 11,
     except Exception:  # noqa: BLE001
         pass
 
-    report = {"files": 0, "files_parsed": 0, "drop": {}, "units_drop": {},
+    report = {"files": 0, "files_parsed": 0, "drop": defaultdict(int),
+              "units_drop": defaultdict(int),
               "units_kept": 0, "categories": {}, "seed": seed}
 
     units = []
@@ -281,7 +288,9 @@ def build(roots: list[str], out_dir: str, tokenizer_path: str, seed: int = 11,
     for i, d in enumerate(train_instr):
         acc += len(tok.encode(d)) + 1
         if acc > budget:
-            cut = i
+            # never starve the instruction stream: keep the first episode even
+            # on toy corpora where it alone exceeds the token budget
+            cut = max(i, 1)
             break
     train_instr = train_instr[:cut]
     # interleave: shuffle the doc order of the mixed train stream
@@ -304,6 +313,8 @@ def build(roots: list[str], out_dir: str, tokenizer_path: str, seed: int = 11,
         "bytes_per_token": round(raw_bytes / max(1, total_tokens), 3),
         "built_utc": time.strftime("%FT%TZ", time.gmtime()),
     })
+    report["drop"] = dict(report["drop"])
+    report["units_drop"] = dict(report["units_drop"])
     if report_path:
         os.makedirs(os.path.dirname(report_path) or ".", exist_ok=True)
         with open(report_path, "w") as f:
