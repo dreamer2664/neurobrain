@@ -1,0 +1,11 @@
+{
+ "ckpt": "checkpoints/lm_baseline_step4600.pt",
+ "step": 4600,
+ "val_loss_by_stream": {
+  "code_val": 2.2448,
+  "code_val_v2_instr": 2.5074,
+  "code_val_v2_plain": 2.4326,
+  "drive_val": 5.8343,
+  "ui_val": 2.012
+ }
+}

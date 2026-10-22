@@ -1,0 +1,53 @@
+{
+ "files": 54867,
+ "files_parsed": 48362,
+ "drop": {
+  "size": 5211,
+  "generated_marker": 434,
+  "vendored_or_fixture": 860
+ },
+ "units_drop": {
+  "size": 19633,
+  "dup_ast": 105,
+  "dup_source": 83589
+ },
+ "units_kept": 86398,
+ "categories": {
+  "io": 12324,
+  "os_sys": 3153,
+  "runtime": 41209,
+  "data": 18741,
+  "text": 5491,
+  "time_date": 402,
+  "numeric": 2764,
+  "net": 1842,
+  "concurrency": 466,
+  "misc": 6
+ },
+ "seed": 11,
+ "units_balanced": 50124,
+ "categories_capped": {
+  "concurrency": 466,
+  "data": 12000,
+  "io": 12000,
+  "misc": 6,
+  "net": 1842,
+  "numeric": 2764,
+  "os_sys": 3153,
+  "runtime": 12000,
+  "text": 5491,
+  "time_date": 402
+ },
+ "instruction_candidates": 24830,
+ "tokens": {
+  "code_train_v2": 22723949,
+  "code_val_v2_plain": 569297,
+  "code_val_v2_instr": 378672
+ },
+ "train_plain_docs": 17210,
+ "train_instr_docs": 8762,
+ "instr_share_est": 0.1993,
+ "unit_bytes": 53846844,
+ "bytes_per_token": 2.37,
+ "built_utc": "2026-10-22T21:29:48Z"
+}
