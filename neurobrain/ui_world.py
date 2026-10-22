@@ -115,7 +115,7 @@ def make_layout(rng: random.Random, n: int | None = None) -> Layout:
         role = rng.choice(roles)
         label = labels[i]
         if role == "slider":
-            w, h = int(cell_w - 8), 8
+            w, h = int(cell_w - 8), 12
         elif role == "menu":
             w, h = int(cell_w - 8), 9
         elif role == "tab":
@@ -175,8 +175,8 @@ def render(layout: Layout, size: int = CANVAS) -> np.ndarray:
             d.rectangle([x, y, x + w, y + h], fill=c, outline=(160, 164, 176))
             _draw_glyph(d, x + 3, y + (h - 5) // 2 + 1, el.label, 2)
         elif el.role == "checkbox":
-            d.rectangle([x, y, x + 8, y + 8], fill=c, outline=(60, 120, 80))
-            _draw_glyph(d, x + 10, y + 1, el.label, 2)
+            d.rectangle([x, y, x + w, y + h], fill=c, outline=(60, 120, 80))
+            _draw_glyph(d, x + 2, y + 2, el.label, 2)
         elif el.role == "tab":
             d.rectangle([x, y, x + w, y + h], fill=c)
             _draw_glyph(d, x + 3, y + 2, el.label, 2)
@@ -187,8 +187,11 @@ def render(layout: Layout, size: int = CANVAS) -> np.ndarray:
             d.rectangle([x, y, x + w, y + h], fill=c, outline=(200, 200, 206))
             _draw_glyph(d, x + 2, y + 1, el.label, 2)
         elif el.role == "slider":
-            d.line([x, y + h // 2, x + w, y + h // 2], fill=c, width=2)
-            kx = x + int(w * 0.6)
+            d.rectangle([x, y, x + w, y + h], fill=(236, 238, 243) if layout.theme == "light"
+                        else (44, 46, 54), outline=c)
+            _draw_glyph(d, x + 2, y + 2, el.label, 2)
+            d.line([x + 10, y + h // 2, x + w - 2, y + h // 2], fill=c, width=2)
+            kx = x + 10 + int((w - 12) * 0.6)
             d.ellipse([kx - 2, y + h // 2 - 2, kx + 3, y + h // 2 + 3], fill=c)
     return np.asarray(img, dtype=np.uint8)
 

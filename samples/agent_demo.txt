@@ -1,0 +1,10 @@
+language brain step 1800
+gripnet: 0/6 clicks on target
+language brain: 1/6 clicks on target
+
+{"task": "adjust export", "target": [54, 86, 24, 8], "gripnet_px": [39.0, 72.0], "gripnet_hit": false, "lm_action": "drag(1410,1065)", "lm_hit": false}
+{"task": "click the settings icon", "target": [85, 22, 18, 18], "gripnet_px": [72.0, 71.0], "gripnet_hit": false, "lm_action": "click(1410,480)", "lm_hit": true}
+{"task": "turn on filter", "target": [90, 27, 12, 12], "gripnet_px": [23.0, 72.0], "gripnet_hit": false, "lm_action": "toggle(1515,1065)", "lm_hit": false}
+{"task": "drag the archive slider", "target": [84, 54, 24, 8], "gripnet_px": [24.0, 39.0], "gripnet_hit": false, "lm_action": "drag(1515,1125)", "lm_hit": false}
+{"task": "move the logout slider", "target": [49, 27, 24, 8], "gripnet_px": [24.0, 55.0], "gripnet_hit": false, "lm_action": "drag(1410,480)", "lm_hit": false}
+{"task": "turn on cart", "target": [29, 71, 12, 12], "gripnet_px": [88.0, 71.0], "gripnet_hit": false, "lm_action": "toggle(1410,1425)", "lm_hit": false}

@@ -92,13 +92,14 @@ def main() -> None:
         print(f"[lm] resumed from step {step}")
 
     rng = random.Random(args.seed + step)
+    t_start = time.time()
     t0 = time.time()
     log_path = os.path.join("reports", "lm_log.jsonl")
     running = 0.0
     n_run = 0
 
     while step < args.steps:
-        if time.time() - t0 > args.time_budget:
+        if time.time() - t_start > args.time_budget:
             print("[lm] time budget reached, stopping")
             break
         lr = cosine_lr(step, args.steps, args.lr, warmup=args.warmup)
