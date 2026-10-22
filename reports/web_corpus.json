@@ -3,12 +3,12 @@
     {
       "name": "web_train",
       "episodes": 19000,
-      "tokens": 16195892
+      "tokens": 22159636
     },
     {
       "name": "web_val",
       "episodes": 1000,
-      "tokens": 852534
+      "tokens": 1166668
     }
   ]
 }

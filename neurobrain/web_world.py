@@ -116,24 +116,28 @@ class WebWorld:
         self.failed_clicks: list[str] = []
 
     # ------------------------------------------------------------------ views
+    def _dock(self) -> list[Element]:
+        """The dock is on every screen, so switching apps is always a real click."""
+        return _grid(DESKTOP_ICONS, "icon", 120, 1700, 6, 220, 120, 30)
+
     def _desktop(self) -> Win:
-        return Win("desktop", 0, 0, CANVAS, CANVAS,
-                   _grid(DESKTOP_ICONS, "icon", 160, 260, 3, 260, 200, 40))
+        els = _grid(DESKTOP_ICONS, "icon", 160, 260, 3, 260, 200, 40) + self._dock()
+        return Win("desktop", 0, 0, CANVAS, CANVAS, els)
 
     def _chrome(self) -> Win:
         els = [_el("field", "address", 200, 90, 900, 90),
                _el("button", "search", 1130, 90, 220, 90),
                _el("button", "close", 1700, 90, 120, 90)]
         els += _grid(self.task.results, "button", 200, 320, 1, 1500, 130, 30)
-        els += _grid(self.task.distractors, "icon", 200, 900, 3, 420, 160, 40)
-        return Win("chrome", 40, 40, 1840, 1200, els)
+        els += _grid(self.task.distractors, "icon", 200, 1200, 3, 420, 160, 40)
+        return Win("chrome", 40, 40, 1840, 1600, els + self._dock())
 
     def _article(self) -> Win:
         els = [_el("button", "copy", 1450, 900, 260, 110),
                _el("button", "back", 200, 150, 200, 90),
                _el("button", "close", 1700, 90, 120, 90)]
         els += _grid([self.task.answer] + self.task.distractors, "field", 200, 300, 1, 1500, 110, 24)
-        return Win("article", 40, 40, 1840, 1200, els)
+        return Win("article", 40, 40, 1840, 1600, els + self._dock())
 
     def _docs(self) -> Win:
         els = [_el("button", "paste", 200, 820, 240, 110),
@@ -141,7 +145,7 @@ class WebWorld:
                _el("button", "close", 1700, 90, 120, 90)]
         # the editor shows the clipboard once pasted; before that it is blank
         els += [_el("field", "document", 200, 260, 1500, 480)]
-        return Win("docs", 120, 80, 1700, 1000, els)
+        return Win("docs", 120, 80, 1700, 1600, els + self._dock())
 
     def view(self) -> Win:
         if self.state == "desktop":
@@ -181,6 +185,14 @@ class WebWorld:
         if el is None:
             return {"ok": False, "detail": "clicked empty desktop"}
         label, state = el.label, self.state
+
+        # the dock is always live: chrome and docs are one click away from any app
+        if self.state != "desktop" and label in ("chrome", "docs"):
+            self.state = label
+            return {"ok": True, "detail": f"{label} brought to the front"}
+
+        if state == "docs" and label == "document":
+            return {"ok": True, "detail": f"clicked inside the document ({len(self.doc_text)} chars)"}
 
         if state == "desktop":
             if label == "chrome":
@@ -309,9 +321,6 @@ def web_episode(rng: random.Random) -> str:
     parts.append(_scan(world.view().elements))
     click("copy", "the answer is not on the clipboard",
           f"copied {task.answer} to the clipboard")
-    # the article is closed through the desktop: docs is a separate window
-    click("close", "left the article", "article closed")
-    world.state = "desktop"
     parts.append(_scan(world.view().elements))
     click("docs", "google docs is not open", "google docs opened")
     parts.append(_scan(world.view().elements))

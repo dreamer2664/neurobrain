@@ -70,7 +70,8 @@ class LMDriver:
     TAIL_CHARS = 600   # ~150 tokens of recent history; the head is never dropped
 
     def __init__(self, host, max_steps: int = 8, max_tokens: int = 40,
-                 temperature: float = 0.4, top_k: int = 30, seed: int | None = 7):
+                 temperature: float = 0.0, top_k: int = 1, seed: int | None = 7):
+        # greedy by default: the eval bars are about reliability, not variety
         self.host = host
         self.max_steps = max_steps
         self.max_tokens = max_tokens
@@ -134,6 +135,7 @@ class LMDriver:
             tail += f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}"
             tail += ("<|check|>objective satisfied" if satisfied
                      else f"<|check|>objective not satisfied: {detail}")
+            tail += scan_from_obs(after)
             transcript.append(comp.strip())
 
         solved = world.progress() >= 1.0
