@@ -13,3 +13,4 @@ checkpoints/*/weights*.pt
 *.egg-info/
 dist/
 *.pyz
+build/
