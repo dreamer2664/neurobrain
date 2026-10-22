@@ -32,7 +32,7 @@ PROFILES: dict[str, dict] = {
         "ui_protocol": {"n": 2_000, "val_frac": 0.03},
         "drive":       {"episodes": 3_000, "val_frac": 0.02},
         "ui_seed":     {"samples": 10_000, "shard_size": 5_000},
-        "hard_ui":     {"samples": 0, "shard_size": 5_000},
+        "hard_ui":     {"samples": 2_000, "shard_size": 5_000},
         "instructions": {"n": 0},
         "trajectories": {"n": 0},
         "code_v2":     {"functions": 0},

@@ -25,8 +25,29 @@ def _log(quiet: bool):
     return lambda msg: print(msg, flush=True)
 
 
+def _apply_overrides(cfg: dict, sets: list[str] | None) -> dict:
+    """--set dataset.key=value, e.g. --set hard_ui.samples=10000."""
+    cfg = {k: dict(v) for k, v in cfg.items()}
+    for item in sets or []:
+        if "=" not in item or "." not in item.split("=")[0]:
+            raise SystemExit(f"dataforge: --set wants dataset.key=value, got {item!r}")
+        key, val = item.split("=", 1)
+        ds, knob = key.split(".", 1)
+        if ds not in cfg:
+            raise SystemExit(f"dataforge: --set unknown dataset {ds!r}")
+        try:
+            num = int(val)
+        except ValueError:
+            try:
+                num = float(val)
+            except ValueError:
+                num = val
+        cfg[ds][knob] = num
+    return cfg
+
+
 def cmd_build(args) -> int:
-    cfg = P.resolve(args.profile)
+    cfg = _apply_overrides(P.resolve(args.profile), args.set)
     out = os.path.abspath(args.out)
     os.makedirs(out, exist_ok=True)
     log = _log(args.quiet)
@@ -178,6 +199,8 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--tokenizer", default=None)
     b.add_argument("--sample-docs", type=int, default=3000)
     b.add_argument("--json", default=None)
+    b.add_argument("--set", action="append", metavar="DS.KEY=VAL",
+                   help="override a profile knob, e.g. --set hard_ui.samples=10000")
     b.add_argument("--no-stats", action="store_true")
     b.add_argument("--quiet", action="store_true")
     b.set_defaults(func=cmd_build)

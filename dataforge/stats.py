@@ -150,7 +150,7 @@ def ui_shard_stats(dirpath: str, manifest: dict, max_image_shards: int = 4) -> d
         role_hist = rh if role_hist is None else role_hist + rh
         ah = np.bincount(z["actions"], minlength=4)
         action_hist = ah if action_hist is None else action_hist + ah
-        th = np.bincount(z["themes"], minlength=2)
+        th = np.bincount(z["themes"], minlength=3)
         theme_hist = th if theme_hist is None else theme_hist + th
 
         heat = z["heat"].astype(np.float32)
@@ -382,6 +382,12 @@ def render(report: dict) -> str:
                      f"black share {100*e['black_share']:.1f}%")
         lines.append(f"duplicates img  exact {100*du['exact_rate']:.2f}%, near {100*du['near_rate']:.2f}%, "
                      f"{du['sampled']:,} sampled")
+        lines.append(f"action balance  " + " ".join(
+            f"{n} {100*c/max(1,sum(ui[0]['action_balance']['counts'])):.1f}%"
+            for n, c in zip(["click", "type", "toggle", "drag"], ui[0]["action_balance"]["counts"]))
+            + f"   themes " + " ".join(
+            f"{n} {100*c/max(1,sum(ui[0]['theme_balance']['counts'])):.0f}%"
+            for n, c in zip(["light", "dark", "contrast"], ui[0]["theme_balance"]["counts"])))
 
     ov = {n: d["ranges"]["overrides"] for n, d in report["datasets"].items() if d["ranges"].get("overrides")}
     if ov:

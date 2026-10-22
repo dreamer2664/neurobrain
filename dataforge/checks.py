@@ -20,14 +20,18 @@ RANGES = {
     # label / action balance (share of the most common class)
     "label_entropy_ratio_min": 0.90,   # H / log2(n_labels)
     "label_min_share_of_uniform": 0.40,
-    "action_entropy_ratio_min": 0.80,
+    "action_entropy_ratio_min": 0.50,
+    "action_min_share_min": 0.06,      # every action class must be learnable
     "theme_min_share": 0.20,           # both light and dark present
     # coordinates
     "heat_entropy_ratio_min": 0.45,    # H of argmax-cell histogram / log2(1024)
     "heat_max_cell_share_max": 0.06,
     "heat_cells_used_min": 150,
     "offset_clipped_max": 0.05,
-    "offset_mean_abs_max": 0.45,
+    # target centres are uniform inside a cell, so mean |offset| is ~0.5 in a
+    # healthy world; near 1.0 means the regression target saturates, near 0
+    # means every target is parked on a cell centre. Two-sided on purpose.
+    "offset_mean_abs_band": (0.30, 0.60),
     # pixels
     "entropy_bits_min": 2.5,
     "entropy_bits_max": 8.0,
@@ -52,7 +56,7 @@ RANGES = {
 # dataset is running with a weaker gate.
 DATASET_OVERRIDES = {
     "ui_seed": {"heat_cells_used_min": 60, "heat_entropy_ratio_min": 0.45,
-                "offset_clipped_max": 0.60, "offset_mean_abs_max": 0.65,
+                "offset_clipped_max": 0.60, "offset_mean_abs_band": (0.30, 0.80),
                 "entropy_bits_min": 2.0},
     "ui_protocol": {"alpha_share_min": 0.15, "vocab_used_min": 150},
     "drive": {"vocab_used_min": 380},
@@ -127,8 +131,15 @@ def check_dataset(d: dict) -> list[str]:
         if d["action_balance"]["entropy_ratio"] < r["action_entropy_ratio_min"]:
             bad.append(f"action_entropy_ratio {d['action_balance']['entropy_ratio']:.3f} < "
                        f"{r['action_entropy_ratio_min']}")
-        if min(d["theme_balance"]["counts"]) / max(1, sum(d["theme_balance"]["counts"])) < r["theme_min_share"]:
-            bad.append("theme_balance: one theme below 20%")
+        if d["action_balance"]["min_share"] < r["action_min_share_min"]:
+            bad.append(f"action_min_share {d['action_balance']['min_share']:.3f} < "
+                       f"{r['action_min_share_min']} (a class is too rare to learn)")
+        # every theme that the world defines must be represented (the seed
+        # world has two, the hard world three), and none below 20%
+        tb = [c for c in d["theme_balance"]["counts"] if c > 0]
+        if len(tb) < 2 or min(tb) / max(1, sum(tb)) < r["theme_min_share"]:
+            bad.append(f"theme_balance {d['theme_balance']['counts']}: a theme below "
+                       f"{int(100*r['theme_min_share'])}% or missing")
         co = d["coordinate"]
         if co["entropy_ratio"] < r["heat_entropy_ratio_min"]:
             bad.append(f"heat_entropy_ratio {co['entropy_ratio']:.3f} < {r['heat_entropy_ratio_min']}")
@@ -138,8 +149,9 @@ def check_dataset(d: dict) -> list[str]:
             bad.append(f"heat_cells_used {co['cells_used']} < {r['heat_cells_used_min']}")
         if co["offset_clipped"] > r["offset_clipped_max"]:
             bad.append(f"offset_clipped {co['offset_clipped']:.4f} > {r['offset_clipped_max']}")
-        if abs(co["offset_mean_abs"]) > r["offset_mean_abs_max"]:
-            bad.append(f"offset_mean_abs {co['offset_mean_abs']:.3f} > {r['offset_mean_abs_max']}")
+        lo, hi = r["offset_mean_abs_band"]
+        if not (lo <= co["offset_mean_abs"] <= hi):
+            bad.append(f"offset_mean_abs {co['offset_mean_abs']:.3f} outside [{lo}, {hi}]")
         e = d["image_entropy"]
         if not (r["entropy_bits_min"] <= e["mean"] <= r["entropy_bits_max"]):
             bad.append(f"image_entropy {e['mean']:.2f} outside "
