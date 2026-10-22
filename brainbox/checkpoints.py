@@ -341,7 +341,8 @@ def find_grip_checkpoint(explicit: str | None = None) -> tuple[str, str] | None:
             continue
         for name in sorted(os.listdir(root)):
             p = os.path.join(root, name)
-            if os.path.isdir(p) and os.path.exists(os.path.join(p, "config.json")):
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "config.json")) \
+                    and os.path.exists(os.path.join(p, "weights.pt")):
                 try:
                     if read_config(p).get("kind") == "grip":
                         return p, "dir"
@@ -366,7 +367,10 @@ def find_checkpoint() -> tuple[str, str] | None:
             continue
         for name in sorted(os.listdir(root)):
             p = os.path.join(root, name)
-            if os.path.isdir(p) and os.path.exists(os.path.join(p, "config.json")):
+            # config+card merge to git without weights (coordinator policy):
+            # such a dir is a placeholder, not a loadable checkpoint.
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "config.json")) \
+                    and os.path.exists(os.path.join(p, "weights.pt")):
                 try:
                     cfg = read_config(p)
                 except Exception:

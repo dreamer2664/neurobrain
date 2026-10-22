@@ -428,7 +428,9 @@ class ShellWorld:
                 os.makedirs(self._safe(a["path"]), exist_ok=True)
                 return {"ok": True, "detail": f"mkdir {a['path']}"}
             if op == "move":
-                shutil.move(self._safe(a["src"]), self._safe(a["dst"]))
+                dst = self._safe(a["dst"])
+                os.makedirs(os.path.dirname(dst) or ".", exist_ok=True)
+                shutil.move(self._safe(a["src"]), dst)
                 return {"ok": True, "detail": f"moved {a['src']} -> {a['dst']}"}
         except Exception as e:
             return {"ok": False, "detail": f"{op} failed: {e}"}
