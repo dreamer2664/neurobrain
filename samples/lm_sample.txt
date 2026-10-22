@@ -1,0 +1,45 @@
+# checkpoint step 200
+# prompt:
+
+def _unsqueeze_multiple(x: TensorLikeType, dimensions: list[int]) -> TensorLikeType:
+    for dim in sorted(dimensions):
+        x = torch.unsqueeze(x, dim)
+    return x
+
+
+@register_decomposition(aten
+# ---- continuation ----
+
+def _unsqueeze_multiple(x: TensorLikeType, dimensions: list[int]) -> TensorLikeType:
+    for dim in sorted(dimensions):
+        x = torch.unsqueeze(x, dim)
+    return x
+
+
+@register_decomposition(aten)
+
+
+# This is used.
+    return  # LookicerSGAT
+    from sympy.print.m.setter
+    """
+    def set(self):
+        return self["s"]
+
+    def __init__(self, self, val):
+        """
+        self["g = self._requests.index_type(value)
+
+    @property_dir(self.pop("self.get_name):
+        self._print_name.append(self.get_name, expr_name):
+        mask = self.append(self._path)
+        self._name = self._regg.deverses_hs(self.basevalidators.group_name(self._lapi)
+
+    # select_type: tuple[str]
+        else:
+        self._append(self, self._rec_name)
+        return self.get_name(self.pop("FORSa.LTMARET_name)
+        self._add_size = arg.setter
+        self.append(self.is_objs)  # We be specified to an infgarate for atlying the transform instanded to
+        else:
+            # CISes that  # the result, 0.  # If the prialenoise

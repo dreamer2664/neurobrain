@@ -36,16 +36,32 @@ def main() -> None:
     ap.add_argument("--temperature", type=float, default=0.7)
     ap.add_argument("--top_k", type=int, default=40)
     ap.add_argument("--out", default="samples/lm_sample.txt")
+    ap.add_argument("--val-prompt", action="store_true",
+                    help="take the prompt from the held-out code split instead of --prompt")
+    ap.add_argument("--data", default="data")
+    ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
     if not os.path.exists(args.ckpt):
         print(f"[sample] no checkpoint at {args.ckpt} yet")
         return
     model, tok, step = load(args.ckpt)
-    text = complete(model, tok, args.prompt, args.tokens, args.temperature, args.top_k)
+    prompt = args.prompt
+    if args.val_prompt:
+        import random
+        import numpy as np
+        rng = random.Random(args.seed)
+        toks = np.memmap(os.path.join(args.data, "code_val.bin"), dtype=np.uint16, mode="r")
+        # start at a line break so the prompt looks like the beginning of a definition
+        for _ in range(200):
+            i = rng.randrange(0, len(toks) - model.cfg.ctx)
+            if tok.decode(toks[i:i + 1]) == "\n":
+                break
+        prompt = tok.decode(toks[i:i + 80])
+    text = complete(model, tok, prompt, args.tokens, args.temperature, args.top_k)
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w") as f:
-        f.write(f"# checkpoint step {step}\n# prompt:\n{args.prompt}\n# ---- continuation ----\n{text}\n")
+        f.write(f"# checkpoint step {step}\n# prompt:\n{prompt}\n# ---- continuation ----\n{text}\n")
     print(text)
 
 

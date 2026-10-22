@@ -1,0 +1,82 @@
+checkpoint step 200
+
+task:    pick refresh
+  ref:   click(945,885)
+  model: click(1410,495)
+
+task:    focus settings
+  ref:   type(1410,1095)
+  model: click(1440,495)
+
+task:    open the rename tab
+  ref:   click(960,1020)
+  model: click(1440,495)
+
+task:    select the home icon
+  ref:   click(870,510)
+  model: click(495,1440)
+
+task:    open play
+  ref:   click(1050,420)
+  model: click(1440,495)
+
+task:    open the share tab
+  ref:   click(1410,1470)
+  model: click(1410,495)
+
+task:    type into the share field
+  ref:   type(570,1155)
+  model: click(1470,495)
+
+task:    open login
+  ref:   click(1410,1455)
+  model: click(1440,495)
+
+task:    drag the cancel slider
+  ref:   drag(960,450)
+  model: click(930,495)
+
+task:    check download
+  ref:   toggle(840,480)
+  model: click(1440,495)
+
+task:    focus delete
+  ref:   type(1410,435)
+  model: click(1440,495)
+
+task:    drag the settings slider
+  ref:   drag(480,810)
+  model: click(1410,495)
+
+task:    select the save icon
+  ref:   click(1410,825)
+  model: click(1440,495)
+
+task:    click the pause icon
+  ref:   click(1350,810)
+  model: click(495,495)
+
+task:    click the archive menu item
+  ref:   click(1305,735)
+  model: click(495,495)
+
+task:    click the play icon
+  ref:   click(1485,510)
+  model: click(1410,495)
+
+task:    choose logout from the menu
+  ref:   click(495,1440)
+  model: click(1440,495)
+
+task:    open profile
+  ref:   click(525,1125)
+  model: click(1440,495)
+
+task:    open profile
+  ref:   click(300,690)
+  model: click(945,495)
+
+task:    focus rename
+  ref:   type(510,810)
+  model: click(1470,495)
+
