@@ -199,6 +199,55 @@ def migrate_legacy(pt_path: str, tokenizer_path: str, out_dir: str) -> Checkpoin
                                 step=info.step, stub=False, card=card)
 
 
+# --------------------------------------------------------------- grounder
+def grip_dims(model) -> dict:
+    """Recover GripNet's constructor dims from a built model."""
+    text = model.text
+    return {"char_vocab": text[0].num_embeddings,
+            "max_len": text[2].in_features // 32,
+            "d": text[5].normalized_shape[0],
+            "grid": model.grid}
+
+
+def write_grip_checkpoint_dir(out_dir: str, model, step: int, stub: bool = False,
+                              card: str | None = None) -> CheckpointInfo:
+    import torch
+
+    from neurobrain.ui_world import CHAR_VOCAB
+
+    os.makedirs(out_dir, exist_ok=True)
+    weights_path = os.path.join(out_dir, "weights.pt")
+    torch.save(model.state_dict(), weights_path)
+    config = {"kind": "grip", **grip_dims(model), "step": int(step),
+              "stub": bool(stub), "char_vocab_string": CHAR_VOCAB,
+              "params": sum(p.numel() for p in model.parameters()),
+              "weights_sha256": sha256_file(weights_path)}
+    with open(os.path.join(out_dir, "config.json"), "w") as f:
+        json.dump(config, f, indent=2)
+    with open(os.path.join(out_dir, "card.md"), "w") as f:
+        f.write(card or (f"# grip checkpoint\n\n- step: {step}\n"
+                         f"- params: {config['params']}\n"))
+    return CheckpointInfo(path=out_dir, kind="grip", step=int(step),
+                          stub=bool(stub), params=config["params"], config=config)
+
+
+def migrate_grip_legacy(pt_path: str, out_dir: str) -> CheckpointInfo:
+    import torch
+
+    from neurobrain.gripnet import GripNet
+
+    ck = torch.load(pt_path, map_location="cpu", weights_only=False)
+    model = GripNet()
+    model.load_state_dict(ck["model"])
+    model.eval()
+    ev = ck.get("eval") or {}
+    ev_lines = "".join(f"- eval {k}: {v}\n" for k, v in ev.items())
+    card = (f"# grip checkpoint - migrated from legacy .pt\n\n"
+            f"- source: {os.path.basename(pt_path)}\n- step: {ck.get('step')}\n{ev_lines}")
+    return write_grip_checkpoint_dir(out_dir, model, step=int(ck.get("step", -1)),
+                                     stub=False, card=card)
+
+
 def build_stub_model(tokenizer, seed: int = 0, config_override: dict | None = None):
     """Fresh seeded GPT with the real dims (or a test override). Not trained."""
     import torch
@@ -228,14 +277,62 @@ def make_stub(out_dir: str, tokenizer_path: str, seed: int = 0,
                                 step=0, stub=True, card=card)
 
 
+def _checkpoint_roots() -> list[str]:
+    return [os.path.join(os.getcwd(), "checkpoints"),
+            os.path.join(repo_root(), "checkpoints"),
+            os.path.expanduser("~/.brainbox/checkpoints")]
+
+
+def verify_checkpoint_dir(ckdir: str) -> bool:
+    """True iff every hash recorded in config.json matches the bytes on disk."""
+    try:
+        cfg = read_config(ckdir)
+        w = os.path.join(ckdir, "weights.pt")
+        if not os.path.exists(w):
+            return False
+        if cfg.get("weights_sha256") and sha256_file(w) != cfg["weights_sha256"]:
+            return False
+        if cfg.get("tokenizer_sha256"):
+            t = os.path.join(ckdir, "tokenizer.json")
+            if not os.path.exists(t) or sha256_file(t) != cfg["tokenizer_sha256"]:
+                return False
+        return True
+    except Exception:
+        return False
+
+
+def find_grip_checkpoint(explicit: str | None = None) -> tuple[str, str] | None:
+    """Search for a GripNet checkpoint. Returns (path, 'dir'|'legacy')."""
+    path = explicit or os.environ.get("BRAINBOX_GRIP_CHECKPOINT")
+    if path:
+        if os.path.isdir(path):
+            return path, "dir"
+        if os.path.exists(path):
+            return path, "legacy"
+        raise CheckpointError(f"grip checkpoint not found: {path}")
+    for root in _checkpoint_roots():
+        if not os.path.isdir(root):
+            continue
+        for name in sorted(os.listdir(root)):
+            p = os.path.join(root, name)
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "config.json")):
+                try:
+                    if read_config(p).get("kind") == "grip":
+                        return p, "dir"
+                except Exception:
+                    continue
+        pt = os.path.join(root, "grip_best.pt")
+        if os.path.exists(pt):
+            return pt, "legacy"
+    return None
+
+
 def find_checkpoint() -> tuple[str, str] | None:
     """Search for a loadable LM checkpoint. Returns (path, 'dir'|'legacy')."""
     env = os.environ.get("BRAINBOX_CHECKPOINT")
     if env and os.path.exists(env):
         return env, "dir" if os.path.isdir(env) else "legacy"
-    roots = [os.path.join(os.getcwd(), "checkpoints"),
-             os.path.join(repo_root(), "checkpoints"),
-             os.path.expanduser("~/.brainbox/checkpoints")]
+    roots = _checkpoint_roots()
     best: tuple[int, int, str] | None = None  # (not_stub, step, path)
     legacy = None
     for root in roots:
@@ -248,10 +345,12 @@ def find_checkpoint() -> tuple[str, str] | None:
                     cfg = read_config(p)
                 except Exception:
                     continue
+                if cfg.get("kind", "lm") != "lm":
+                    continue  # a grounder dir is not an LM, whatever its step
                 key = (0 if cfg.get("stub") else 1, int(cfg.get("step", 0)), p)
                 if best is None or key > best:
                     best = key
-            elif name.endswith(".pt") and legacy is None:
+            elif name.endswith(".pt") and "grip" not in name and legacy is None:
                 legacy = p
     if best is not None:
         return best[2], "dir"

@@ -1,7 +1,7 @@
 """brainbox CLI: doctor | bench | serve | run | tasks | logs | kill | undo.
 
-M0 implements doctor + bench for real; the other verbs exist, print the
-milestone that lands them, and exit 2. Nothing is faked.
+Implemented: doctor, bench, serve, run, tasks, logs, undo. Remaining verbs print the
+milestone that lands them and exit 2. Nothing is faked.
 """
 
 from __future__ import annotations
@@ -19,12 +19,7 @@ _T0 = time.time()  # process-start marker, before any torch import
 from . import __version__  # noqa: E402
 
 _NOT_YET = {
-    "serve": "M1 (local API per specs/model_io.md)",
-    "run": "M3 (drive loop per specs/drive.md)",
-    "tasks": "M3 (task store per specs/task_schema.md)",
-    "logs": "M3 (run records under ~/.brainbox/runs/)",
     "kill": "M6 (watch/autostart supervision)",
-    "undo": "M4 (trash/restore under ~/.brainbox/trash/)",
 }
 
 
@@ -71,19 +66,39 @@ def cmd_doctor(args) -> int:
     found = ckmod.find_checkpoint()
     if found and found[1] == "dir":
         checkpoint = {"found": True, "format": "dir",
+                      "verified": ckmod.verify_checkpoint_dir(found[0]),
                       **{k: v for k, v in ckmod.inspect_checkpoint_dir(found[0]).items()
                          if k != "config"}}
     elif found:
         checkpoint = {"found": True, "format": "legacy-pt", "path": found[0],
-                      "sha256": ckmod.sha256_file(found[0]), "stub": False}
+                      "sha256": ckmod.sha256_file(found[0]), "stub": False,
+                      "verified": None}
     else:
-        checkpoint = {"found": False, "stub": True,
+        checkpoint = {"found": False, "stub": True, "verified": None,
                       "note": "no checkpoint published; bench/serve fall back to a "
                               "seeded stub of the real architecture (see card.md)"}
 
+    try:
+        gfound = ckmod.find_grip_checkpoint()
+    except ckmod.CheckpointError as e:
+        gfound = None
+        grip_checkpoint = {"found": False, "verified": None, "note": str(e)}
+    if gfound and gfound[1] == "dir":
+        grip_checkpoint = {"found": True, "format": "dir",
+                           "verified": ckmod.verify_checkpoint_dir(gfound[0]),
+                           **{k: v for k, v in ckmod.inspect_checkpoint_dir(gfound[0]).items()
+                              if k != "config"}}
+    elif gfound:
+        grip_checkpoint = {"found": True, "format": "legacy-pt", "path": gfound[0],
+                           "sha256": ckmod.sha256_file(gfound[0]), "verified": None}
+    elif "grip_checkpoint" not in dir():
+        grip_checkpoint = {"found": False, "verified": None}
+
     disk = shutil.disk_usage(os.path.expanduser("~"))
+    intact = checkpoint.get("verified") is not False and \
+        grip_checkpoint.get("verified") is not False
     report = {
-        "ok": bool(torch_ok and tokenizer["found"]),
+        "ok": bool(torch_ok and tokenizer["found"] and intact),
         "versions": versions,
         "torch_import_s": torch_import_s,
         "cpu_count": os.cpu_count(),
@@ -93,6 +108,7 @@ def cmd_doctor(args) -> int:
         "peak_rss_mb": round(peak_rss_mb(), 1),
         "tokenizer": tokenizer,
         "checkpoint": checkpoint,
+        "grip_checkpoint": grip_checkpoint,
         "uptime_s": round(time.time() - _T0, 3),
     }
     if args.json:
@@ -105,9 +121,14 @@ def cmd_doctor(args) -> int:
         print(f"tokenizer  {'ok vocab=' + str(tokenizer.get('vocab_size')) + ' ' + str(tokenizer.get('path')) if tokenizer['found'] else 'MISSING'}")
         if checkpoint["found"]:
             print(f"checkpoint {checkpoint['path']} step={checkpoint.get('step')} "
-                  f"stub={checkpoint.get('stub')}")
+                  f"stub={checkpoint.get('stub')} verified={checkpoint.get('verified')}")
         else:
             print(f"checkpoint NONE FOUND — stub fallback active")
+        if grip_checkpoint["found"]:
+            print(f"grip       {grip_checkpoint['path']} step={grip_checkpoint.get('step')} "
+                  f"verified={grip_checkpoint.get('verified')}")
+        else:
+            print("grip       NONE FOUND (/ground will 503)")
         print(f"rss        {report['rss_mb']} MB (peak {report['peak_rss_mb']} MB)")
         print("doctor:", "OK" if report["ok"] else "FAIL")
     return 0 if report["ok"] else 1
@@ -158,6 +179,186 @@ def cmd_bench(args) -> int:
     return 0
 
 
+def cmd_serve(args) -> int:
+    from .governor import Governor, rss_mb
+    from .host import BrainHost
+    from .server import make_server
+
+    governor = Governor(cap_mb=args.ram_cap_mb) if args.ram_cap_mb else None
+    host = BrainHost(checkpoint=args.checkpoint,
+                     grip_checkpoint=args.grip_checkpoint,
+                     threads=args.threads, governor=governor)
+    info = host.boot()
+    grip_desc = "grip=unavailable (/ground -> 503)"
+    try:
+        g = host.boot_grip()
+        grip_desc = f"grip step={g['step']} stub={g['stub']}"
+    except Exception as e:
+        print(f"brainbox serve: grounder not loaded ({e})", file=sys.stderr)
+    server = make_server(host, port=args.port)
+    print(f"brainbox {__version__} serve http://127.0.0.1:{args.port} "
+          f"lm step={info['step']} stub={info['stub']} params={info['params']:,} "
+          f"{grip_desc} boot={info['boot_s']}s rss={rss_mb():.0f}MB", flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\nbrainbox serve: stopped")
+    finally:
+        server.server_close()
+    return 0
+
+
+def cmd_undo(args) -> int:
+    from .trash import TrashError, list_trash, restore
+
+    if args.list:
+        listing = list_trash()
+        if args.json:
+            print(json.dumps(listing, indent=2))
+        elif listing:
+            for t in listing:
+                print(f"{t['task_id']}  entries={t['entries']}  bytes={t['bytes']}")
+        else:
+            print("trash is empty")
+        return 0
+    if not args.task_id:
+        print("usage: brainbox undo <task-id> | brainbox undo --list", file=sys.stderr)
+        return 2
+    try:
+        rep = restore(args.task_id, overwrite=args.force)
+    except TrashError as e:
+        print(f"brainbox undo: {e}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(rep, indent=2))
+    else:
+        for p in rep["restored"]:
+            print(f"restored {p}")
+        for f in rep["failures"]:
+            print(f"FAILED {f['path']}: {f['error']}", file=sys.stderr)
+        print(f"undo {args.task_id}: {len(rep['restored'])} restored, "
+              f"{len(rep['failures'])} failed")
+    return 0 if not rep["failures"] else 1
+
+
+def cmd_run(args) -> int:
+    import random as _random
+
+    from .drive import (DriveLoop, LMPlanner, OracleGrounder, RealGrounder,
+                        ScriptedPlanner, ShellWorld, SimulatedDesktop, TaskStore)
+
+    store = TaskStore()
+    budget = {}
+    if args.max_steps:
+        budget["max_steps"] = args.max_steps
+    if args.max_seconds:
+        budget["max_seconds"] = args.max_seconds
+
+    grounder = None
+    if args.script:
+        with open(args.script) as f:
+            spec = json.load(f)
+        planner = ScriptedPlanner(spec.get("steps", []),
+                                  replan_script=spec.get("replan_steps"),
+                                  shell_steps=spec.get("shell_steps"),
+                                  decompose_steps=spec.get("decompose_steps"))
+        task = store.create(args.instruction, budget=budget or None,
+                            checks=spec.get("checks"),
+                            workspace=spec.get("workspace"))
+        if spec.get("world", "shell") == "shell":
+            world = ShellWorld(spec["workspace"], spec.get("checks", []))
+        else:
+            from neurobrain import ui_world
+
+            ex = ui_world.sample_example(_random.Random(spec.get("seed", 0)))
+            world = SimulatedDesktop(ex, **spec.get("world_options", {}))
+            grounder = OracleGrounder(world)  # scripted == loop mechanics
+            task["world"] = "simulated (scripted, oracle grounder)"
+    else:
+        from neurobrain import ui_world
+
+        from .host import BrainHost
+
+        host = BrainHost(checkpoint=args.checkpoint, threads=args.threads)
+        host.boot()
+        planner = LMPlanner(host)
+        task = store.create(args.instruction, budget=budget or None)
+        ex = ui_world.sample_example(_random.Random(0))
+        world = SimulatedDesktop(ex)
+        task["world"] = "simulated desktop (no real display attached)"
+        try:
+            from .grip import Grounder
+
+            grounder = RealGrounder(Grounder.find(args.grip_checkpoint))
+        except Exception as e:
+            print(f"brainbox run: no grip checkpoint ({e}); oracle grounder",
+                  file=sys.stderr)
+            grounder = OracleGrounder(world)
+
+    out = DriveLoop(store).run_until_settled(task, world, planner, grounder)
+    rec = {"id": out["id"], "status": out["status"], "result": out["result"],
+           "metrics": out["metrics"], "world": out.get("world"),
+           "history_len": len(out["history"])}
+    if args.json:
+        print(json.dumps(rec, indent=2))
+    else:
+        m = rec["metrics"]
+        print(f"{rec['id']}: {rec['status']}  progress="
+              f"{(rec['result'] or {}).get('progress')}  attempts={m['steps_used']}  "
+              f"max_rung={m['max_rung']}  recovered={m['recovered']}")
+        if rec["world"]:
+            print(f"world: {rec['world']}")
+    return 0 if out["status"] == "done" else 1
+
+
+def cmd_tasks(args) -> int:
+    from .drive import TaskStore
+
+    tasks = TaskStore().list()
+    rows = [{"id": t["id"], "status": t["status"],
+             "instruction": t["instruction"],
+             "attempts": t["metrics"]["steps_used"],
+             "max_rung": t["metrics"]["max_rung"]} for t in tasks]
+    if args.json:
+        print(json.dumps(rows, indent=2))
+    else:
+        for r in rows:
+            print(f"{r['id']}  {r['status']:<12}  attempts={r['attempts']}  "
+                  f"rung<={r['max_rung']}  {r['instruction'][:60]}")
+        if not rows:
+            print("no tasks yet")
+    return 0
+
+
+def cmd_logs(args) -> int:
+    from .drive import TaskStore
+
+    store = TaskStore()
+    if not args.task_id:
+        names = sorted(f[:-5] for f in os.listdir(store.runs_dir)
+                       if f.endswith(".json"))
+        print(json.dumps(names, indent=2) if args.json else "\n".join(names))
+        return 0
+    run_path = os.path.join(store.runs_dir, f"{args.task_id}.json")
+    try:
+        if os.path.exists(run_path):
+            with open(run_path) as f:
+                rec = json.load(f)
+        else:
+            rec = store.load(args.task_id)
+    except Exception as e:
+        print(f"brainbox logs: {e}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(rec, indent=2))
+    else:
+        print(f"{rec['id']}: {rec['status']} — {rec['instruction']}")
+        for h in rec["history"]:
+            print(f"  step {h['step']} rung {h['rung']} {h['verdict']}: "
+                  f"{h['intent'][:50]} ({h['note'][:60]})")
+    return 0
+
+
 def _not_yet(verb: str):
     def handler(_args) -> int:
         print(f"brainbox {verb}: not implemented yet — lands in {_NOT_YET[verb]}")
@@ -188,6 +389,48 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--json", action="store_true")
     b.add_argument("--out", default=None, help="also write the JSON report here")
     b.set_defaults(fn=cmd_bench)
+
+    s = sub.add_parser("serve", help="local API on 127.0.0.1 (specs/model_io.md)")
+    s.add_argument("--port", type=int,
+                   default=int(os.environ.get("BRAINBOX_PORT", "8321")),
+                   help="port on 127.0.0.1 (default 8321, env BRAINBOX_PORT)")
+    s.add_argument("--checkpoint", default=None,
+                   help="LM checkpoint dir or legacy .pt (default: search)")
+    s.add_argument("--grip-checkpoint", default=None,
+                   help="GripNet checkpoint dir or legacy .pt (default: search)")
+    s.add_argument("--threads", type=int, default=2)
+    s.add_argument("--ram-cap-mb", type=float, default=None,
+                   help="governor hard cap (default 3800, env BRAINBOX_RAM_CAP_MB)")
+    s.set_defaults(fn=cmd_serve)
+
+    u = sub.add_parser("undo", help="restore files trashed by a task (M4)")
+    u.add_argument("task_id", nargs="?")
+    u.add_argument("--list", action="store_true", help="list tasks holding trash")
+    u.add_argument("--force", action="store_true",
+                   help="overwrite paths that exist again")
+    u.add_argument("--json", action="store_true")
+    u.set_defaults(fn=cmd_undo)
+
+    r = sub.add_parser("run", help="run a task through the drive loop (M3)")
+    r.add_argument("instruction")
+    r.add_argument("--script", default=None,
+                   help="JSON scripted task {world, workspace, checks, steps...}")
+    r.add_argument("--checkpoint", default=None)
+    r.add_argument("--grip-checkpoint", default=None)
+    r.add_argument("--threads", type=int, default=2)
+    r.add_argument("--max-steps", type=int, default=None)
+    r.add_argument("--max-seconds", type=int, default=None)
+    r.add_argument("--json", action="store_true")
+    r.set_defaults(fn=cmd_run)
+
+    t = sub.add_parser("tasks", help="list tasks and their status (M3)")
+    t.add_argument("--json", action="store_true")
+    t.set_defaults(fn=cmd_tasks)
+
+    lg = sub.add_parser("logs", help="show a task's run record / history (M3)")
+    lg.add_argument("task_id", nargs="?")
+    lg.add_argument("--json", action="store_true")
+    lg.set_defaults(fn=cmd_logs)
 
     for verb, milestone in _NOT_YET.items():
         s = sub.add_parser(verb, help=f"({milestone})")
