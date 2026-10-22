@@ -1,40 +1,40 @@
 {
-  "step": 4600,
-  "terminal_rate": 0.0,
-  "retry_after_failure": 0.0,
-  "honest_completion": 0.0,
-  "mean_steps": 0.0,
+  "step": 5000,
+  "terminal_rate": 1.0,
+  "retry_after_failure": 1.0,
+  "honest_completion": 1.0,
+  "mean_steps": 2.9,
   "n": 24,
   "examples": [
     {
       "objective": "<|drive|>objective: drag the cart slider",
-      "terminal": false,
-      "text": " level, used for\n            the middles.\n        \"\"\"\n        # We can only be removed for this context.\n        self.check_build_context(self.context)\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n   "
+      "terminal": true,
+      "text": "<|step|>1<|act|>drag(1470,840)<|obs|>slider delete moved to 0%<|check|>objective not satisfied: wrong element<|retry|>that was delete, not cart. target the slider labelled cart<|step|>2<|act|>drag(525,1425)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, cart<|step|>3<|act|>drag(1425,1425)<|obs|>slider cart moved to 37%<|che"
     },
     {
       "objective": "<|drive|>objective: check cart",
-      "terminal": false,
-      "text": "esrc for this object.\n\n    This method can be used for the :class:`~sklearn.Metadata` objects.\n    This method is not choice for the :class:`~sklearn.Metadata` objects.\n    \"\"\"\n    def __init__(self, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, "
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(1515,1425)<|obs|>checkbox save is now on<|check|>objective not satisfied: wrong element<|retry|>that was save, not cart. target the checkbox labelled cart<|step|>2<|act|>toggle(450,480)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, cart<|step|>3<|act|>toggle(1380,1140)<|obs|>checkbox cart is now on"
     },
     {
       "objective": "<|drive|>objective: drag the settings slider",
-      "terminal": false,
-      "text": "<|action|>drag(450,855)"
+      "terminal": true,
+      "text": "<|step|>1<|act|>click(1440,1155)<|obs|>menu closed after inbox<|check|>objective not satisfied: wrong element<|retry|>that was inbox, not settings. target the slider labelled settings<|step|>2<|act|>drag(450,1455)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, settings<|step|>3<|act|>drag(450,510)<|obs|>slider settings move"
     },
     {
       "objective": "<|drive|>objective: type into the upload field",
-      "terminal": false,
-      "text": " of the fields.\n    \"\"\"\n    \"\"\"\n    return _check_from_drive(drive)\n\n\n@dataclass\nclass DjangoMetadata:\n    \"\"\"\n    Additional AdjangoMetadata objects.\n    \"\"\"\n    def __init__(drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, "
+      "terminal": true,
+      "text": "<|step|>1<|act|>type(1380,1140)<|obs|>caret blinking in help field<|check|>objective not satisfied: wrong element<|retry|>that was help, not upload. target the field labelled upload<|step|>2<|act|>type(1380,1440)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the field, upload<|step|>3<|act|>type(435,1155)<|obs|>caret blinking in uploa"
     },
     {
       "objective": "<|drive|>objective: turn on archive",
-      "terminal": false,
-      "text": "<|action|>type(1005,1425)"
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(1455,1095)<|obs|>checkbox export is now off<|check|>objective not satisfied: wrong element<|retry|>that was export, not archive. target the checkbox labelled archive<|step|>2<|act|>toggle(450,1155)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, archive<|step|>3<|act|>toggle(450,1140)<|obs|>checkbox "
     },
     {
       "objective": "<|drive|>objective: open the print tab",
-      "terminal": false,
-      "text": "<|action|>type(object)s.\n\n        The 'object' property is an enumeration that may be specified as:\n          - One of the following enumeration values:\n                ['normal', 'small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-sma"
+      "terminal": true,
+      "text": "<|step|>1<|act|>click(1410,1170)<|obs|>tab cart is active<|check|>objective not satisfied: wrong element<|retry|>that was cart, not print. target the tab labelled print<|step|>2<|act|>click(1410,1110)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the tab labelled print<|step|>3<|act|>click(435,1140)<|obs|>icon print selected<|check|>o"
     }
   ]
 }

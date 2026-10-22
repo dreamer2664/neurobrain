@@ -35,7 +35,7 @@ from __future__ import annotations
 
 import random
 
-from .ui_world import SCALE, make_layout, TASKS, ACTION_OF_ROLE
+from .ui_world import SCALE, LABELS, ROLES, make_layout, TASKS, ACTION_OF_ROLE
 
 # --------------------------------------------------------------------- helpers
 
@@ -73,6 +73,8 @@ OBS_BY_ROLE = {
 
 def ui_episode(rng: random.Random) -> str:
     layout = make_layout(rng)
+    if rng.random() < 0.18:
+        return _exhausted_episode(rng, layout)
     target = rng.choice(layout.elements)
     task = rng.choice(TASKS[target.role]).format(label=target.label)
     action = ACTION_OF_ROLE[target.role]
@@ -105,6 +107,43 @@ def ui_episode(rng: random.Random) -> str:
     parts.append(f"<|obs|>{OBS_BY_ROLE[target.role].format(label=target.label, state='on', pct=rng.randint(20, 90))}")
     parts.append("<|check|>objective satisfied")
     parts.append("<|done|>success")
+    return "".join(parts)
+
+
+def _exhausted_episode(rng: random.Random, layout) -> str:
+    """A task the model cannot finish: the loop spends its budget and says so.
+
+    Without these, the corpus teaches "every objective ends in success", which
+    is the most dangerous thing an unattended machine can believe.
+    """
+    target = rng.choice(layout.elements)
+    task = rng.choice(TASKS[target.role]).format(label=target.label)
+    parts = [f"<|drive|>objective: {task}"]
+    for step in range(1, rng.randint(3, 5)):
+        other = rng.choice(layout.elements)
+        x, y = _coords(other, rng)
+        parts.append(f"<|step|>{step}<|act|>{ACTION_OF_ROLE[other.role]}({x},{y})")
+        parts.append("<|obs|>no visible change")
+        parts.append(f"<|check|>objective not satisfied: {other.label} is not {target.label}")
+        parts.append(f"<|retry|>target the {target.role} labelled {target.label}, not {other.label}")
+    parts.append("<|budget|>steps exhausted")
+    parts.append("<|done|>failed: retries exhausted, objective not reached")
+    return "".join(parts)
+
+
+def impossible_episode(rng: random.Random) -> str:
+    """Objective names something that is not on this screen. Honest answer:
+    say impossible, do not click around and do not claim success."""
+    layout = make_layout(rng)
+    present = {e.label for e in layout.elements}
+    missing = [l for l in LABELS if l not in present]
+    label = rng.choice(missing)
+    role = rng.choice(ROLES)
+    task = rng.choice(TASKS[role]).format(label=label)
+    parts = [f"<|drive|>objective: {task}",
+             "<|scan|>elements on screen: " + ", ".join(sorted(present)),
+             f"<|check|>{label} is not present on this screen",
+             "<|done|>impossible: no {0} labelled {1} exists here".format(role, label)]
     return "".join(parts)
 
 
@@ -152,6 +191,20 @@ def _mutate(body: str, rng: random.Random) -> str:
 
 def code_episode(rng: random.Random) -> str:
     good, bad, assertion = rng.choice(BUGS)
+    if rng.random() < 0.15:
+        name = assertion.split("(")[0].replace("assert ", "")
+        sig = SIGS[name]
+        parts = [f"<|task|>make the tests pass for {name}()"]
+        for attempt in (1, 2):
+            parts.append(f"<|try|>{attempt}")
+            parts.append(f"<|code|>{sig}\n{bad}")
+            parts.append("<|run|>pytest -q")
+            parts.append(f"<|err|>{assertion}  ->  AssertionError")
+            parts.append("<|think|>the fix needs information the prompt does not have")
+            parts.append(f"<|retry|>attempt {attempt} failed, patch the logic and rerun")
+        parts.append("<|budget|>attempts exhausted")
+        parts.append("<|done|>failed: tests still red, 2 attempts")
+        return "".join(parts)
     name = SIGS and assertion.split("(")[0].replace("assert ", "")
     sig = SIGS[name]
     parts = [f"<|task|>make the tests pass for {name}()"]
@@ -222,8 +275,12 @@ def plan_episode(rng: random.Random) -> str:
             parts.append("<|obs|>step completed")
         else:
             parts.append("<|obs|>step completed")
-    parts.append("<|check|>objective satisfied")
-    parts.append("<|done|>success")
+    if rng.random() < 0.15:
+        parts.append("<|check|>objective not satisfied: blocked by the environment")
+        parts.append("<|done|>blocked: the obstacle needs credentials this machine does not hold")
+    else:
+        parts.append("<|check|>objective satisfied")
+        parts.append("<|done|>success")
     return "".join(parts)
 
 
@@ -232,22 +289,36 @@ def drive_corpus(n: int, seed: int = 0):
     rng = random.Random(seed)
     for i in range(n):
         r = rng.random()
-        if r < 0.45:
+        if r < 0.42:
             yield ui_episode(rng)
-        elif r < 0.85:
+        elif r < 0.78:
             yield code_episode(rng)
-        else:
+        elif r < 0.94:
             yield plan_episode(rng)
+        else:
+            yield impossible_episode(rng)
 
 
 def drive_stats(n: int = 2000, seed: int = 0) -> dict:
-    """Sanity numbers the forge prints: retries per episode, terminal rate."""
+    """Retries per episode, terminal rate, and how the terminals split.
+
+    The split matters more than the rate: a corpus that only ever says
+    "success" teaches an unattended machine to overclaim.
+    """
     eps = list(drive_corpus(n, seed))
     retries = sum(e.count("<|retry|>") for e in eps)
     done = sum(e.count("<|done|>") for e in eps)
+    success = sum("<|done|>success" in e for e in eps)
+    failed = sum("<|done|>failed" in e for e in eps)
+    blocked = sum("<|done|>blocked" in e for e in eps)
+    impossible = sum("<|done|>impossible" in e for e in eps)
     return {
         "episodes": len(eps),
         "mean_retries": round(retries / len(eps), 2),
         "terminal_rate": round(done / len(eps), 3),
+        "success": round(success / len(eps), 3),
+        "failed": round(failed / len(eps), 3),
+        "blocked": round(blocked / len(eps), 3),
+        "impossible": round(impossible / len(eps), 3),
         "mean_chars": round(sum(len(e) for e in eps) / len(eps), 1),
     }
