@@ -5,18 +5,36 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-# survival: sandbox rollbacks wipe installed packages
+# survival: rollbacks wipe installed packages and the large token streams
 python3 -c "import torch, numpy, PIL" 2>/dev/null || {
   echo "[setup] reinstalling stack"
   python3 -m pip install --quiet --no-input torch --index-url https://download.pytorch.org/whl/cpu
   python3 -m pip install --quiet --no-input numpy pillow matplotlib
 }
+if [ ! -s data/code_train.bin ] || [ ! -s data/drive_train.bin ] || [ ! -s data/tokenizer.json ]; then
+  echo "[setup] corpus missing, restoring"
+  bash scripts/restore_data.sh
+fi
 
 LM_SEG=${LM_SEG:-1200}       # seconds of language training per cycle
 GRIP_SEG=${GRIP_SEG:-300}    # seconds of vision training per cycle
 LM_TOTAL=${LM_TOTAL:-16000}  # total LM steps (resumable)
 GRIP_TOTAL=${GRIP_TOTAL:-24000}
 FIRST=${FIRST:-lm}
+export MALLOC_ARENA_MAX=2
+export PYTHONUNBUFFERED=1
+
+# survival: rollbacks wipe installed packages and large token streams
+python3 -c "import torch, numpy, PIL" 2>/dev/null || {
+  echo "[setup] reinstalling stack"
+  python3 -m pip install --quiet --no-input torch --index-url https://download.pytorch.org/whl/cpu
+  python3 -m pip install --quiet --no-input numpy pillow matplotlib
+}
+if [ ! -s data/code_train.bin ] || [ ! -s data/drive_train.bin ] || [ ! -s data/tokenizer.json ]; then
+  echo "[setup] corpus missing, restoring"
+  bash scripts/restore_data.sh
+fi
+
 export MALLOC_ARENA_MAX=2
 export PYTHONUNBUFFERED=1
 
