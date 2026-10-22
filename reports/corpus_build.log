@@ -1,0 +1,101 @@
+[corpus] scanning 11 roots
+[corpus] collected 17082 python files, 160.0 MB
+[corpus] ui transcripts: 146227 train / 4508 val (46.3 MB) in 4.0s
+[corpus] learning BPE: 12.3MB code + 1.8MB ui
+[bpe] 14.1M chars, 62,758 unique pre-tokens, 3840 merges to learn
+[bpe] merge 512/3840  best_count=2547  vocab=768
+[bpe] merge 1024/3840  best_count=1045  vocab=1280
+[bpe] merge 1536/3840  best_count=591  vocab=1792
+[bpe] merge 2048/3840  best_count=388  vocab=2304
+[bpe] merge 2560/3840  best_count=275  vocab=2816
+[bpe] merge 3072/3840  best_count=210  vocab=3328
+[bpe] merge 3584/3840  best_count=166  vocab=3840
+[corpus] tokenizer saved: vocab 4100
+[corpus] code-train: 2000/16570 docs, 5.69M tokens, 1895k tok/s
+[corpus] code-train: 4000/16570 docs, 11.09M tokens, 1976k tok/s
+[corpus] code-train: 6000/16570 docs, 16.81M tokens, 2040k tok/s
+[corpus] code-train: 8000/16570 docs, 21.71M tokens, 2064k tok/s
+[corpus] code-train: 10000/16570 docs, 27.79M tokens, 2083k tok/s
+[corpus] code-train: 12000/16570 docs, 33.64M tokens, 2102k tok/s
+[corpus] code-train: 14000/16570 docs, 39.60M tokens, 2123k tok/s
+[corpus] code-train: 16000/16570 docs, 45.24M tokens, 2125k tok/s
+[corpus] ui-train: 2000/146227 docs, 0.40M tokens, 2030k tok/s
+[corpus] ui-train: 4000/146227 docs, 0.63M tokens, 2078k tok/s
+[corpus] ui-train: 6000/146227 docs, 0.86M tokens, 2062k tok/s
+[corpus] ui-train: 8000/146227 docs, 1.08M tokens, 2069k tok/s
+[corpus] ui-train: 10000/146227 docs, 1.31M tokens, 2087k tok/s
+[corpus] ui-train: 12000/146227 docs, 1.54M tokens, 2080k tok/s
+[corpus] ui-train: 14000/146227 docs, 1.76M tokens, 2086k tok/s
+[corpus] ui-train: 16000/146227 docs, 1.99M tokens, 2027k tok/s
+[corpus] ui-train: 18000/146227 docs, 2.22M tokens, 2038k tok/s
+[corpus] ui-train: 20000/146227 docs, 2.44M tokens, 2040k tok/s
+[corpus] ui-train: 22000/146227 docs, 2.67M tokens, 2046k tok/s
+[corpus] ui-train: 24000/146227 docs, 2.89M tokens, 2054k tok/s
+[corpus] ui-train: 26000/146227 docs, 3.12M tokens, 2052k tok/s
+[corpus] ui-train: 28000/146227 docs, 3.35M tokens, 2057k tok/s
+[corpus] ui-train: 30000/146227 docs, 3.57M tokens, 2061k tok/s
+[corpus] ui-train: 32000/146227 docs, 3.80M tokens, 2056k tok/s
+[corpus] ui-train: 34000/146227 docs, 4.03M tokens, 2057k tok/s
+[corpus] ui-train: 36000/146227 docs, 4.25M tokens, 2064k tok/s
+[corpus] ui-train: 38000/146227 docs, 4.48M tokens, 2068k tok/s
+[corpus] ui-train: 40000/146227 docs, 4.70M tokens, 2068k tok/s
+[corpus] ui-train: 42000/146227 docs, 4.93M tokens, 2070k tok/s
+[corpus] ui-train: 44000/146227 docs, 5.16M tokens, 2073k tok/s
+[corpus] ui-train: 46000/146227 docs, 5.38M tokens, 2078k tok/s
+[corpus] ui-train: 48000/146227 docs, 5.61M tokens, 2081k tok/s
+[corpus] ui-train: 50000/146227 docs, 5.84M tokens, 2080k tok/s
+[corpus] ui-train: 52000/146227 docs, 6.06M tokens, 2083k tok/s
+[corpus] ui-train: 54000/146227 docs, 6.29M tokens, 2082k tok/s
+[corpus] ui-train: 56000/146227 docs, 6.52M tokens, 2076k tok/s
+[corpus] ui-train: 58000/146227 docs, 6.74M tokens, 2076k tok/s
+[corpus] ui-train: 60000/146227 docs, 6.97M tokens, 2080k tok/s
+[corpus] ui-train: 62000/146227 docs, 7.19M tokens, 2083k tok/s
+[corpus] ui-train: 64000/146227 docs, 7.42M tokens, 2086k tok/s
+[corpus] ui-train: 66000/146227 docs, 7.65M tokens, 2089k tok/s
+[corpus] ui-train: 68000/146227 docs, 7.87M tokens, 2089k tok/s
+[corpus] ui-train: 70000/146227 docs, 8.10M tokens, 2087k tok/s
+[corpus] ui-train: 72000/146227 docs, 8.32M tokens, 2073k tok/s
+[corpus] ui-train: 74000/146227 docs, 8.55M tokens, 2075k tok/s
+[corpus] ui-train: 76000/146227 docs, 8.77M tokens, 2075k tok/s
+[corpus] ui-train: 78000/146227 docs, 9.00M tokens, 2077k tok/s
+[corpus] ui-train: 80000/146227 docs, 9.23M tokens, 2073k tok/s
+[corpus] ui-train: 82000/146227 docs, 9.45M tokens, 2064k tok/s
+[corpus] ui-train: 84000/146227 docs, 9.68M tokens, 2052k tok/s
+[corpus] ui-train: 86000/146227 docs, 9.90M tokens, 2040k tok/s
+[corpus] ui-train: 88000/146227 docs, 10.13M tokens, 2020k tok/s
+[corpus] ui-train: 90000/146227 docs, 10.36M tokens, 2013k tok/s
+[corpus] ui-train: 92000/146227 docs, 10.58M tokens, 2015k tok/s
+[corpus] ui-train: 94000/146227 docs, 10.81M tokens, 2017k tok/s
+[corpus] ui-train: 96000/146227 docs, 11.04M tokens, 2017k tok/s
+[corpus] ui-train: 98000/146227 docs, 11.26M tokens, 2013k tok/s
+[corpus] ui-train: 100000/146227 docs, 11.49M tokens, 2013k tok/s
+[corpus] ui-train: 102000/146227 docs, 11.71M tokens, 2014k tok/s
+[corpus] ui-train: 104000/146227 docs, 11.94M tokens, 1995k tok/s
+[corpus] ui-train: 106000/146227 docs, 12.17M tokens, 1988k tok/s
+[corpus] ui-train: 108000/146227 docs, 12.39M tokens, 1989k tok/s
+[corpus] ui-train: 110000/146227 docs, 12.62M tokens, 1992k tok/s
+[corpus] ui-train: 112000/146227 docs, 12.85M tokens, 1993k tok/s
+[corpus] ui-train: 114000/146227 docs, 13.07M tokens, 1985k tok/s
+[corpus] ui-train: 116000/146227 docs, 13.30M tokens, 1985k tok/s
+[corpus] ui-train: 118000/146227 docs, 13.52M tokens, 1987k tok/s
+[corpus] ui-train: 120000/146227 docs, 13.75M tokens, 1988k tok/s
+[corpus] ui-train: 122000/146227 docs, 13.98M tokens, 1983k tok/s
+[corpus] ui-train: 124000/146227 docs, 14.21M tokens, 1974k tok/s
+[corpus] ui-train: 126000/146227 docs, 14.43M tokens, 1975k tok/s
+[corpus] ui-train: 128000/146227 docs, 14.66M tokens, 1978k tok/s
+[corpus] ui-train: 130000/146227 docs, 14.89M tokens, 1980k tok/s
+[corpus] ui-train: 132000/146227 docs, 15.11M tokens, 1980k tok/s
+[corpus] ui-train: 134000/146227 docs, 15.34M tokens, 1973k tok/s
+[corpus] ui-train: 136000/146227 docs, 15.56M tokens, 1970k tok/s
+[corpus] ui-train: 138000/146227 docs, 15.79M tokens, 1972k tok/s
+[corpus] ui-train: 140000/146227 docs, 16.02M tokens, 1973k tok/s
+[corpus] ui-train: 142000/146227 docs, 16.25M tokens, 1976k tok/s
+[corpus] ui-train: 144000/146227 docs, 16.47M tokens, 1977k tok/s
+[corpus] ui-train: 146000/146227 docs, 16.70M tokens, 1977k tok/s
+[corpus] ui-val: 2000/4508 docs, 0.23M tokens, 2137k tok/s
+[corpus] ui-val: 4000/4508 docs, 0.45M tokens, 2100k tok/s
+[corpus] wrote code_train.bin: 47.07M tokens
+[corpus] wrote code_val.bin: 1.61M tokens
+[corpus] wrote ui_train.bin: 16.72M tokens
+[corpus] wrote ui_val.bin: 0.51M tokens
+[corpus] report: {"code_files": 17082, "code_bytes": 160039404, "tokens": {"code_train": 47070897, "code_val": 1612646, "ui_train": 16722021, "ui_val": 510676}, "vocab_size": 4100, "code_bytes_per_token": 3.292, "ui_examples": 150735, "sdist_roots": ["click-8.5.0", "django-6.1.2", "fastapi-0.159.1", "flask-3.1.3", "jinja2-3.1.6", "pytest-9.1.1", "requests-2.34.2", "sqlalchemy-2.1.6", "werkzeug-3.1.9"]}

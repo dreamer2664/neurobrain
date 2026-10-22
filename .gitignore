@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+data/*.bin
+data/*.npy
+checkpoints/*.pt
+samples/*.png
+/tmp/
+reports/train_stdout.log

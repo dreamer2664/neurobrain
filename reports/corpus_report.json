@@ -1,0 +1,24 @@
+{
+  "code_files": 17082,
+  "code_bytes": 160039404,
+  "tokens": {
+    "code_train": 47070897,
+    "code_val": 1612646,
+    "ui_train": 16722021,
+    "ui_val": 510676
+  },
+  "vocab_size": 4100,
+  "code_bytes_per_token": 3.292,
+  "ui_examples": 150735,
+  "sdist_roots": [
+    "click-8.5.0",
+    "django-6.1.2",
+    "fastapi-0.159.1",
+    "flask-3.1.3",
+    "jinja2-3.1.6",
+    "pytest-9.1.1",
+    "requests-2.34.2",
+    "sqlalchemy-2.1.6",
+    "werkzeug-3.1.9"
+  ]
+}
