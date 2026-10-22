@@ -1,41 +1,35 @@
-# checkpoint step 1800
+# checkpoint step 2400
 # prompt:
-
-from ._pick import pick_bool
-from ._ratio import ratio_distribute, ratio_reduce
-from .align import VerticalAlignMethod
-from .jupyter import JupyterMixin
-from .measure import Measurement
-from .
+ state_steps,
+                lambd=group["lambd"],
+                lr=group["lr"],
+                t0=group["t0"],
+                alpha=group["alpha"],
+                weight_decay=group["weight_decay"],
+                foreach=group["foreach"],
+                maximize
 # ---- continuation ----
+ state_steps,
+                lambd=group["lambd"],
+                lr=group["lr"],
+                t0=group["t0"],
+                alpha=group["alpha"],
+                weight_decay=group["weight_decay"],
+                foreach=group["foreach"],
+                maximize_decay=group["wpha"],
+                alpha_pre_free_decay=group["br"]),
+                src_threshold=group["br"],
+                src_threshold=col["br"])
+                self.register_br(br.copy(br)
+                self.register_br(br.copy(br.items(), src_threshold))
+            self._register_br(br.copy()),
+                src_threshold=group["br"])
+            self.register_br(br.copy(),storeach=storeach, src_threshold=src_threshold))
+            self.register_br(br.copy(), src_threshold=ssl_threshold)
+            self.register_br(br.tree().add((br.tree().br, src_threshold))
+            self.register_br(br.tree).copy()
 
-from ._pick import pick_bool
-from ._ratio import ratio_distribute, ratio_reduce
-from .align import VerticalAlignMethod
-from .jupyter import JupyterMixin
-from .measure import Measurement
-from .higheric import get_migval(__asure_or_name,  # type: ignore[attr-attr]
+    def _register_br(self, br, pi_threshold=False):
+        return _register_br(br.tree())
 
-
-class _PicksWriter(types, list):
-    """
-    Given a migion of the given list of ``types`` for a list of any field."""
-    if isinstance(types, list):
-        return _Into_migval(__asure_or_name)
-
-    @types.integate
-    def _Into(fn, key):
-        return _IntoVersion.get_full()
-
-    @_context
-    def get_kernel(context: Callable[[T], None], key: str, key: _IntoVersion) -> None:
-        _IntoVersion.get_file_name()
-        _IntoVersion.get_name()
-        _IntoVersion.get_bindings()
-        _IntoVersion.get_event()
-        _IntoVersion.call_name()
-        _IntoVersion.get_name()
-        _IntoVersion.set_base_name()
-        _IntoVersion.call_name()
-        _IntoVersion.get_name()
-        _In
+    def _register_br(self
