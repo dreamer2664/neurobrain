@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "title_case",
+ "id": "cb-str-08",
+ "prompt": "def title_case(s):\n    \"\"\"return s with every word capitalised\"\"\"\n",
+ "reference": "    return s.title()\n",
+ "tests": "assert title_case('hello world') == 'Hello World'\nassert title_case('') == ''",
+ "timeout_s": 5
+}

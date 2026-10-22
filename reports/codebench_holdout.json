@@ -1,0 +1,12 @@
+{
+ "method": "sha256 manifest pin + verbatim prompt+reference scan of corpus roots",
+ "roots": [
+  "/usr/local/lib/python3.13",
+  "/usr/local/lib/python3.13/site-packages"
+ ],
+ "py_files_scanned": 64271,
+ "chars_scanned": 472213066,
+ "collisions": [],
+ "n_collisions": 0,
+ "task_files": 49
+}

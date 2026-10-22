@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "join_words",
+ "id": "cb-str-07",
+ "prompt": "def join_words(words, sep):\n    \"\"\"join the list of words with the separator\"\"\"\n",
+ "reference": "    return sep.join(words)\n",
+ "tests": "assert join_words(['a', 'b'], '-') == 'a-b'\nassert join_words([], ' ') == ''\nassert join_words(['x'], ',') == 'x'",
+ "timeout_s": 5
+}

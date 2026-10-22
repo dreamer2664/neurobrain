@@ -1,0 +1,10 @@
+{
+ "category": "sorting",
+ "difficulty": "medium",
+ "fn": "second_largest",
+ "id": "cb-sort-03",
+ "prompt": "def second_largest(xs):\n    \"\"\"return the second largest distinct value in a list with at least two\"\"\"\n",
+ "reference": "    return sorted(set(xs))[-2]\n",
+ "tests": "assert second_largest([3, 9, 2]) == 3\nassert second_largest([5, 5, 1]) == 1",
+ "timeout_s": 5
+}

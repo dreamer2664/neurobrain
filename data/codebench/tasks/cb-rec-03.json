@@ -1,0 +1,10 @@
+{
+ "category": "recursion",
+ "difficulty": "easy",
+ "fn": "sum_to",
+ "id": "cb-rec-03",
+ "prompt": "def sum_to(n):\n    \"\"\"return the sum of the integers from 1 to n\"\"\"\n",
+ "reference": "    return n * (n + 1) // 2\n",
+ "tests": "assert sum_to(5) == 15\nassert sum_to(0) == 0\nassert sum_to(1) == 1",
+ "timeout_s": 5
+}

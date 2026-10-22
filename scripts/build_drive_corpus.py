@@ -34,9 +34,15 @@ def main() -> None:
     print("[drive] stats:", json.dumps(drive_stats(3000, args.seed)))
 
     def build(n: int, seed: int, name: str) -> None:
-        """Stream to disk in chunks: 400k episodes never fit in 2 GB as a list."""
+        """Stream to disk in chunks.
+
+        A 400k-episode id list (~70M python ints at ~28-36 B each) is multiple
+        GB and OOM-kills a 2 GB sandbox: this was hit independently by the head
+        coordinator and agent-04. `array("H")` keeps the buffer at 2 bytes/token.
+        """
         from array import array
         path = os.path.join(args.data, f"{name}.bin")
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
         buf = array("H")
         total = 0
         with open(path, "wb") as f:
@@ -48,8 +54,8 @@ def main() -> None:
                     total += len(buf)
                     buf = array("H")
                 if (i + 1) % 50_000 == 0:
-                    print(f"[drive] {name}: {i+1} episodes, {(total+len(buf))/1e6:.2f}M tokens",
-                          flush=True)
+                    print(f"[drive] {name}: {i+1} episodes, "
+                          f"{(total + len(buf)) / 1e6:.2f}M tokens", flush=True)
             if buf:
                 buf.tofile(f)
                 total += len(buf)

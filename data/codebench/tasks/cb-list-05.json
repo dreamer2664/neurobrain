@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "easy",
+ "fn": "max_of",
+ "id": "cb-list-05",
+ "prompt": "def max_of(xs):\n    \"\"\"return the largest element of a non-empty list\"\"\"\n",
+ "reference": "    return max(xs)\n",
+ "tests": "assert max_of([3, 9, 2]) == 9\nassert max_of([-1, -5]) == -1",
+ "timeout_s": 5
+}

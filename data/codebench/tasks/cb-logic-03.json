@@ -1,0 +1,10 @@
+{
+ "category": "logic",
+ "difficulty": "easy",
+ "fn": "xor",
+ "id": "cb-logic-03",
+ "prompt": "def xor(a, b):\n    \"\"\"true when exactly one of a and b is truthy\"\"\"\n",
+ "reference": "    return bool(a) != bool(b)\n",
+ "tests": "assert xor(True, False)\nassert not xor(True, True)\nassert not xor(False, False)",
+ "timeout_s": 5
+}

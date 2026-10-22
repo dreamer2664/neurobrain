@@ -1,0 +1,10 @@
+{
+ "category": "recursion",
+ "difficulty": "easy",
+ "fn": "power",
+ "id": "cb-rec-04",
+ "prompt": "def power(b, e):\n    \"\"\"return b raised to the non-negative integer e\"\"\"\n",
+ "reference": "    return b ** e\n",
+ "tests": "assert power(2, 10) == 1024\nassert power(3, 0) == 1\nassert power(5, 1) == 5",
+ "timeout_s": 5
+}

@@ -1,0 +1,10 @@
+{
+ "category": "recursion",
+ "difficulty": "easy",
+ "fn": "factorial",
+ "id": "cb-rec-01",
+ "prompt": "def factorial(n):\n    \"\"\"return n factorial for n >= 0\"\"\"\n",
+ "reference": "    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n",
+ "tests": "assert factorial(0) == 1\nassert factorial(5) == 120\nassert factorial(1) == 1",
+ "timeout_s": 5
+}

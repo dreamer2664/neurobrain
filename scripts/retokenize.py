@@ -52,25 +52,40 @@ def main() -> None:
     n_val = max(8, int(0.03 * len(docs)))
     print(f"[retok] {len(docs)} files, {total/1e6:.1f} MB")
 
-    def encode(texts):
-        ids = []
-        for s in texts:
-            ids.extend(tok.encode(s))
-            ids.append(eot)
-        return ids
+    # NOTE(agent-04): stream ids to disk in chunks. Accumulating ~55M python
+    # ints in one list costs ~36 B each and OOMs a 2 GB sandbox; writing every
+    # 2M tokens keeps peak RSS flat. Output bytes are identical.
+    import numpy as np
 
-    for name, texts in [("code_train", docs[n_val:]), ("code_val", docs[:n_val])]:
-        ids = encode(texts)
-        write_tokens(os.path.join(args.data, f"{name}.bin"), ids)
-        print(f"[retok] {name}.bin {len(ids)/1e6:.2f}M tokens")
+    def encode_stream(tag: str, texts) -> int:
+        path = os.path.join(args.data, f"{tag}.bin")
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        total, buf = 0, []
+        with open(path, "wb") as f:
+            for i, s in enumerate(texts):
+                buf.extend(tok.encode(s))
+                buf.append(eot)
+                if len(buf) >= 2_000_000:
+                    np.array(buf, dtype=np.uint16).tofile(f)
+                    total += len(buf)
+                    buf = []
+                    print(f"[retok] {tag}: {i+1} docs, {total/1e6:.2f}M tokens", flush=True)
+            if buf:
+                np.array(buf, dtype=np.uint16).tofile(f)
+                total += len(buf)
+        print(f"[retok] {tag}.bin {total/1e6:.2f}M tokens", flush=True)
+        return total
+
+    counts = {}
+    counts["code_train"] = encode_stream("code_train", docs[n_val:])
+    counts["code_val"] = encode_stream("code_val", docs[:n_val])
 
     ui_train = list(protocol_corpus(int(args.ui_samples * 0.97), seed=args.seed))
     ui_val = list(protocol_corpus(int(args.ui_samples * 0.03) + 8, seed=args.seed + 1))
     ui_train = [SEED_UI_CORPUS] * max(1, len(ui_train) // 200) + ui_train
-    for name, texts in [("ui_train", ui_train), ("ui_val", ui_val)]:
-        ids = encode(texts)
-        write_tokens(os.path.join(args.data, f"{name}.bin"), ids)
-        print(f"[retok] {name}.bin {len(ids)/1e6:.2f}M tokens")
+    counts["ui_train"] = encode_stream("ui_train", ui_train)
+    counts["ui_val"] = encode_stream("ui_val", ui_val)
+    print(f"[retok] done: { {k: round(v/1e6, 2) for k, v in counts.items()} } M tokens")
 
 
 if __name__ == "__main__":

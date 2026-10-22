@@ -1,0 +1,10 @@
+{
+ "category": "misc",
+ "difficulty": "easy",
+ "fn": "fizz",
+ "id": "cb-misc-01",
+ "prompt": "def fizz(n):\n    \"\"\"return 'fizz' if n is divisible by 3, else str(n)\"\"\"\n",
+ "reference": "    return 'fizz' if n % 3 == 0 else str(n)\n",
+ "tests": "assert fizz(9) == 'fizz'\nassert fizz(4) == '4'\nassert fizz(0) == 'fizz'",
+ "timeout_s": 5
+}

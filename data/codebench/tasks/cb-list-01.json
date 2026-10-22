@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "easy",
+ "fn": "unique",
+ "id": "cb-list-01",
+ "prompt": "def unique(xs):\n    \"\"\"return the list with duplicates removed, order preserved\"\"\"\n",
+ "reference": "    out = []\n    for x in xs:\n        if x not in out:\n            out.append(x)\n    return out\n",
+ "tests": "assert unique([1, 2, 2, 3, 1]) == [1, 2, 3]\nassert unique([]) == []\nassert unique([5]) == [5]",
+ "timeout_s": 5
+}

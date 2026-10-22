@@ -1,0 +1,400 @@
+{
+ "bench": "codebench-v1",
+ "n": 49,
+ "built_utc": "2026-10-22T19:43:53Z",
+ "generated_by": "agent-04 neurobrain.codebench",
+ "tasks": [
+  {
+   "file": "cb-arith-01.json",
+   "id": "cb-arith-01",
+   "category": "arithmetic",
+   "difficulty": "easy",
+   "fn": "add",
+   "sha256": "68aa2b4f8c734aab8a71adc9075d70a5496bf3111bd1b33c7063a6f1fdf5cae9"
+  },
+  {
+   "file": "cb-arith-02.json",
+   "id": "cb-arith-02",
+   "category": "arithmetic",
+   "difficulty": "easy",
+   "fn": "double",
+   "sha256": "6be23642ee4259160225d632d06ae5e6dc6229c95e71b37648db028d62f9aeb0"
+  },
+  {
+   "file": "cb-arith-03.json",
+   "id": "cb-arith-03",
+   "category": "arithmetic",
+   "difficulty": "easy",
+   "fn": "mean",
+   "sha256": "b5a8d974c1de683b8cded78cc65a74e649d186c680d293de08cc5a668d78e77b"
+  },
+  {
+   "file": "cb-arith-04.json",
+   "id": "cb-arith-04",
+   "category": "arithmetic",
+   "difficulty": "easy",
+   "fn": "celsius_to_fahrenheit",
+   "sha256": "f6ee3a41fddab6beef4e28df0dcf6a44e652abe62b654948ebb1a704742da70b"
+  },
+  {
+   "file": "cb-arith-05.json",
+   "id": "cb-arith-05",
+   "category": "arithmetic",
+   "difficulty": "easy",
+   "fn": "clamp",
+   "sha256": "7a2999e4333bc6463f617753b0f99c2216542161ea02e2fc76a52af87392340f"
+  },
+  {
+   "file": "cb-arith-06.json",
+   "id": "cb-arith-06",
+   "category": "arithmetic",
+   "difficulty": "medium",
+   "fn": "gcd",
+   "sha256": "99077111db33c79f85641360d4183a0f81a7ef1782855356ac1de9afa0bddc6f"
+  },
+  {
+   "file": "cb-str-01.json",
+   "id": "cb-str-01",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "reverse",
+   "sha256": "c21390bb8c15de8c312bf87da8a478b734d87fcbeea643167e2b73abd232300c"
+  },
+  {
+   "file": "cb-str-02.json",
+   "id": "cb-str-02",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "first_word",
+   "sha256": "9e868c9dbda55c019d497e1e158ddc16b311066881927c073584e20bb8a6ab26"
+  },
+  {
+   "file": "cb-str-03.json",
+   "id": "cb-str-03",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "count_char",
+   "sha256": "c448ffd11c02e05d7484cbe1b5d07124449e2c1557c9ada0fc92fd3fab28c739"
+  },
+  {
+   "file": "cb-str-04.json",
+   "id": "cb-str-04",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "is_palindrome",
+   "sha256": "bbf1812b242e874c30322d8970c133791c9a234ae880ef937ebb6b72424b9ff2"
+  },
+  {
+   "file": "cb-str-05.json",
+   "id": "cb-str-05",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "count_vowels",
+   "sha256": "309a4cd73cf037833a073e6f18836e2efcecfd69a8b9dea86dfdcec5a56a4574"
+  },
+  {
+   "file": "cb-str-06.json",
+   "id": "cb-str-06",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "shout",
+   "sha256": "d6c2bd3e63b5cf69267c667ea643de9ab8d017c14d1d27a8697c40b3c7e058e5"
+  },
+  {
+   "file": "cb-str-07.json",
+   "id": "cb-str-07",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "join_words",
+   "sha256": "aee710795a9ea3a41b7d5fa7bc886ba82993462d12b84d16d1faf71efa1b2b87"
+  },
+  {
+   "file": "cb-str-08.json",
+   "id": "cb-str-08",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "title_case",
+   "sha256": "4cd5a526f57c7fdb4b1aaf5df1ac5ef54ecfdff1ede2ba129ec6a9a217e87918"
+  },
+  {
+   "file": "cb-str-09.json",
+   "id": "cb-str-09",
+   "category": "strings",
+   "difficulty": "easy",
+   "fn": "repeat",
+   "sha256": "59b0238b420e2124091527eacd9f63eab2a2640646800f0a3b90be5e7e92700d"
+  },
+  {
+   "file": "cb-list-01.json",
+   "id": "cb-list-01",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "unique",
+   "sha256": "7aff3addf227172abed1ba887607b11783d24d45c6eb5e16bc525f0ff4a26c72"
+  },
+  {
+   "file": "cb-list-02.json",
+   "id": "cb-list-02",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "even_only",
+   "sha256": "04121b7450047a808f6516853b06015ea6bedc39631b76511d5bbfb5b19b4860"
+  },
+  {
+   "file": "cb-list-03.json",
+   "id": "cb-list-03",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "positives",
+   "sha256": "b38fd6a9ef4d591329e207ca003721819490d5dcaac9ef73f2660aadbe83ef2e"
+  },
+  {
+   "file": "cb-list-04.json",
+   "id": "cb-list-04",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "flatten1",
+   "sha256": "d05bdd2198e7c64be93d97dd560a98011871c8a21a10a0a6656cc893a0f79bba"
+  },
+  {
+   "file": "cb-list-05.json",
+   "id": "cb-list-05",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "max_of",
+   "sha256": "037d44cd86508def742304ee00d0dbc3ab77e925c4fa15a37044b583b805de28"
+  },
+  {
+   "file": "cb-list-06.json",
+   "id": "cb-list-06",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "sum_squares",
+   "sha256": "59728bbc27f2125f7c46a0bd940e14f45a9faa75fe0d285c6dce19220af3bdea"
+  },
+  {
+   "file": "cb-list-07.json",
+   "id": "cb-list-07",
+   "category": "lists",
+   "difficulty": "medium",
+   "fn": "chunk",
+   "sha256": "ba1d52c6f0bdb4bb0fa2c93204334971c385cf64e2eecc26d44d1b7d4b2ac8a6"
+  },
+  {
+   "file": "cb-list-08.json",
+   "id": "cb-list-08",
+   "category": "lists",
+   "difficulty": "easy",
+   "fn": "last",
+   "sha256": "dd7552c347e6857467123a0c2f778c35421df88bda22c74ece42f3cb16c859cc"
+  },
+  {
+   "file": "cb-list-09.json",
+   "id": "cb-list-09",
+   "category": "lists",
+   "difficulty": "medium",
+   "fn": "cumsum",
+   "sha256": "2d193fa2b27baffb4498aebf963e3effb1ead42cf33ff183a1223ee0345e8710"
+  },
+  {
+   "file": "cb-list-10.json",
+   "id": "cb-list-10",
+   "category": "lists",
+   "difficulty": "medium",
+   "fn": "remove_first",
+   "sha256": "f96334ab018a86aa9929e0740f240ad48030d9ef9bd09683949c79a6fb4d4f29"
+  },
+  {
+   "file": "cb-dict-01.json",
+   "id": "cb-dict-01",
+   "category": "dicts",
+   "difficulty": "medium",
+   "fn": "word_count",
+   "sha256": "cfc5bc727463288941b83acc63ee8ec607cf50d1aac94ad2bb2488f995fea0f5"
+  },
+  {
+   "file": "cb-dict-02.json",
+   "id": "cb-dict-02",
+   "category": "dicts",
+   "difficulty": "easy",
+   "fn": "keys_positive",
+   "sha256": "7881936afee065763a80b4aea4ad6cb83f644f19c4d02eb079a7129c8546d113"
+  },
+  {
+   "file": "cb-dict-03.json",
+   "id": "cb-dict-03",
+   "category": "dicts",
+   "difficulty": "easy",
+   "fn": "invert",
+   "sha256": "0978d07b8ccb9d0b218fa34112803534804b048563db8b76ffd2473cdf324853"
+  },
+  {
+   "file": "cb-dict-04.json",
+   "id": "cb-dict-04",
+   "category": "dicts",
+   "difficulty": "easy",
+   "fn": "merge",
+   "sha256": "3d752314321422d6bbed73b23c7707f15d85342c1146f844e6fe568592b18ff0"
+  },
+  {
+   "file": "cb-dict-05.json",
+   "id": "cb-dict-05",
+   "category": "dicts",
+   "difficulty": "easy",
+   "fn": "get_or",
+   "sha256": "1b016f4e4190a3ff7d02ad04e387c255cc1f8f64b38d5cb1142c7b4129498d1c"
+  },
+  {
+   "file": "cb-dict-06.json",
+   "id": "cb-dict-06",
+   "category": "dicts",
+   "difficulty": "medium",
+   "fn": "count_by_first_letter",
+   "sha256": "4362b1ff88b0e8dc6ca9720e8cd16090133cd9aeecffc3c6d59966abd72d49ad"
+  },
+  {
+   "file": "cb-logic-01.json",
+   "id": "cb-logic-01",
+   "category": "logic",
+   "difficulty": "easy",
+   "fn": "is_even",
+   "sha256": "dcfe924a0dbebae21fc1b5c611e97fb0d49119c238aa93ecc3bbdfe562767c35"
+  },
+  {
+   "file": "cb-logic-02.json",
+   "id": "cb-logic-02",
+   "category": "logic",
+   "difficulty": "easy",
+   "fn": "all_positive",
+   "sha256": "9c8af0e5946caddbbcd203c8bfbc1cc4d1e5e433b9260a54a0aac7c4e7d80e31"
+  },
+  {
+   "file": "cb-logic-03.json",
+   "id": "cb-logic-03",
+   "category": "logic",
+   "difficulty": "easy",
+   "fn": "xor",
+   "sha256": "c61bbc0b3d33cafa6dc84792495a891cd65e7b5ae12fa66296aa707632666494"
+  },
+  {
+   "file": "cb-logic-04.json",
+   "id": "cb-logic-04",
+   "category": "logic",
+   "difficulty": "easy",
+   "fn": "is_sorted",
+   "sha256": "00b4b0b75ca8dd65e2cb18e8498cc900ec83409ac2dd6ff3aa918b3f89b8eaa6"
+  },
+  {
+   "file": "cb-rec-01.json",
+   "id": "cb-rec-01",
+   "category": "recursion",
+   "difficulty": "easy",
+   "fn": "factorial",
+   "sha256": "42c2f2a541da5bcd09e1886d8d548e850ee5fa78a09b298d011632b50ff05aa0"
+  },
+  {
+   "file": "cb-rec-02.json",
+   "id": "cb-rec-02",
+   "category": "recursion",
+   "difficulty": "medium",
+   "fn": "fib",
+   "sha256": "f0dbd93ec3efd286d43bae7fa9821cb1b1738efa9c1a075d34d13230a248d151"
+  },
+  {
+   "file": "cb-rec-03.json",
+   "id": "cb-rec-03",
+   "category": "recursion",
+   "difficulty": "easy",
+   "fn": "sum_to",
+   "sha256": "db9091940f6c35de3732d74c532069f1019193e90e02bb0cb6e3e24dc7f38ea2"
+  },
+  {
+   "file": "cb-rec-04.json",
+   "id": "cb-rec-04",
+   "category": "recursion",
+   "difficulty": "easy",
+   "fn": "power",
+   "sha256": "06dc88be55b84360aea10ce1842f374109ad5991f58b81fee1b1618cd4487196"
+  },
+  {
+   "file": "cb-sort-01.json",
+   "id": "cb-sort-01",
+   "category": "sorting",
+   "difficulty": "easy",
+   "fn": "sort_desc",
+   "sha256": "713b724c26e829ba6909036953dafbd4c7c46fe5cd74c47e8a752b6705055776"
+  },
+  {
+   "file": "cb-sort-02.json",
+   "id": "cb-sort-02",
+   "category": "sorting",
+   "difficulty": "easy",
+   "fn": "sort_by_len",
+   "sha256": "25755f996b88e15546f9bb767cdb65fd5e075da8849c71e5da54df7803d523e0"
+  },
+  {
+   "file": "cb-sort-03.json",
+   "id": "cb-sort-03",
+   "category": "sorting",
+   "difficulty": "medium",
+   "fn": "second_largest",
+   "sha256": "4c97bd9c81d8c6bcff71d6d91e2a1b4db2fbfe0613dfaf578963adc4e31d7502"
+  },
+  {
+   "file": "cb-sort-04.json",
+   "id": "cb-sort-04",
+   "category": "sorting",
+   "difficulty": "hard",
+   "fn": "bubble_sort",
+   "sha256": "daca19c64d56223c0f44d30a4826d89fabf96ffbc857e8a5aeceef12f7415aef"
+  },
+  {
+   "file": "cb-misc-01.json",
+   "id": "cb-misc-01",
+   "category": "misc",
+   "difficulty": "easy",
+   "fn": "fizz",
+   "sha256": "4427bf020f69d34e0b0ebaa10af5fd629602d9c291a87372d9673c190905f9ba"
+  },
+  {
+   "file": "cb-misc-02.json",
+   "id": "cb-misc-02",
+   "category": "misc",
+   "difficulty": "easy",
+   "fn": "multiples",
+   "sha256": "242d74599dcf8b362d0de7d6cd21ba9dfbcacede7580efa387234971acb2618e"
+  },
+  {
+   "file": "cb-misc-03.json",
+   "id": "cb-misc-03",
+   "category": "misc",
+   "difficulty": "easy",
+   "fn": "squares_upto",
+   "sha256": "76e70aa2ae70f228c75afeeae4c0eba5f16fffb74557bea604c6a04173cdef15"
+  },
+  {
+   "file": "cb-misc-04.json",
+   "id": "cb-misc-04",
+   "category": "misc",
+   "difficulty": "hard",
+   "fn": "is_prime",
+   "sha256": "9c4de33657e5f9d378f044501c9ced78d44a174bee0cd75e6c7141712a8474a3"
+  },
+  {
+   "file": "cb-misc-05.json",
+   "id": "cb-misc-05",
+   "category": "misc",
+   "difficulty": "easy",
+   "fn": "evens_upto",
+   "sha256": "64186fc9be5b6e01c261a379a4f1dcf584a31b6e082be8337fdb5d82edf06b64"
+  },
+  {
+   "file": "cb-misc-06.json",
+   "id": "cb-misc-06",
+   "category": "misc",
+   "difficulty": "easy",
+   "fn": "summarize",
+   "sha256": "a5a12d3c014e2e93979b7aa78da7a14f12396889261d1da362022959b6744534"
+  }
+ ]
+}

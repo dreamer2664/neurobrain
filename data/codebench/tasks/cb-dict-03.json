@@ -1,0 +1,10 @@
+{
+ "category": "dicts",
+ "difficulty": "easy",
+ "fn": "invert",
+ "id": "cb-dict-03",
+ "prompt": "def invert(d):\n    \"\"\"return a new dict with keys and values swapped\"\"\"\n",
+ "reference": "    return {v: k for k, v in d.items()}\n",
+ "tests": "assert invert({'a': 1, 'b': 2}) == {1: 'a', 2: 'b'}\nassert invert({}) == {}",
+ "timeout_s": 5
+}
