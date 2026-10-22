@@ -91,7 +91,10 @@ def _verify_streams(d: str, name: str, mf: dict, tok, info: dict) -> list[str]:
             bad = drive_rules.check(scan)
             for b in bad:
                 problems.append(f"FAIL {name}: {sh['name']} invariant {b}")
-            declared = (mf.get("content") or {}).get("invariants", {})
+            # per-shard numbers win: train and val are different populations, and
+            # checking a shard against the pooled summary flags a correct build
+            declared = (sh.get("invariants")
+                        or (mf.get("content") or {}).get("invariants", {}))
             for k in ("terminal_rate", "retry_after_failure_rate", "failure_fraction"):
                 if k in declared and abs(float(declared[k]) - float(scan[k])) > 1e-6:
                     problems.append(f"FAIL {name}: manifest {k}={declared[k]} but bytes say {scan[k]}")

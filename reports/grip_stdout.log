@@ -327,3 +327,5 @@ ModuleNotFoundError: No module named 'torch'
 [grip] params: 0.44M, batch 16, steps 24000
 [grip] resumed from step 750
 [grip] params: 0.44M, batch 16, steps 24000
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
