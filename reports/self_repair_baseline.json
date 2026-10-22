@@ -1,0 +1,491 @@
+{
+ "utc": "2026-10-22T22:51:46Z",
+ "ckpt": "checkpoints/lm_baseline_step4600.pt",
+ "ckpt_sha256": "0df9f2f6b1ad75de05b25f29c05284522e6a514f9674ea31912d2b0e64f54b7d",
+ "step": 4600,
+ "decode": {
+  "temperature": 0.8,
+  "top_k": 40,
+  "seed": 0
+ },
+ "n_tasks": 49,
+ "first_pass": 0,
+ "failed_first": 49,
+ "repaired": 0,
+ "repair_rate": 0.0,
+ "final_pass": 0.0,
+ "seconds": 1544.9,
+ "peak_rss_mb": 266.9,
+ "transcripts": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "\n__rgba__ = _operator(a, b)\n",
+   "passed1": false,
+   "error": "NameError: name '_operator' is not defined. Did you forget to import '_operator'?",
+   "attempt2": "def add(a, b):\n    \"\"\"return the sum of a and b\"\"\"\n_failed'\nif sys.version_info < 'python3.64.5fa7': passing.version_info < 'myl4.8c2.88/2.402': passing.version_info>2.8.078\\n': 6.2.45729\n    format: '2.2.1', 0: 2\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def double'\nelse:\n    \"\"\"\n    def __init__(self, file=None):\n        self.file = self.file\n        self.file = file_manager()\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.failed\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 1)"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def prepare_same_single(xs, xs, dst=None, **params):\n    \"\"\"\n    Return the integer sum of ``xs`` and ``xs``, where ``ys`` is always the prepare\n    series by the transactions.\n    \"\"\"\n    import matplotlib.pyplot as plt_label_single\n\n    # -----------------------------------------------------------",
+   "passed1": false,
+   "error": "SyntaxError: duplicate argument 'xs' in function definition",
+   "attempt2": "def mean(xs):\n    \"\"\"return the arithmetic mean of a non-empty list\"\"\"\nlogic(x)\n    # 'xs' in order to be a valid effect matching form (x, y)\n    # (x, 1) algebraic\n    #\n    # 'xs' in order to be a futy or more than 25 \u201d, or\n    # fun the file\n    # url = sort_sequence_parts(x\n",
+   "passed2": false,
+   "why2": "NameError: name 'logic' is not defined"
+  }
+ ],
+ "all_rows": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "\n__rgba__ = _operator(a, b)\n",
+   "passed1": false,
+   "error": "NameError: name '_operator' is not defined. Did you forget to import '_operator'?",
+   "attempt2": "def add(a, b):\n    \"\"\"return the sum of a and b\"\"\"\n_failed'\nif sys.version_info < 'python3.64.5fa7': passing.version_info < 'myl4.8c2.88/2.402': passing.version_info>2.8.078\\n': 6.2.45729\n    format: '2.2.1', 0: 2\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def double'\nelse:\n    \"\"\"\n    def __init__(self, file=None):\n        self.file = self.file\n        self.file = file_manager()\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.file = file\n        self.failed\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 1)"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def prepare_same_single(xs, xs, dst=None, **params):\n    \"\"\"\n    Return the integer sum of ``xs`` and ``xs``, where ``ys`` is always the prepare\n    series by the transactions.\n    \"\"\"\n    import matplotlib.pyplot as plt_label_single\n\n    # -----------------------------------------------------------",
+   "passed1": false,
+   "error": "SyntaxError: duplicate argument 'xs' in function definition",
+   "attempt2": "def mean(xs):\n    \"\"\"return the arithmetic mean of a non-empty list\"\"\"\nlogic(x)\n    # 'xs' in order to be a valid effect matching form (x, y)\n    # (x, 1) algebraic\n    #\n    # 'xs' in order to be a futy or more than 25 \u201d, or\n    # fun the file\n    # url = sort_sequence_parts(x\n",
+   "passed2": false,
+   "why2": "NameError: name 'logic' is not defined"
+  },
+  {
+   "id": "cb-arith-04",
+   "attempt1": "\n# The following sequence names, or list[V]] for the format.\n\n@impl.fixes\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def celsius_to_fahrenheit(c):\n    \"\"\"convert celsius to fahrenheit\"\"\"\n\nrunner: Only renderer, optional in the logic-to_fainten_retry, stem,\n    etc. the inverse (patch) in the sequence for renderers.\n\nThe total sequence is to flow the first sequence in the derer.\n\nFollowing the se\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-arith-05",
+   "attempt1": ")\n",
+   "passed1": false,
+   "error": "syntax: unmatched ')'",
+   "attempt2": "def clamp(x, lo, hi):\n    \"\"\"return x limited to the range lo..hi\"\"\"\ntwice\n    'a' (retry, is)''\n\n_emailer = _emailer.emailer(\n    name='%s' (my)s)\"\n    + _Emailer.emailer.emailer.emailer.descr, \"%s' (my)s.>\"\n",
+   "passed2": false,
+   "why2": "syntax: unexpected indent"
+  },
+  {
+   "id": "cb-arith-06",
+   "attempt1": "\n\n    if len(a, b):\n        return _repr(a, b)\n    return result\n\n\n@lower_divisor(fd)\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def gcd(a, b):\n    \"\"\"return the greatest common divisor of a and b\"\"\"\nfaces\nofance: https://github.com/font/font/font/licrace/ofance/file/font/font/font/font/font/font/font/link\n                <font.font.font.font.font/font/font/font/font/font/font/font/font.font.font.font.font.font\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-dict-01",
+   "attempt1": "\n\n    def __new__(cls, flag, cell):\n        if not isinstance(flag, Exception):\n            raise TypeError(\n                flag,\n                flag,\n                cell = cell.color,\n                cell.color,\n                cell.color,\n                cell.color,\n                cell.color,\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def word_count(s):\n    \"\"\"return a dict mapping each word to how often it appears\"\"\"\n\\n'\n    \"\"\"\n    print(flag, cell.color)\n    sys.path1d2d2d2d2d2dot2d2d2d2d2d2d2d2d2d2de2d2d2d2d2d2d2d2d4d2d2d2d2d3d2d2d2d2\n",
+   "passed2": false,
+   "why2": "syntax: unexpected character after line continuation character"
+  },
+  {
+   "id": "cb-dict-02",
+   "attempt1": "\n    return d\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def keys, e.g. ``Q. ``d`` (x, x)}``\n    \"\"\"\n    return d, x\n",
+   "passed2": false,
+   "why2": "syntax: unmatched '}'"
+  },
+  {
+   "id": "cb-dict-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def invert(d):\n    \"\"\"return a new dict with keys and values swapped\"\"\"\npaths\nfor the archives to use with an indirect failed.\nfrom pathlib.path import pathlib.path.path, pathlib.path, Path, Path, Path, Path, RTF, Strict, \\\nfrom neededutil.path import pathlib, path, is_none, pathlib, path, path, path, path,\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-dict-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def merge(a, b):\n    \"\"\"return one dict with all pairs; values from b win\"\"\"\ndefs\nand the user (super, place, rer, and rer) and retry them (pat, patch, such as\nit, it will be included).\n\nSuper:\n    \"\"\"\n    import pytest.conftest\n    from pytest.conftest.importorskipdev_patchc import Super\n    from\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 11)"
+  },
+  {
+   "id": "cb-dict-05",
+   "attempt1": "\n\n    @classmethod\n    def _get_or_var(cls, key, default=\"left\")\n    from _get_origins_keys import get_origins_keys\n    from _get_origins_keys import get_origins_keys\n\n\n@dataclass\n",
+   "passed1": false,
+   "error": "syntax: expected ':'",
+   "attempt2": "def get_or(d, k, default):\n    \"\"\"return d[k] if present, otherwise default\"\"\"\n failed (the test).\n\nToo, build the simply wrapper to use the default class. Year on the\ndirty and treat the incremental.\n\nToo, you need to sort the `na_type` class, implit in\ninfer the test.\n\nIf you should to use this\n",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-dict-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count_by_first_right_letter(words):\n    \"\"\"\n    Specifies the document of annotate transform.\n    \"\"\"\n    return self.files.get_words(words)\n",
+   "passed2": false,
+   "why2": "NameError: name 'count_by_first_letter' is not defined. Did you mean: 'count_by_first_right_letter'?"
+  },
+  {
+   "id": "cb-list-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def unique(z)*args**(2s)**(2s)/(2s))**2s\n\n    See https://docs.ist.ist.a.org/docs/lines/lines/pytest-proising-projects/set_lines/28.2.html\n\n    \"\"\"\n    self._lines_trace_\n",
+   "passed2": false,
+   "why2": "syntax: invalid decimal literal"
+  },
+  {
+   "id": "cb-list-02",
+   "attempt1": "CRDOUT = _Chape(10)\nCache_syntax = _ChapeConfigChain(I)\nChapeConfigChain = _ChapeConfigChain(I)\nChapeConfigChain = _ChapeConfigChain\nChapeConfigChain = _ChapeConfigChain\n",
+   "passed1": false,
+   "error": "NameError: name '_Chape' is not defined",
+   "attempt2": "def even_only(xs):\n    \"\"\"return only the even numbers\"\"\"\n failed.\n",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-list-03",
+   "attempt1": "@array_array_array_array_array_array_array_array(array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array_array(array_array_array_array_array_array_Data\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def positives(xs):\n    \"\"\"return only the numbers greater than zero\"\"\"\narray items'\n\nThis is a valid functional numpy array of lists \"(mi)_array_array_array_like_array_array_array,\n:`.\n\nImplement sus direction for each dimension and the outer axis (see `array_array_array_array_array_array_array_arrays)`.\n\nSee :func:`~\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-list-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def flatten1(nested):\n    \"\"\"flatten one level of nested lists\"\"\"\ndefflatten1df5f5f2df6f2df4f2df3f2f82f0dc2f3d4b6f2df5f4f3f2f3ddf4f4df2f7f0d2f4f7f7f3f2f3f2f2f4f2\n",
+   "passed2": false,
+   "why2": "NameError: name 'defflatten1df5f5f2df6f2df4f2df3f2f82f0dc2f3d4b6f2df5f4f3f2f3ddf4f4df2f7f0d2f4f7f7f3f2f3f2f2f4f2' is not defined"
+  },
+  {
+   "id": "cb-list-05",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def max_of(xs):\n    \"\"\"return the largest element of a non-empty list\"\"\"\ndefinition. And, ... \"through a gainst.\"\n%mm_id = 0xFFFFFFFFFFFF f2f2f7f4f3f2f4f3f4f2f2f2f3f6f4f3f4f4f9f2f3f3f8f4f9f\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-list-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def sum_squares(xs):\n    \"\"\"return the sum of the squares\"\"\"\ndefs.\n\n\"\"\"\n\nfrom ._bip import BidifierDef, Max, TextDef, TextDef\nfrom ._bip import (\n    BipFile,\n    BipFile,\n    BipFile,\n    BipFileExpr,\n    BipFileError,\n)\nfrom ._bip import OperativeDef, O\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 15)"
+  },
+  {
+   "id": "cb-list-07",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def chunk(xs, n):\n    \"\"\"split xs into consecutive chunks of length n (last may be shorter)\"\"\"\n_failed()\n",
+   "passed2": false,
+   "why2": "NameError: name '_failed' is not defined"
+  },
+  {
+   "id": "cb-list-08",
+   "attempt1": "\n\n    @classmethod\n    def _wrap_regex(self, other):\n        \"\"\"\n        Return the caller is a callable that should be errnore in their\n        empty list, e and empty list.\n\n        Args:\n            other: The other to be able to be a callable of a callable.\n            *other: the callable is a ",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def last(xs):\n    \"\"\"return the last element of a non-empty list\"\"\"\n failed.\n        \"\"\"\n        self._obj = getattr(other, self._obj)\n        self._obj.writes(self._obj)\n        self._obj.writes.append(self._obj)\n        self._obj = None\n\n    def _wrap_registration(self):\n        \"\"\"\n        Pytest registration of a callable, retryed, using the\n        regist\n",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-list-09",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def cumsum(xs):\n    \"\"\"return the cumulative sums: [1, 2, 3] becomes [1, 3, 6]\"\"\"\n\n\nNot the file down at the file, for their mapping with the cumsum and conftest bits.\n\nAlso is the file-like other than that a tempt should be the conftest conftest\nit.\n\"\"\"\n\nimport cumsum\nimport io\nimport narwhals as nw\nimport sys\nfrom typing import Any\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 15)"
+  },
+  {
+   "id": "cb-list-10",
+   "attempt1": "_ = {v: self: self._get_var_var(get_var_var, v)]\n_ = {},\n_ = {v: node: self._get_var_var}\n_ = {k: node: self._get_var_var}\n_ = {v: node: self._get_var}\n\n    \"\"\"\n    return a node.ModuleType(\n        [\n            {k: v for k,\n",
+   "passed1": false,
+   "error": "syntax: closing parenthesis ']' does not match opening parenthesis '{'",
+   "attempt2": "def remove_first(xs, v):\n    \"\"\"return a new list without the first occurrence of v\"\"\"\n\"\n    )\n\n\n@dataclass\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-logic-01",
+   "attempt1": "@dataclass\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def is_even(n):\n    \"\"\"true if n is even\"\"\"\nt2(1)/\n    \"\"\"\n    def __eq__(self, *args, **kwargs):\n        with exit(\n            \"RequireSystemt2(dur, failed={\"name\": \"\"\n        ) from exit(dur)/failed={\"name\": name}.0.0, \".join([dur], kwargs)\n\n    def as\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 10)"
+  },
+  {
+   "id": "cb-logic-02",
+   "attempt1": "\n__all__ = [\n    \"AtomicDirectory\"],\n    \"AtomicDirectoryWith_greater_to_greater\"],\n)\n",
+   "passed1": false,
+   "error": "syntax: unexpected indent",
+   "attempt2": "def all_positive(xs):\n    \"\"\"true if every number is greater than zero\"\"\"\n failed,\nand (every_path, rerunner)\n\n__all__ = [\"Greaternet-DirectoryWithKey\"]\n",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-logic-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def xor(a, b):\n    \"\"\"true when exactly one of a and b is truthy\"\"\"\ndefinition\nsee:\n    \"\"\"\n    patch passes.\n    \"\"\"\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-logic-04",
+   "attempt1": ")\n\nif __name__ == \"__main__\":\n    \"\"\"\n    Base def __main__ as 8.0 in the order of the order to the\n    improved sort.\n\n    \"\"\"\n    return (1 >= 0,)\n",
+   "passed1": false,
+   "error": "syntax: unmatched ')'",
+   "attempt2": "def is_sorted(xs):\n    \"\"\"true if the list is in non-decreasing order\"\"\"\nsorted as well\n    in the directory. This is the \"''\n\nExperimental to be influiting many-like.\n\n\"\"\"\n\nimport numba\nimport timeout_paths\nimport sys\nimport sys\nimport sys\nimport sys\nfrom collections.above import BaseList, Final\nfrom collections\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 4)"
+  },
+  {
+   "id": "cb-misc-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def fizz(n):\n    \"\"\"return 'fizz' if n is divisible by 3, else str(n)\"\"\"\nfailures for different\nseconds.\n\n ------------------------------------------------------------------------------\n\n  LPDWORD = '#merge',\n  Structures.\n         ------------------------------------------------------------------------------\n\n   LPDBMDWITH TAB\n   LPDWHDWITH TAB\n  Structure.\n  The\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-misc-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def multiples(xs, k):\n    \"\"\"return the numbers in xs divisible by k\"\"\"\ndefs\nif hasattr(sys, '__main__'):\n    _ascii_scope(sys, verbosity)\n    _algorithm = _algorithm_scope(sys, verbosity)\n    _algorithm = _algorithm = _algorithm_algorithm\n_algorithm = _algorithm\n",
+   "passed2": false,
+   "why2": "NameError: name 'defs' is not defined"
+  },
+  {
+   "id": "cb-misc-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def squares_upto(n):\n    \"\"\"return the squares of the integers from 1 to n\"\"\"\nfailed (SHOTY_WITH)\n\nif sys.version_info < (3, 22, 'SHOTITY_LIGHS = _sHOTITY_LIGHT_LIGHTY_LIGHT_LIME\", _sHOTITY_LIGHT_LIGHT\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 5)"
+  },
+  {
+   "id": "cb-misc-04",
+   "attempt1": "\n_symp_deps_cumulative = {n, 1}\n\n@pytest.fixture(@pytest.munpytest_medianative=True)\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def is_prime(n):\n    \"\"\"true if n is a prime number\"\"\"\ndefs\nof it.\n\n_symp_deps = {'.i'}\n\n@pytest.mark.fixture(...) as sys\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-misc-05",
+   "attempt1": "class _Tiensysible(Protocol):\n    \"\"\"\n    Ovensysible and find the arbitrary for a solution\n    arbitrary.\n\n    This is see for the system equality for a connection or empty request.\n    \"\"\"\n    if isinstance(n - 1, Integer):\n        # We only solute the protocol, we remove a bit\n",
+   "passed1": false,
+   "error": "syntax: expected an indented block after 'if' statement on line 10",
+   "attempt2": "def evens_upto(n):\n    \"\"\"return the even numbers from 2 up to n inclusive\"\"\"\nfinal\n. If were found, therefore the training protocol being a reply render and retryuage\nretryuage: after the connected directory and a solution.\n\"\"\"\n\nimport torch.distributed._protocol\nfrom ._typ_function import (\n    TypedDict,\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 10)"
+  },
+  {
+   "id": "cb-misc-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def summarize(items):\n    \"\"\"return {'ok': True, 'n': number of items}\"\"\"\nFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n",
+   "passed2": false,
+   "why2": "NameError: name 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF' is not defined"
+  },
+  {
+   "id": "cb-rec-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def factorial(n):\n    \"\"\"return n factorial for n >= 0\"\"\"\ndefinition\n\n        # e.g. 0.0, 2.0\n        # This implementation is also freater than this method when we fit the\n        # generated paths.  (see `run_init_retry`) and the\n        # search of the form of the module,\n        # so the caller in them extend to these par\n",
+   "passed2": false,
+   "why2": "NameError: name 'definition' is not defined"
+  },
+  {
+   "id": "cb-rec-02",
+   "attempt1": "\n# private fixed by the request.\n# Neach to avoid creating fixed by a simple pool.\n\n\n@pytest.mark.skipif(_plotly_utils.basevalidators.NumberValidator):\n    def __init__(self, plotly_name=\"color\", parent_name=\"treemap\", **kwargs):\n        super(HoverteredValidator, self).__\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def fib(n):\n    \"\"\"return the nth fibonacci number, fib(0) == 0 and fib(1) == 1\"\"\"\nleft(xnu, nu, nu, nu, nu, nu])\n    def test_checkpoint_init(self, pytester, tz=None):\n        \"\"\"\n        pytest.mark.skipif(\n            \"\"\"\n            def test_checkpoint_init(self):\n                assert self._checkpoint_init() in pytester.get_checkpoint_init()\n",
+   "passed2": false,
+   "why2": "syntax: closing parenthesis ']' does not match opening parenthesis '('"
+  },
+  {
+   "id": "cb-rec-03",
+   "attempt1": "def unsign_to(n):\n    \"\"\"\n    Returns the implementation of the sequence ``n`` and ``n``.\n    \"\"\"\n    prepare_args = {}\n    for i in range(n, len(n), len(n))\n    prepare_args = prepare_args[i]\n    # doctest populated from ufuncs that are populated at 0:\n    if len(n\n",
+   "passed1": false,
+   "error": "syntax: expected ':'",
+   "attempt2": "def sum_to(n):\n    \"\"\"return the sum of the integers from 1 to n\"\"\"\n'\n\n    This method is also created for implementation replacing regular to be\n    replaced when the regular proximaton is not included,\n    which would be replaced to be replaced by the failed regular existing,\n    but there cannot regular existing and large\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-rec-04",
+   "attempt1": "\n\n    def __new__(cls, power, power, s):\n        \"\"\"\n        Return a non-negative integer.\n\n        The reduced benchmark will be redundant by a sequence of\n        the :class:`~.expression.Model` object.\n\n        \"\"\"\n        if self.next == 0:\n            return\n        return [t for t in self.nex",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def power(b, e):\n    \"\"\"return b raised to the non-negative integer e\"\"\"\nfailed.0failed\n    \"\"\"\n    # Reading the tests for specification, such as the `~.cookies.SinPlanLeft`\n    # and a feature manually expression is used.\n    \"\"\"\n    next = next(length, next(length, next(len(self.next)))))\n",
+   "passed2": false,
+   "why2": "syntax: invalid decimal literal"
+  },
+  {
+   "id": "cb-sort-01",
+   "attempt1": "# Conflict that kinds the inlining parts.  This class is\n# produced and the sign of the descround of the largest descrollers.\n    \"\"\"\n    return find_opt_request(dxs, sequests, sorted_descroller)\n\n\n@poll.skip(\"inline-definition-opt\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 9)",
+   "attempt2": "def sort_desc(xs):\n    \"\"\"return the numbers sorted from largest to smallest\"\"\"\nretry(Gatherr.encoding())\n    return find_opt(second_format, search=search)\n\n\n@poll.skipFound(\"inline-definition-opt-definition-opt-definition-opt-definitions\", find_opt_seection_from=True)\n\n\n@\n",
+   "passed2": false,
+   "why2": "syntax: unexpected indent"
+  },
+  {
+   "id": "cb-sort-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def form\n    (in_eps, tests)\n    \"\"\"\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-sort-03",
+   "attempt1": "\n\n    @classmethod\n    def pytest_maybe_require_super(\n        self,\n        Xs: DummyTestException,\n        kind: Enum_utils.Enum_utilsParams,\n        real_trace: bool = False,\n    ) -> DummyTestException:\n        \"\"\"\n        Supers all distincts from a tuple of :class\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 13)",
+   "attempt2": "def second_largest(xs):\n    \"\"\"return the second largest distinct value in a list with at least two\"\"\"\nretry.py\nhttps://docs.en-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple-lstriple\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-sort-04",
+   "attempt1": "@dataclasses.dataclass\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def blanced(MatrixInterr),\n)\n\n\n@dataclasses.dataclass\n",
+   "passed2": false,
+   "why2": "syntax: unmatched ')'"
+  },
+  {
+   "id": "cb-str-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def reverse(s):\n    \"\"\"return the string backwards\"\"\"\ndefreverse()[0] = True\n    \"\"\"Return a rest of the path.\n\n    :param path: The path to be rest of the file.\n\n    :param path: The path to be redirected as a path that will be redirect. By default,\n      the directory is written to the path.\n\n\n       :type path: tuple(str): the path of the\n",
+   "passed2": false,
+   "why2": "syntax: unexpected indent"
+  },
+  {
+   "id": "cb-str-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word()\\s+\n    return a failed string (for the prefix, the prefix) errnown\n    string (which should treate the text) of the user.\n\"\"\"\n\n# Bokeh/files-operators/jaintajaintah>\n# ----------------------\n# Failed to find\n",
+   "passed2": false,
+   "why2": "syntax: unexpected character after line continuation character"
+  },
+  {
+   "id": "cb-str-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count_char(s, ch):\n    \"\"\"count occurrences of ch in s\"\"\"\nfailed.\n    \"\"\"\n    def __init__(tmp_file_path=None, eq: FinalTiledDatettePath | None):\n        with tmp_file_path(sys_path=False):\n            file_path = None\n            file_path = None\n            create_dir_path = None\n            bold_path = None\n            file_path = os.f\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 11)"
+  },
+  {
+   "id": "cb-str-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def test().\n\nThe tests of the palconvergence of another.  This is usually not part of the\nstatically store and rendering references.\n\nThe regular-relure-lure-lure-lure-lure-lure-lure-lure-\n",
+   "passed2": false,
+   "why2": "syntax: expected ':'"
+  },
+  {
+   "id": "cb-str-05",
+   "attempt1": "\n# These are lowercase-byte-dead-like objects; this is a Python version or do not contain it.\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count_vowels(s):\n    \"\"\"count the lowercase vowels a e i o u in s\"\"\"\nfailed. They are retry integers,\n# and other tags are not byterest.\n@empty_forward.commit(runner=runner=True)\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def shout(s):\n    \"\"\"return s in upper case followed by an exclamation mark\"\"\"\ndefs (0f) doed\n    the next and mark mark must be retryed, within them to reduce.\n    \"\"\"\n\n    def __init__(self, context, args=1, args=None):\n        self.blob = context.blob\n        self.exec_stderr = False\n\n    def __getstate__(self):\n        return MarkmEx\n",
+   "passed2": false,
+   "why2": "syntax: invalid decimal literal"
+  },
+  {
+   "id": "cb-str-07",
+   "attempt1": "\n\n    def __init__(\n        self,\n        description: _Exception | None = None,\n        side: Literal[Element] | None = None\n    ) -> dict[Element]:\n        \"\"\"\n        Sets the description of the description, and can be passed as a collection.\n        \"\"\"\n        missing_description = re.MULT_MESI",
+   "passed1": false,
+   "error": "NameError: name '_Exception' is not defined. Did you mean: 'Exception'?",
+   "attempt2": "def join_words(words, sep):\n    \"\"\"join the list of words with the separator\"\"\"\n failed.\n        \"\"\"\n        # This failed will return it.\n        if isinstance(arg, int):\n            # Only call to be reruned and return a list of values.\n            # If the provided expression is not used after the expression is excluded.\n            if isinstance(arg, str):\n                expression = arg.args",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-str-08",
+   "attempt1": "\n      def _title_count(self, s):\n        \"\"\"\n        Returns the every longer to be defined in the plot.\n        \"\"\"\n        if self._title is not None or not self._title_count):\n            raise NotImplementedError\n        # If self._title is set to self._title_count and then a sum char\n        r",
+   "passed1": false,
+   "error": "syntax: unexpected indent",
+   "attempt2": "def title_case(s):\n    \"\"\"return s with every word capitalised\"\"\"\n failed to satisfy the entire\n        fanisfy: the first sampling the entire fanisfying.\n\n        # The first title does not fanisfy the fanisfy the entire\n        # facet (1, 2) and 1 breat the entire fractions.\n        _hist\n",
+   "passed2": false,
+   "why2": "syntax: unindent does not match any outer indentation level"
+  },
+  {
+   "id": "cb-str-09",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def repeat(s, n):\n    \"\"\"return s repeated n times\"\"\"\ndefs(a, n, n)\n    \"\"\"\n    pytest.fixtures.path.aw()\n    pytest.raises(Exception, PAVD)\n    pytest.raises(\n        f\"test_founds_path={n: {type(c)} failed (default: {type(c)}, {n})\"\n    )\n    py\n",
+   "passed2": false,
+   "why2": "syntax: unexpected indent"
+  }
+ ]
+}
