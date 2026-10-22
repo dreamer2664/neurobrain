@@ -713,3 +713,240 @@ def train_stage2_refiner(
         "step_stage2": steps,
     }, out_ckpt)
     return stage2
+
+
+def build_stage1_episode_cache(
+    stage1: Stage1CoarseNet,
+    bank: dict[str, list[tuple[np.ndarray, list[Any]]]],
+    episodes_per_screen: int = 3,
+    top_k: int = 7,
+    seed: int = 707,
+) -> list[dict[str, Any]]:
+    """Precompute real Stage-1 Top-K candidates (`< 3 MB` RAM) across all screens in `bank`."""
+    from PIL import Image
+
+    rng = random.Random(seed)
+    stage1.eval()
+    episodes: list[dict[str, Any]] = []
+    t0 = time.time()
+
+    flat_screens: list[tuple[str, int, np.ndarray, list[Any]]] = []
+    for tier, items in bank.items():
+        for idx, (rgb, els) in enumerate(items):
+            flat_screens.append((tier, idx, rgb, els))
+
+    with torch.no_grad():
+        for b0 in range(0, len(flat_screens), 64):
+            chunk = flat_screens[b0 : b0 + 64]
+            x128_list = []
+            for _, _, rgb, _ in chunk:
+                im128 = np.asarray(Image.fromarray(rgb).resize((COARSE_CANVAS, COARSE_CANVAS), Image.BILINEAR), dtype=np.float32) / 127.5 - 1.0
+                x128_list.append(im128)
+            x128 = torch.from_numpy(np.stack(x128_list, 0)).permute(0, 3, 1, 2).contiguous()
+            fpn = stage1.encode_vision(x128)
+
+            q_tasks = []
+            q_meta = []
+            rep_counts = []
+            for _, (tier, s_idx, _, els) in enumerate(chunk):
+                ordered = list(els)
+                ordered.sort(key=lambda e: (0 if e.role in ("icon", "button", "menu", "tab") else 1, rng.random()))
+                chosen_els = ordered[: min(len(ordered), episodes_per_screen)]
+                rep_counts.append(len(chosen_els))
+                for el in chosen_els:
+                    t_ids = encode_task(rng.choice(TASKS_HARD[el.role]).format(label=el.label))
+                    q_tasks.append(t_ids)
+                    q_meta.append((tier, s_idx, el))
+
+            if not q_tasks:
+                continue
+            rc_t = torch.tensor(rep_counts, dtype=torch.long)
+            fpn_r = torch.repeat_interleave(fpn, rc_t, dim=0)
+            q1 = stage1.encode_instruction(torch.tensor(q_tasks, dtype=torch.long))
+            sc, off, wh, _ = stage1.match_features(fpn_r, q1)
+
+            for qi, ((tier, s_idx, el), t_ids) in enumerate(zip(q_meta, q_tasks)):
+                cands = topk_grid_candidates(
+                    sc[qi], off[qi], wh[qi], HARD_CANVAS, HARD_CANVAS, k=top_k, nms_radius_cells=1
+                )
+                # Keep episodes where at least one Stage-1 candidate hits or is within 10px of target
+                has_hit = any(
+                    (el.x - 2 <= c["x"] <= el.x + el.w + 2 and el.y - 2 <= c["y"] <= el.y + el.h + 2)
+                    or (abs(c["x"] - el.cx) <= 10.0 and abs(c["y"] - el.cy) <= 9.0)
+                    for c in cands
+                )
+                if has_hit and len(cands) == top_k:
+                    episodes.append({
+                        "tier": tier,
+                        "s_idx": s_idx,
+                        "task": t_ids,
+                        "tgt": (float(el.x), float(el.y), float(el.w), float(el.h), float(el.cx), float(el.cy)),
+                        "cands": [(float(c["x"]), float(c["y"]), float(c["stage1_logp"])) for c in cands],
+                    })
+
+    print(
+        f"[episode_cache] built {len(episodes)} exact Stage-1 Top-{top_k} episodes "
+        f"in {time.time()-t0:.1f}s rss={peak_rss_mb():.0f}MB",
+        flush=True,
+    )
+    return episodes
+
+
+def train_stage2_listwise_reranker(
+    stage1: Stage1CoarseNet,
+    stage2: Stage2RefineNet,
+    bank: dict[str, list[tuple[np.ndarray, list[Any]]]],
+    episodes: list[dict[str, Any]],
+    steps: int = 900,
+    batch_episodes: int = 12,
+    lr: float = 9.0e-4,
+    seed: int = 808,
+    threads: int = 2,
+    out_ckpt: str = "checkpoints/eyes_m6_best.pt",
+) -> Stage2RefineNet:
+    """End-to-end listwise fine-tuning of Stage2 + `stage1_alpha` directly on real Stage-1 Top-7 candidates."""
+    torch.set_num_threads(threads)
+    torch.manual_seed(seed)
+    rng = random.Random(seed)
+
+    stage1.eval()
+    stage2.train()
+    opt = torch.optim.AdamW(stage2.parameters(), lr=lr, weight_decay=1e-2)
+
+    span_w = Stage2RefineNet.SPAN_W_FRAC * HARD_CANVAS
+    span_h = Stage2RefineNet.SPAN_H_FRAC * HARD_CANVAS
+    hard_replay: list[dict[str, Any]] = []
+    t0 = time.time()
+
+    for step in range(1, steps + 1):
+        batch: list[dict[str, Any]] = []
+        n_hard = min(len(hard_replay), batch_episodes // 3)
+        for _ in range(n_hard):
+            batch.append(rng.choice(hard_replay))
+        while len(batch) < batch_episodes:
+            batch.append(rng.choice(episodes))
+
+        B = len(batch)
+        K = len(batch[0]["cands"])
+        crops_list = []
+        tasks_list = []
+        s1_logp_mat = np.zeros((B, K), dtype=np.float32)
+        soft_tgt_mat = np.zeros((B, K), dtype=np.float32)
+        valid_pos_mask = []
+        duv_targets = []
+        wh_targets = []
+
+        for bi, ep in enumerate(batch):
+            rgb, _ = bank[ep["tier"]][ep["s_idx"]]
+            tx, ty, tw, th, tcx, tcy = ep["tgt"]
+            tasks_list.append(ep["task"])
+            weights_k = np.zeros(K, dtype=np.float32)
+
+            for ki, (cx, cy, lp) in enumerate(ep["cands"]):
+                # Small sub-pixel training jitter (0.6px) for generalization
+                jcx = float(np.clip(cx + rng.gauss(0.0, 0.5), 1.0, HARD_CANVAS - 2.0))
+                jcy = float(np.clip(cy + rng.gauss(0.0, 0.5), 1.0, HARD_CANVAS - 2.0))
+                arr6, (_, _, rw, rh) = extract_crop_tensor(rgb, jcx, jcy, span_w, span_h)
+                crops_list.append(arr6)
+                s1_logp_mat[bi, ki] = lp
+
+                inside = (tx - 1.5 <= cx <= tx + tw + 1.5) and (ty - 1.5 <= cy <= ty + th + 1.5)
+                dist = math.hypot(cx - tcx, cy - tcy)
+                if inside or dist <= 9.0:
+                    weights_k[ki] = math.exp(-dist / 6.0)
+                    valid_pos_mask.append(True)
+                    max_dx = Stage2RefineNet.MAX_DX_PX * (rw / float(Stage2RefineNet.CROP_W))
+                    max_dy = Stage2RefineNet.MAX_DY_PX * (rh / float(Stage2RefineNet.CROP_H))
+                    du = float(np.clip((tcx - jcx) / max_dx, -0.99, 0.99))
+                    dv = float(np.clip((tcy - jcy) / max_dy, -0.99, 0.99))
+                    duv_targets.append((du, dv))
+                    wh_targets.append((min(0.96, tw / float(HARD_CANVAS)), min(0.25, th / float(HARD_CANVAS))))
+                else:
+                    valid_pos_mask.append(False)
+                    duv_targets.append((0.0, 0.0))
+                    wh_targets.append((0.2, 0.08))
+
+            if weights_k.sum() <= 0:
+                # Fallback to nearest candidate
+                dists = [math.hypot(cx - tcx, cy - tcy) for cx, cy, _ in ep["cands"]]
+                weights_k[int(np.argmin(dists))] = 1.0
+            soft_tgt_mat[bi] = weights_k / weights_k.sum()
+
+        crop_t = torch.from_numpy(np.stack(crops_list, 0)).permute(0, 3, 1, 2).contiguous()
+        # Apply palette aug per episode so all K candidates of the same screen share the exact same theme!
+        crop_b = crop_t.view(B, K, 6, Stage2RefineNet.CROP_H, Stage2RefineNet.CROP_W)
+        for bi in range(B):
+            aug_rgb = apply_palette_aug(crop_b[bi : bi + 1, 0, :3], rng)
+            # Re-apply identical transform by computing linear scale/perm cleanly on all K candidates:
+            r = rng.random()
+            if r < 0.20:
+                crop_b[bi, :, :3] = -crop_b[bi, :, :3]
+            elif r < 0.40:
+                perm = [0, 1, 2]
+                rng.shuffle(perm)
+                crop_b[bi, :, :3] = crop_b[bi, :, perm]
+            if rng.random() < 0.30:
+                sc_f = rng.uniform(0.82, 1.18)
+                sh_f = rng.uniform(-0.14, 0.14)
+                crop_b[bi, :, :3] = (crop_b[bi, :, :3] * sc_f + sh_f).clamp(-1.0, 1.0)
+        crop_t = crop_b.view(B * K, 6, Stage2RefineNet.CROP_H, Stage2RefineNet.CROP_W)
+
+        task_t = torch.tensor(tasks_list, dtype=torch.long)
+        q2 = stage2.encode_instruction(task_t)  # (B, D)
+        q2_rep = q2[:, None, :].expand(B, K, -1).reshape(B * K, -1)
+
+        v_logits, pred_duv, pred_wh = stage2(crop_t, q2_rep)
+        v_mat = v_logits.view(B, K)
+        s1_t = torch.from_numpy(s1_logp_mat)
+        alpha = stage2.stage1_alpha.clamp(0.05, 1.50)
+        comb_mat = alpha * s1_t + v_mat  # (B, K)
+
+        soft_tgt = torch.from_numpy(soft_tgt_mat)
+        log_probs = F.log_softmax(comb_mat, dim=1)
+        list_loss = -(soft_tgt * log_probs).sum(dim=1).mean()
+        bin_tgt = (soft_tgt > 0.05).float()
+        bce_loss = F.binary_cross_entropy_with_logits(v_mat, bin_tgt, pos_weight=torch.tensor(4.0))
+
+        pm = torch.tensor(valid_pos_mask, dtype=torch.bool)
+        duv_t = torch.tensor(duv_targets, dtype=torch.float32)
+        wh_t = torch.tensor(wh_targets, dtype=torch.float32)
+        xy_loss = F.smooth_l1_loss(pred_duv[pm], duv_t[pm], beta=0.06) if pm.any() else torch.tensor(0.0)
+        wh_loss = F.smooth_l1_loss(pred_wh[pm], wh_t[pm], beta=0.05) if pm.any() else torch.tensor(0.0)
+
+        loss = list_loss + 0.4 * bce_loss + 1.8 * xy_loss + 0.2 * wh_loss
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(stage2.parameters(), 2.0)
+        opt.step()
+
+        cur_lr = lr * (0.08 + 0.92 * 0.5 * (1.0 + math.cos(math.pi * step / steps)))
+        for g in opt.param_groups:
+            g["lr"] = cur_lr
+
+        with torch.no_grad():
+            picks = comb_mat.argmax(dim=1).tolist()
+            hits = 0
+            for bi, pk in enumerate(picks):
+                if soft_tgt_mat[bi, pk] > 0.05:
+                    hits += 1
+                else:
+                    if len(hard_replay) >= 600:
+                        hard_replay.pop(0)
+                    hard_replay.append(batch[bi])
+
+        if step % 150 == 0 or step == steps:
+            print(
+                f"[stage2-listwise] step {step}/{steps} loss={loss.item():.4f} hit7={hits/B:.3f} "
+                f"alpha={float(stage2.stage1_alpha.item()):.3f} xy={xy_loss.item():.4f} "
+                f"rss={peak_rss_mb():.0f}MB elapsed={time.time()-t0:.1f}s",
+                flush=True,
+            )
+
+    stage2.eval()
+    os.makedirs(os.path.dirname(out_ckpt) or ".", exist_ok=True)
+    torch.save({
+        "stage1": stage1.state_dict(),
+        "stage2": stage2.state_dict(),
+        "step_stage2": steps,
+    }, out_ckpt)
+    return stage2

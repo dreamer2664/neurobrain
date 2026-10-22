@@ -57,7 +57,7 @@ def _coord_grid(batch_size: int, h: int, w: int, device: torch.device, dtype: to
 class ConvBlockAA(nn.Module):
     """ResNet-D anti-aliased residual block (`stride=2` conv + `AvgPool2d(2)` skip, 4x faster on CPU)."""
 
-    def __init__(self, cin: int, cout: int, stride: int = 1):
+    def __init__(self, cin: int, cout: int, stride: int | tuple[int, int] = 1):
         super().__init__()
         self.conv = nn.Sequential(
             nn.Conv2d(cin, cout, 3, stride=stride, padding=1, bias=False),
@@ -66,8 +66,8 @@ class ConvBlockAA(nn.Module):
             nn.Conv2d(cout, cout, 3, stride=1, padding=1, bias=False),
             nn.BatchNorm2d(cout),
         )
-        if stride == 2:
-            self.skip = nn.Sequential(nn.AvgPool2d(2), nn.Conv2d(cin, cout, 1, bias=False))
+        if stride == 2 or (isinstance(stride, tuple) and stride != (1, 1)):
+            self.skip = nn.Sequential(nn.AvgPool2d(stride), nn.Conv2d(cin, cout, 1, bias=False))
         elif cin != cout:
             self.skip = nn.Conv2d(cin, cout, 1, bias=False)
         else:
@@ -79,10 +79,11 @@ class ConvBlockAA(nn.Module):
 
 
 class CharConvTextEncoder(nn.Module):
-    """Shift-invariant multi-scale character n-gram encoder with 2-head attention pooling."""
+    """Shift-invariant multi-scale character n-gram encoder with multi-head attention pooling."""
 
-    def __init__(self, char_vocab: int = 40, d_emb: int = 48, d_out: int = 128):
+    def __init__(self, char_vocab: int = 40, d_emb: int = 48, d_out: int = 128, n_attn_heads: int = 2):
         super().__init__()
+        self.n_attn_heads = n_attn_heads
         self.emb = nn.Embedding(char_vocab, d_emb, padding_idx=0)
         self.k1 = nn.Conv1d(d_emb, 32, kernel_size=1)
         self.k3 = nn.Conv1d(d_emb, 48, kernel_size=3, padding=1)
@@ -93,9 +94,9 @@ class CharConvTextEncoder(nn.Module):
             nn.SiLU(inplace=True),
             nn.Conv1d(c_mid, c_mid, kernel_size=3, padding=1),
         )
-        self.attn = nn.Conv1d(c_mid, 2, kernel_size=1)
+        self.attn = nn.Conv1d(c_mid, n_attn_heads, kernel_size=1)
         self.proj = nn.Sequential(
-            nn.Linear(c_mid * 3, d_out),
+            nn.Linear(c_mid * (n_attn_heads + 1), d_out),
             nn.SiLU(inplace=True),
             nn.Linear(d_out, d_out),
             nn.LayerNorm(d_out),
@@ -108,16 +109,15 @@ class CharConvTextEncoder(nn.Module):
         h = F.silu(torch.cat([self.k1(e), self.k3(e), self.k5(e)], dim=1)) * mask
         h = F.silu(h + self.refine(h)) * mask  # (B, 128, L)
 
-        logits = self.attn(h)  # (B, 2, L)
+        logits = self.attn(h)  # (B, H, L)
         logits = logits.masked_fill(mask == 0, -1e4)
-        weights = F.softmax(logits, dim=-1)  # (B, 2, L)
-        head0 = (h * weights[:, 0:1, :]).sum(dim=-1)
-        head1 = (h * weights[:, 1:2, :]).sum(dim=-1)
+        weights = F.softmax(logits, dim=-1)  # (B, H, L)
+        heads = [(h * weights[:, hi : hi + 1, :]).sum(dim=-1) for hi in range(self.n_attn_heads)]
         h_masked = h.masked_fill(mask == 0, -1e4)
         h_max = h_masked.max(dim=-1).values
         h_max = torch.where(mask.sum(dim=-1) > 0, h_max, torch.zeros_like(h_max))
 
-        return self.proj(torch.cat([head0, head1, h_max], dim=1))
+        return self.proj(torch.cat([*heads, h_max], dim=1))
 
 
 class Stage1CoarseNet(nn.Module):
@@ -343,7 +343,6 @@ class Stage2RefineNet(nn.Module):
         seq = (self.v_collapse(f8).squeeze(2) + self.col_emb).transpose(1, 2)  # (K, 40, 96)
         h_seq, _ = self.bigru(seq)  # (K, 40, 160)
 
-        # Direct readout at candidate anchor col 28 (cols 25..31 = [-12px .. +12px]) + narrow fovea cols 21..34
         anc_mean = h_seq[:, 25:32, :].mean(dim=1)
         anc_fovea = h_seq[:, 21:35, :].max(dim=1).values
         anc_vec = self.anc_proj(torch.cat([anc_mean, anc_fovea], dim=1))  # (K, d_text)
@@ -538,7 +537,7 @@ class EyesGrounder:
         stage2: Stage2RefineNet | None = None,
         top_k: int = 7,
         nms_radius_cells: int = 1,
-        stage1_weight: float = 0.35,
+        stage1_weight: float | None = None,
         stage2_weight: float = 1.0,
     ):
         self.stage1 = stage1.eval()
@@ -646,7 +645,12 @@ class EyesGrounder:
                     if ex is not None and (ex[0] <= fx <= ex[0] + ex[2] and ex[1] <= fy <= ex[1] + ex[3]):
                         continue
 
-                    comb = self.stage1_weight * c["stage1_logp"] + self.stage2_weight * float(v_logits[idx_c].item())
+                    s1_w = (
+                        float(self.stage1_weight)
+                        if self.stage1_weight is not None
+                        else float(getattr(self.stage2, "stage1_alpha", torch.tensor(0.45)).item())
+                    )
+                    comb = s1_w * c["stage1_logp"] + self.stage2_weight * float(v_logits[idx_c].item())
                     if comb > best_score:
                         best_score = comb
                         px, py = fx, fy

@@ -1,0 +1,8 @@
+{
+  "kind": "char_vocab",
+  "char_vocab": 40,
+  "max_len": 48,
+  "pad_id": 0,
+  "unk_id": 39,
+  "chars": "abcdefghijklmnopqrstuvwxyz0123456789 -"
+}
