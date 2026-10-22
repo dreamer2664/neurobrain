@@ -1,2 +1,4 @@
 [grip] resumed from step 30
 [grip] params: 0.65M, batch 32, steps 12000
+[grip] step 50/12000 loss 3.3840 ce 3.2686 act 0.0550 elapsed 7s
+[grip] step 75/12000 loss 3.1355 ce 3.1437 act 0.0105 elapsed 14s
