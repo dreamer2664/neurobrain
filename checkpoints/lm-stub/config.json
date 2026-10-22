@@ -1,0 +1,15 @@
+{
+  "vocab_size": 2052,
+  "n_layer": 6,
+  "n_head": 7,
+  "d_model": 224,
+  "ctx": 256,
+  "dropout": 0.0,
+  "tie_embeddings": true,
+  "kind": "lm",
+  "step": 0,
+  "stub": true,
+  "params": 4247264,
+  "tokenizer_sha256": "198316dfad27b115e58868edc9b850e58ad23ebf596aed063aec023c8f30f8ab",
+  "weights_sha256": "0ac458cd3dc93a30c8871e76f9bf71f574158ed9ffe946e6d31f221a26831bc9"
+}

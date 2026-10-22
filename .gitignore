@@ -8,3 +8,6 @@ checkpoints/*.pt
 samples/*.png
 /tmp/
 reports/train_stdout.log
+checkpoints/*/weights*.pt
+.brainbox/
+*.egg-info/
