@@ -1,82 +1,82 @@
-checkpoint step 4400
+checkpoint step 4600
 
-task:    pick refresh
-  ref:   click(945,885)
-  model: click(930,495)
+task:    turn on save
+  ref:   toggle(390,1170)
+  model: toggle(1440,1425)
 
-task:    focus settings
-  ref:   type(1410,1095)
-  model: type(930,1455)
-
-task:    open the rename tab
-  ref:   click(960,1020)
-  model: click(930,1455)
-
-task:    select the home icon
-  ref:   click(870,510)
-  model: click(525,1455)
-
-task:    move the play slider
-  ref:   drag(1020,405)
-  model: drag(930,1455)
-
-task:    open the share tab
-  ref:   click(1410,1470)
-  model: click(1455,465)
-
-task:    open refresh
-  ref:   click(1425,495)
-  model: click(930,1455)
+task:    click the settings button
+  ref:   click(1335,1185)
+  model: click(1455,1425)
 
 task:    check print
-  ref:   toggle(1350,1500)
-  model: toggle(510,1455)
+  ref:   toggle(360,420)
+  model: toggle(1425,795)
 
-task:    drag the cancel slider
-  ref:   drag(960,480)
-  model: drag(1470,1470)
+task:    hit the login button
+  ref:   click(420,870)
+  model: click(1440,1110)
 
-task:    check download
-  ref:   toggle(840,480)
-  model: toggle(930,1455)
+task:    press delete
+  ref:   click(420,1050)
+  model: click(1485,450)
 
-task:    focus delete
-  ref:   type(1410,435)
-  model: type(930,495)
+task:    hit the logout button
+  ref:   click(1500,510)
+  model: click(1545,1110)
 
-task:    drag the settings slider
-  ref:   drag(525,840)
-  model: drag(1470,1455)
+task:    select the rename icon
+  ref:   click(510,585)
+  model: click(1485,1425)
 
-task:    select the save icon
-  ref:   click(1410,825)
-  model: click(930,1455)
+task:    focus export
+  ref:   type(855,780)
+  model: type(450,1485)
 
-task:    click the pause icon
-  ref:   click(1350,810)
-  model: click(930,1455)
+task:    click the cart icon
+  ref:   click(1455,1410)
+  model: click(1425,1125)
 
-task:    click the archive menu item
-  ref:   click(1305,735)
-  model: click(930,1455)
+task:    click the archive button
+  ref:   click(900,1200)
+  model: click(1485,1110)
 
-task:    click the play icon
-  ref:   click(1485,510)
-  model: click(525,1455)
+task:    adjust submit
+  ref:   drag(810,525)
+  model: drag(1485,1125)
 
-task:    choose logout from the menu
-  ref:   click(495,1440)
-  model: click(480,1455)
+task:    select the pause icon
+  ref:   click(885,1200)
+  model: click(1440,1425)
 
-task:    open profile
-  ref:   click(525,1125)
-  model: click(945,1455)
+task:    toggle the search checkbox
+  ref:   toggle(570,465)
+  model: toggle(1485,1110)
 
-task:    open profile
-  ref:   click(300,690)
-  model: click(930,1425)
+task:    click the save tab
+  ref:   click(360,375)
+  model: click(1485,1110)
 
-task:    select the share icon
-  ref:   click(885,1470)
-  model: click(1470,1455)
+task:    turn on archive
+  ref:   toggle(525,705)
+  model: toggle(1485,1440)
+
+task:    click the cancel button
+  ref:   click(1020,450)
+  model: click(1485,1425)
+
+task:    open the export tab
+  ref:   click(570,840)
+  model: click(1485,1125)
+
+task:    toggle the help checkbox
+  ref:   toggle(945,765)
+  model: toggle(1440,1110)
+
+task:    turn on delete
+  ref:   toggle(465,1155)
+  model: toggle(1545,1455)
+
+task:    hit the pause button
+  ref:   click(1395,870)
+  model: click(495,1425)
 

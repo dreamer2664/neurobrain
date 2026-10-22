@@ -1,59 +1,59 @@
 {
-  "step": 4400,
-  "val_loss": 2.309,
-  "val_ppl": 10.06,
+  "step": 4600,
+  "val_loss": 2.307,
+  "val_ppl": 10.04,
   "syntax_valid": 1,
   "syntax_total": 10,
   "syntax_rate": 0.1,
   "samples": [
     {
       "prompt": "def add(a, b):\n",
-      "generation": "def remove(a, b):\n    \"\"\"\n    Provides a higher of a higher-sentinel provides.\n    \"\"\"\n    a = (a.is_integer, b.is_integer, b.is_integer)\n    a.is_integer()\n    a.is_integer()\n    a.is_integer()\n    a.is",
-      "parses": false
+      "generation": "# pyrefly: ignore [bad-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument",
+      "parses": true
     },
     {
       "prompt": "def factorial(n):\n",
-      "generation": "\ndef _volt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_solt_s",
+      "generation": "s = [n - 1, n - 1, n - 2, n, n - 2, n - 2, n - 2, n - 1, n + 2, n - 2, n - 2, n - 1, n - 2, n - 1, n - 1, n - 2, n - 2, n - 2, n - 2]\n\n\ndef _cats(n, n, n, n, n, n",
       "parses": false
     },
     {
       "prompt": "class Point:\n    def __init__(self, x, y):\n",
-      "generation": "\n\n        x = x.asarray(x)\n        if x.isinf(x) and x.isinf(x) or y.isinf(x) and x.isinf(x, y):\n        x = x.asarray(x)\n        x = x.asarray(x.isinf(x) for x in x)\n        x = x.asarray(x.isinf(x))",
+      "generation": "\nclass Point:\n    \"\"\"\n    To avoid the terms of the FQG as a squares or squares polynomials of the\n    SQG coefficients from the pieudo-free creation.\n\n    The terms of the SQG coefficients the product of the Maire polynomial coefficients.\n    Fir",
       "parses": false
     },
     {
       "prompt": "def read_file(path):\n",
-      "generation": "import read_file_path.joinpath(\"import os.path to\")\nimport read_file_path.joinpath(\"import os.pathxtiangometric\")\nimport read_file_path.from_path(path, \"import os.path.joinpath(\"import os.path to\")\n\n\n# Directory 2. modules and uses a file to their filesystem.\n",
+      "generation": "# Use the file.py\n# This module is used by the file name, and the file name is a file, so a tempfile and the file\n# (see #666667) and the file is not in the file.\n# This module is deprecated by the file name (see #6667).\n# This module is not read from the file and file, and the file name",
       "parses": false
     },
     {
       "prompt": "def is_even(n):\n",
-      "generation": "# xdoctest: +SK(n) -> n)\n\ndef gamma_mx_sv(n):\n    \"\"\"The function for all elements and returns a list of elements.\"\"\"\n    if constants:\n        return Constants[0]\n    if constants:\n        constants[0] = constants[1]\n\n    if constants[0] == consts:\n        con",
+      "generation": " # type: ignore[return-value]\nStringDict = {}\n\n\nclass _TupleGetItemValue(Mutable[Tuple[Any], Tuple[Tuple[Any], Any]], Tuple[Any], Tuple[Any, ...]):\n    \"\"\"\n    Tuple gmail-array-like-like objects to find the new ``NestedDict`` find on the\n    impl",
       "parses": false
     },
     {
       "prompt": "def main():\n",
-      "generation": "#   __modul__ = __modul__ = __modul__ = __modul__ = __modul__, __modul__ = __modul__ = __modul__, __modul__ = __modul__, __modul__ = __modul__()\n    __modul__ = __modul__\n\n    __modul__ = __mod",
-      "parses": true
+      "generation": "@dataclass\nclass TemplateDict(Base):\n    \"\"\"\n    A dataclass of objects that may be included in them.\n\n    This function is not included in a script.\n    \"\"\"\n\n    # find the template_objects that have a dedicated dict,\n    # which is a scriptable.\n    return _get_dedicated_objects(self.te",
+      "parses": false
     },
     {
       "prompt": "for i in range(10):\n",
-      "generation": "\nAsur.\n\nThe function is included to the implementation of these functions.\n\n-\nThe function is included to the function has a non-empty subclass.\n\nEach function is a non-empty subclass, the function is used to get a new class.\n\n\nExamples:\n\n.. versionadded::\n\n.. versionadded::\n\n    class Example",
+      "generation": "# This is a no-op defined function, in the first element of the\n    # class of launch (or a singleton, the launch is a bounch)\n    for i in range(10):\n    for i in range(10):\n        if i in range(10):\n            if i in range(10):\n                continue\n            if i in range(10):\n                i = i + j + 1\n            if",
       "parses": false
     },
     {
       "prompt": "import json\n\ndef load_config(path):\n",
-      "generation": "\nimport numpy as np\nimport numpy as np\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom math import math\nfrom",
+      "generation": "\nif __name__ == '__main__':\n    pass\n\n# -----------------------------------------------------------------\n\n\nclass MaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMax',\n)\nclass MaxMaxMaxMaxMaxM",
       "parses": false
     },
     {
       "prompt": "def bubble_sort(items):\n",
-      "generation": "# ==============================================================================================================\n# TODO: Fake the conditions of the full longer below.\n#\n# ============================================================================================================================================================\n#\n#   <\n#   <https://github.com/https://github.com/https://en.wikipedia.org/w",
+      "generation": "def flex_schema_from_sort(values, sequence, value) -> Any:\n    \"\"\"\n    Flex the optimizer of a sort (sort,) that are recommended by a sort,\n    the sort is sort by the value of these to the sort.\n    \"\"\"\n    return _flex_schema_from_sort(values)\n\n\n",
       "parses": false
     },
     {
       "prompt": "def greet(name):\n",
-      "generation": "\n# mypy.micpy\n#----------------------------------------------------------------------------\n#----------------------------------------------------------------------------\n#----------------------------------------------------------------------------\n#----------------------------------------------------------------------------\n\n#----------------------------------------------------------------------------\n\n#----------------------------------------------------------------------------\n#----------------------------------------------------------------------------\n\n#----------------------------------------------------------------------------\n\ndef micpy_microsine(\n    name: str,\n    *,\n    *,\n    metadata: dict[str, str],\n    *,\n    **kwargs: Any,\n) -> None",
+      "generation": "# This module is imported in a module to treat the\n# registration\n# and these are not used in the module so we\n# appear the module.\n# This module is a module of python modules, which is used in\n# the modules of sys.modules.\nimport pickle as pickle as Pickle\nfrom collections.abc import (\n    TemplateR",
       "parses": false
     }
   ]

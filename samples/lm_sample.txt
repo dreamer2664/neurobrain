@@ -1,21 +1,26 @@
 # checkpoint step 4600
 # prompt:
-# a tiny helper that retries a call three times
 
+class PostDecrement(Basic):
+    """ Represents the post-decrement operator
+
+    Examples
+    ========
+
+    >>> from sympy.abc import x
+    >>> from sympy.codegen.cnodes import PostDecrement
+    >>> from sympy import ccode
+    >>> ccode(PostDecrement
 # ---- continuation ----
-# a tiny helper that retries a call three times
-from collections.abc import (-1, 8)
-from collections.abc import Callable[_Time]
-from collections.abc import Callable[_Time]
 
+class PostDecrement(Basic):
+    """ Represents the post-decrement operator
 
-class STTPWritePartVersion(torch.libc.Prefix):
-    def __init__(self, context, context, tx, tx, TransformedTime):
-        self.context = context
-        self.tx = tx
-        self.tx = tx.__class__.__class__.__name__
-        self.tx.tx = tx
-        self.tx.tx.tx.tx = tx.__class__.__name__
-        self.tx.tx.tx = tx.tx.tx.tf
-        self.tx.tx.tx = tx.total_tx.tx.tx.tf
-        self.tx.tx.tz.tx.tx.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz.tz
+    Examples
+    ========
+
+    >>> from sympy.abc import x
+    >>> from sympy.codegen.cnodes import PostDecrement
+    >>> from sympy import ccode
+    >>> ccode(PostDecrement(PostDecrement(PostDecrement(Code)))
+    PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrer(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostEventIO(PostDecrement(PostDecrement(PostDecrement(Po

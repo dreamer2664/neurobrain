@@ -250,3 +250,5 @@
 [grip] step 1700/12000 loss 2.7406 ce 2.6603 off 0.104 act 0.0000 elapsed 225s
 [grip] step 1725/12000 loss 2.7272 ce 2.7372 off 0.072 act 0.0000 elapsed 228s
 [grip] step 1750/12000 loss 2.7338 ce 2.7982 off 0.127 act 0.0002 elapsed 231s
+[grip] params: 0.44M, batch 16, steps 12000
+[grip] step 25/12000 loss 5.1260 ce 4.2335 off 0.518 act 0.1602 elapsed 16s
