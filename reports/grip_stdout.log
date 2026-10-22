@@ -2,3 +2,5 @@
 [grip] params: 0.65M, batch 32, steps 12000
 [grip] step 50/12000 loss 3.3840 ce 3.2686 act 0.0550 elapsed 7s
 [grip] step 75/12000 loss 3.1355 ce 3.1437 act 0.0105 elapsed 14s
+[grip] step 100/12000 loss 3.0296 ce 2.8924 act 0.0013 elapsed 21s
+[grip] step 125/12000 loss 2.9697 ce 3.0895 act 0.0042 elapsed 29s
