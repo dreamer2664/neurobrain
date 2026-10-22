@@ -4,60 +4,20 @@
 
 # ---- continuation ----
 # a tiny helper that retries a call three times
-# of type `type` and `union`
+# inferred and the last time.
 
-try:
-    _check_band_override(
-    _check_band_override(func, args, kwargs, kwargs, out=out, **kwargs
-    )
-<|endoftext|>import _plotly_utils.basevalidators
+def _load_tensor(tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor
+
+#  lambda.LambdaIsResult()
+#  lambda.LambdaIsResult()
+def _load_tensor_o_tensor(tensor, tensor, tensor, tensor, tensor, tensor, tensor, dtype, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor
+    tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor
+
+#  lambda, tensor, tensor, tensor, lambda_tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor
+# tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor_, tensor, tensor, tensor, tensor, tensor, tensor, tensor
+# tensor, tensor, tensor, tensor, tuple, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, torch.Lint, tensor, tensor, tensor, tensor, tensor)
+# tensor_, tensor, tensor = tensor_, tensor_, tensor, tensor
 
 
-class ShadowValidator(_plotly_utils.basevalidators.StringValidator):
-    def __init__(
-        self,
-        plotly_name="shadow",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "legendgrouptitle",
-        "
+def input(tensor, tensor, tensor, tensor, tensor, tensor, tensor_, tensor, strategy, tensor, tensor, tensor
+    tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor, tensor,

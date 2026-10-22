@@ -51,7 +51,7 @@ fi
 run_lm() {
   echo "=== [$(date -u +%FT%TZ)] language brain: ${LM_SEG}s ==="
   python3 -m neurobrain.train_lm --resume --steps "$LM_TOTAL" --time_budget "$LM_SEG" \
-      --batch 8 --accum 3 --ctx 256 --threads 2 2>&1 | tee -a reports/train_stdout.log
+      --batch 6 --accum 4 --ctx 256 --threads 2 2>&1 | tee -a reports/train_stdout.log
   python3 -m neurobrain.sample --ckpt checkpoints/lm_best.pt --tokens 400 \
       --out samples/lm_sample.txt 2>&1 | tail -40
 }
