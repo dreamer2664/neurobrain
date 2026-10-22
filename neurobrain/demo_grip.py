@@ -43,8 +43,8 @@ def main() -> None:
             from .ui_world import CHAR2ID
             t = re.sub(r"[^a-z0-9 -]", "", ex.task.lower())[:48]
             ids = [CHAR2ID.get(c, 0) for c in t] + [0] * (48 - len(t))
-            scores, act_logits = model(x, torch.tensor([ids]))
-            px, py = model.click_xy(scores, CANVAS)[0].tolist()
+            scores, offsets, act_logits = model(x, torch.tensor([ids]))
+            px, py = model.click_xy(scores, offsets, CANVAS)[0].tolist()
             hit = ex.target.contains(px, py)
             hits += hit
             tile = Image.fromarray(img).resize((256, 256), Image.NEAREST)

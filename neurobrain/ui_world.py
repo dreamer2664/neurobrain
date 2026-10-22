@@ -260,10 +260,22 @@ def target_heatmap(ex: Example, grid: int = 8) -> np.ndarray:
 ACTION_CLASSES = ["click", "type", "toggle", "drag"]
 
 
+def target_offset(ex: Example, grid: int = 8) -> tuple[int, list[float]]:
+    """Index of the cell holding the widget centre + offset inside that cell."""
+    cell = CANVAS / grid
+    cx, cy = ex.target.cx / cell, ex.target.cy / cell
+    ix, iy = int(cx), int(cy)
+    ix, iy = min(ix, grid - 1), min(iy, grid - 1)
+    dx = (cx - (ix + 0.5)) / 0.45
+    dy = (cy - (iy + 0.5)) / 0.45
+    return iy * grid + ix, [max(-1.0, min(1.0, dx)), max(-1.0, min(1.0, dy))]
+
+
 def batch(n: int, rng: random.Random, grid: int = 8):
     xs = np.empty((n, CANVAS, CANVAS, 3), dtype=np.float32)
     tasks = np.empty((n, 48), dtype=np.int64)
     targets = np.empty((n, grid * grid), dtype=np.float32)
+    offs = np.empty((n, 2), dtype=np.float32)
     actions = np.empty((n,), dtype=np.int64)
     examples = []
     for i in range(n):
@@ -272,6 +284,7 @@ def batch(n: int, rng: random.Random, grid: int = 8):
         xs[i] = img.astype(np.float32) / 127.5 - 1.0
         tasks[i] = np.array(encode_task(ex.task), dtype=np.int64)
         targets[i] = target_heatmap(ex, grid).reshape(-1)
+        offs[i] = np.array(target_offset(ex, grid)[1], dtype=np.float32)
         actions[i] = ACTION_CLASSES.index(ex.action)
         examples.append(ex)
-    return xs, tasks, targets, actions, examples
+    return xs, tasks, targets, offs, actions, examples

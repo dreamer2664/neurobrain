@@ -32,8 +32,8 @@ def grip_click(model: GripNet, layout, task: str):
     t = re.sub(r"[^a-z0-9 -]", "", task.lower())[:48]
     ids = [CHAR2ID.get(c, 0) for c in t] + [0] * (48 - len(t))
     with torch.no_grad():
-        scores, _ = model(x, torch.tensor([ids]))
-        px, py = model.click_xy(scores, CANVAS)[0].tolist()
+        scores, offsets, _ = model(x, torch.tensor([ids]))
+        px, py = model.click_xy(scores, offsets, CANVAS)[0].tolist()
     return px, py
 
 

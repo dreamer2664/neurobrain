@@ -24,9 +24,10 @@ def evaluate(model: GripNet, rng: random.Random, n: int = 256) -> dict:
     iou_sum = 0.0
     with torch.no_grad():
         for _ in range(4):
-            xs, tasks, targets, actions, examples = batch(n // 4, rng)
-            scores, act_logits = model(torch.from_numpy(xs).permute(0, 3, 1, 2), torch.from_numpy(tasks))
-            xy = model.click_xy(scores, CANVAS)
+            xs, tasks, targets, offs, actions, examples = batch(n // 4, rng)
+            scores, offsets, act_logits = model(
+                torch.from_numpy(xs).permute(0, 3, 1, 2), torch.from_numpy(tasks))
+            xy = model.click_xy(scores, offsets, CANVAS)
             pred_act = act_logits.argmax(1).numpy()
             for i, ex in enumerate(examples):
                 px, py = xy[i, 0].item(), xy[i, 1].item()
@@ -91,10 +92,11 @@ def main() -> None:
         if time.time() - t0 > args.time_budget:
             print("[grip] time budget reached, stopping")
             break
-        xs, tasks, targets, actions, _ = batch(args.batch, rng)
-        scores, act_logits = model(torch.from_numpy(xs).permute(0, 3, 1, 2), torch.from_numpy(tasks))
-        loss, parts = model.loss(scores, act_logits, torch.from_numpy(targets),
-                                 torch.from_numpy(actions).long())
+        xs, tasks, targets, offs, actions, _ = batch(args.batch, rng)
+        scores, offsets, act_logits = model(
+            torch.from_numpy(xs).permute(0, 3, 1, 2), torch.from_numpy(tasks))
+        loss, parts = model.loss(scores, offsets, act_logits, torch.from_numpy(targets),
+                                 torch.from_numpy(offs), torch.from_numpy(actions).long())
         opt.zero_grad(set_to_none=True)
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 2.0)
@@ -107,7 +109,8 @@ def main() -> None:
 
         if step % 25 == 0:
             print(f"[grip] step {step}/{args.steps} loss {running/n_run:.4f} "
-                  f"ce {parts['ce']:.4f} act {parts['act']:.4f} elapsed {time.time()-t0:.0f}s", flush=True)
+                  f"ce {parts['ce']:.4f} off {parts['off']:.3f} act {parts['act']:.4f} "
+                  f"elapsed {time.time()-t0:.0f}s", flush=True)
             with open(log_path, "a") as f:
                 f.write(json.dumps({"step": step, "loss": running / n_run, **parts,
                                     "elapsed": round(time.time() - t0, 1)}) + "\n")

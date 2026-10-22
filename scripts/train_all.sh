@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 
 LM_SEG=${LM_SEG:-1200}       # seconds of language training per cycle
 GRIP_SEG=${GRIP_SEG:-300}    # seconds of vision training per cycle
-LM_TOTAL=${LM_TOTAL:-40000}  # total LM steps (resumable)
+LM_TOTAL=${LM_TOTAL:-16000}  # total LM steps (resumable)
 GRIP_TOTAL=${GRIP_TOTAL:-12000}
 FIRST=${FIRST:-lm}
 export MALLOC_ARENA_MAX=2

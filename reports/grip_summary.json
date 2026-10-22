@@ -1,10 +1,10 @@
 {
-  "step": 40,
+  "step": 20,
   "eval": {
-    "hit_widget": 0.15,
-    "hit_point": 0.04,
-    "action_acc": 0.8225,
-    "click_iou": 0.02844819030572672
+    "hit_widget": 0.065,
+    "hit_point": 0.0325,
+    "action_acc": 0.5675,
+    "click_iou": 0.012388476111803652
   },
-  "params": 645285
+  "params": 719207
 }
