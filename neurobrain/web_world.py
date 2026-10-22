@@ -56,7 +56,7 @@ ANSWERS = {
     "the speed of light": "about 300,000 kilometres per second",
 }
 
-DESKTOP_ICONS = ["chrome", "docs", "files", "calculator", "mail", "photos"]
+DESKTOP_ICONS = ["chrome", "docs", "files", "mail"]
 
 
 @dataclass
@@ -98,8 +98,9 @@ class WebTask:
             [a for a in ANSWERS.values() if a != self.answer], k=3)
 
     def objective(self) -> str:
-        return (f"open chrome, research {self.topic}, and report the answer "
-                f"in google docs")
+        # short on purpose: the objective and the screen scan share one
+        # 256-token context, and the scan is what tells the model where to click
+        return f"research {self.topic} in chrome and report it in docs"
 
 
 class WebWorld:
@@ -118,7 +119,7 @@ class WebWorld:
     # ------------------------------------------------------------------ views
     def _dock(self) -> list[Element]:
         """The dock is on every screen, so switching apps is always a real click."""
-        return _grid(DESKTOP_ICONS, "icon", 120, 1700, 6, 220, 120, 30)
+        return _grid(DESKTOP_ICONS, "icon", 120, 1700, 4, 220, 120, 30)
 
     def _desktop(self) -> Win:
         # no app icons on the wallpaper: a label that appears twice on one scan
@@ -127,23 +128,19 @@ class WebWorld:
 
     def _chrome(self) -> Win:
         els = [_el("field", "address", 200, 90, 900, 90),
-               _el("button", "search", 1130, 90, 220, 90),
-               _el("button", "close", 1700, 90, 120, 90)]
+               _el("button", "search", 1130, 90, 220, 90)]
         els += _grid(self.task.results, "button", 200, 320, 1, 1500, 130, 30)
-        els += _grid(self.task.distractors, "icon", 200, 1200, 3, 420, 160, 40)
+        els += _grid(self.task.distractors[:2], "icon", 200, 1200, 2, 420, 160, 40)
         return Win("chrome", 40, 40, 1840, 1600, els + self._dock())
 
     def _article(self) -> Win:
-        els = [_el("button", "copy", 1450, 900, 260, 110),
-               _el("button", "back", 200, 150, 200, 90),
-               _el("button", "close", 1700, 90, 120, 90)]
-        els += _grid([self.task.answer] + self.task.distractors, "field", 200, 300, 1, 1500, 110, 24)
+        els = [_el("button", "copy", 1450, 900, 260, 110)]
+        els += _grid([self.task.answer] + self.task.distractors[:2], "field", 200, 300, 1, 1500, 110, 24)
         return Win("article", 40, 40, 1840, 1600, els + self._dock())
 
     def _docs(self) -> Win:
         els = [_el("button", "paste", 200, 820, 240, 110),
-               _el("button", "save", 1650, 820, 240, 110),
-               _el("button", "close", 1700, 90, 120, 90)]
+               _el("button", "save", 1650, 820, 240, 110)]
         # the editor shows the clipboard once pasted; before that it is blank
         els += [_el("field", "document", 200, 260, 1500, 480)]
         return Win("docs", 120, 80, 1700, 1600, els + self._dock())
@@ -213,9 +210,8 @@ class WebWorld:
                 return {"ok": True, "detail": f"opened the article on {label}"}
             if label in self.task.results or label in self.task.distractors:
                 return {"ok": True, "detail": f"opened {label}, wrong result"}
-            if label == "close":
-                self.state = "desktop"
-                return {"ok": True, "detail": "chrome closed"}
+            if label == "files":
+                return {"ok": True, "detail": "files opened, wrong app"}
             return {"ok": True, "detail": f"clicked {label}, nothing opened"}
 
         if state == "article":
@@ -287,7 +283,7 @@ class WebWorld:
 def _scan(layout_els) -> str:
     items = sorted(layout_els, key=lambda e: e.label)
     return ("<|scan|>elements on screen: "
-            + "; ".join(f"{e.label} {e.role} at {int(e.cx)},{int(e.cy)}"
+            + "; ".join(f"{e.label} {e.role}@{int(e.cx)},{int(e.cy)}"
                         for e in items))
 
 

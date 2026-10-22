@@ -1,0 +1,427 @@
+{
+  "n": 60,
+  "solved": 60,
+  "accuracy": 1.0,
+  "rows": [
+    {
+      "solved": true,
+      "doc": "the yen",
+      "answer": "the yen",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Brasilia",
+      "answer": "Brasilia",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Cairo",
+      "answer": "Cairo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Cairo",
+      "answer": "Cairo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Fe",
+      "answer": "Fe",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Au",
+      "answer": "Au",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Cairo",
+      "answer": "Cairo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "O",
+      "answer": "O",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Cairo",
+      "answer": "Cairo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "100 degrees Celsius",
+      "answer": "100 degrees Celsius",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "O",
+      "answer": "O",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Paris",
+      "answer": "Paris",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "pound sterling",
+      "answer": "pound sterling",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "100 degrees Celsius",
+      "answer": "100 degrees Celsius",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "pound sterling",
+      "answer": "pound sterling",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "O",
+      "answer": "O",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Jupiter",
+      "answer": "Jupiter",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Paris",
+      "answer": "Paris",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Brasilia",
+      "answer": "Brasilia",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Brasilia",
+      "answer": "Brasilia",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Jupiter",
+      "answer": "Jupiter",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Fe",
+      "answer": "Fe",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "about 300,000 kilometres per second",
+      "answer": "about 300,000 kilometres per second",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "the yen",
+      "answer": "the yen",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Paris",
+      "answer": "Paris",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Au",
+      "answer": "Au",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "the yen",
+      "answer": "the yen",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Rome",
+      "answer": "Rome",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "pound sterling",
+      "answer": "pound sterling",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "100 degrees Celsius",
+      "answer": "100 degrees Celsius",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "pound sterling",
+      "answer": "pound sterling",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Ottawa",
+      "answer": "Ottawa",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Jupiter",
+      "answer": "Jupiter",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Tokyo",
+      "answer": "Tokyo",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Au",
+      "answer": "Au",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "100 degrees Celsius",
+      "answer": "100 degrees Celsius",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Fe",
+      "answer": "Fe",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "about 300,000 kilometres per second",
+      "answer": "about 300,000 kilometres per second",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    },
+    {
+      "solved": true,
+      "doc": "Paris",
+      "answer": "Paris",
+      "steps": 6,
+      "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; document field@950,500; files icon@730,1760; mail "
+    }
+  ]
+}

@@ -43,7 +43,7 @@ def scan_from_obs(obs: dict) -> str:
     for e in items:
         x = int(round(float(e.get("cx", 0)) * scale))
         y = int(round(float(e.get("cy", 0)) * scale))
-        parts.append(f"{e['label']} {e['role']} at {x},{y}")
+        parts.append(f"{e['label']} {e['role']}@{x},{y}")
     return "<|scan|>elements on screen: " + "; ".join(parts)
 
 
@@ -96,7 +96,18 @@ class LMDriver:
             tail = text[-self.TAIL_CHARS:]
 
         def prompt_now() -> str:
-            # order matches the training data exactly: ... check ... scan -> step
+            # order matches the training data exactly: ... check ... scan -> step.
+            # If the scene is too big for one context, the objective and the
+            # current screen win: the history is droppable, they are not.
+            budget = getattr(world, "ctx_tokens", 232)
+            budget -= len(self.host.tok.encode(head)) + 28
+            need = len(self.host.tok.encode(scan_now))
+            if need > budget:
+                # keep the head of the scan: the first entries are the apps
+                parts = scan_now.split("; ")
+                while parts and len(self.host.tok.encode("; ".join(parts))) > budget:
+                    parts.pop()
+                return head + "; ".join(parts)
             return head + tail + scan_now
 
         for step in range(1, self.max_steps + 1):

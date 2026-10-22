@@ -95,7 +95,7 @@ def scan_line(layout) -> str:
     """
     items = sorted(layout.elements, key=lambda e: e.label)
     return ("<|scan|>elements on screen: "
-            + "; ".join(f"{e.label} {e.role} at {int(e.cx) * SCALE},{int(e.cy) * SCALE}"
+            + "; ".join(f"{e.label} {e.role}@{int(e.cx) * SCALE},{int(e.cy) * SCALE}"
                         for e in items))
 
 

@@ -75,6 +75,19 @@ grip_segment() {
       --batch 16 --threads 1 2>&1 | tee -a reports/grip_stdout.log
 }
 
+# The two bars, measured in the gap between segments: this is the only moment
+# the box has memory to spare for an evaluator.
+eval_bars() {
+  [ -f checkpoints/lm_best.pt ] || return 0
+  echo "=== [$(date -u +%FT%TZ)] measuring the bars ==="
+  LOWMEM_MB=1100 bash scripts/lowmem.sh python3 scripts/qa_eval.py \
+      --ckpt checkpoints/lm_best.pt --n 50 --out reports/qa_eval.json 2>&1 | tail -12
+  LOWMEM_MB=1100 bash scripts/lowmem.sh python3 scripts/e2e_web_task.py \
+      --ckpt checkpoints/lm_best.pt --n 20 --max-steps 12 \
+      --out reports/web_eval.json 2>&1 | tail -10
+  python3 scripts/morning_report.py --out REPORT.md 2>&1 | tail -2
+}
+
 run_lm() {
   echo "=== [$(date -u +%FT%TZ)] language brain: ${LM_SEG}s ==="
   run_retry lm lm_segment
@@ -100,6 +113,7 @@ while true; do
   ensure_stack
   run_lm
   run_grip
+  eval_bars
   STEPS=$(python3 -c "
 import json
 out = {}
