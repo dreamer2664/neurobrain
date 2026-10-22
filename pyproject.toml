@@ -18,3 +18,6 @@ brainbox = "brainbox.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["neurobrain*", "brainbox*"]
+
+[tool.setuptools.package-data]
+brainbox = ["tokenizer.json"]
