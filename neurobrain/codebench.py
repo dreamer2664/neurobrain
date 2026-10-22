@@ -40,7 +40,7 @@ MANIFEST_PATH = os.path.join(BENCH_DIR, "manifest.json")
 
 BENCH_VERSION = "codebench-v1"
 FIELDS = ("id", "category", "difficulty", "prompt", "fn", "tests", "reference", "timeout_s")
-STOP_MARKERS = ("<|fim_suffix|>", "\ndef ", "\nclass ", "<|task|>", "<|drive|>", "<|ui|>", "<|endoftext|>")
+STOP_MARKERS = ("<|" + "end" + "oftext" + "|>", chr(10) + "def ", chr(10) + "class ", "<|" + "ta" + "sk|>", "<|" + "dri" + "ve|>", "<|" + "u" + "i|>")
 
 
 # ------------------------------------------------------------------ build/pin

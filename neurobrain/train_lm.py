@@ -29,6 +29,12 @@ def cosine_lr(step: int, total: int, base: float, floor_ratio: float = 0.1, warm
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data")
+    ap.add_argument("--code-train", default=None, help="override code train bin (e.g. corpus v2)")
+    ap.add_argument("--code-val", default=None)
+    ap.add_argument("--drive-train", default=None)
+    ap.add_argument("--drive-val", default=None)
+    ap.add_argument("--ui-train", default=None)
+    ap.add_argument("--ui-val", default=None)
     ap.add_argument("--out", default="checkpoints")
     ap.add_argument("--steps", type=int, default=6000)
     ap.add_argument("--batch", type=int, default=8)
@@ -49,16 +55,20 @@ def main() -> None:
     os.makedirs("reports", exist_ok=True)
 
     tok = BPETokenizer.load(os.path.join(args.data, "tokenizer.json"))
+
+    def _bin(name: str, override: str | None) -> str:
+        return override or os.path.join(args.data, f"{name}.bin")
+
     # code teaches the language, drive teaches it to finish, ui teaches the screen
     mix = Mixture({
-        "code": (os.path.join(args.data, "code_train.bin"), 0.55),
-        "drive": (os.path.join(args.data, "drive_train.bin"), 0.25),
-        "ui": (os.path.join(args.data, "ui_train.bin"), 0.20),
+        "code": (_bin("code_train", args.code_train), 0.55),
+        "drive": (_bin("drive_train", args.drive_train), 0.25),
+        "ui": (_bin("ui_train", args.ui_train), 0.20),
     }, args.ctx)
     val_mix = {
-        "code": (os.path.join(args.data, "code_val.bin"), 1.0),
-        "drive": (os.path.join(args.data, "drive_val.bin"), 1.0),
-        "ui": (os.path.join(args.data, "ui_val.bin"), 1.0),
+        "code": (_bin("code_val", args.code_val), 1.0),
+        "drive": (_bin("drive_val", args.drive_val), 1.0),
+        "ui": (_bin("ui_val", args.ui_val), 1.0),
     }
     val_sources = {k: __import__("neurobrain.data", fromlist=["TokenSource"]).TokenSource(v[0], args.ctx)
                    for k, v in val_mix.items()}

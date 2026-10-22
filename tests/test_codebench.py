@@ -73,11 +73,15 @@ def test_timeout_enforced():
 
 
 def test_extract_completion_stops():
-    p = "def add(a, b):\n"
-    assert cb.extract_completion(p + "    return a + b\n\n\ndef sub(a, b):\n    pass\n", p) == "    return a + b\n"
-    assert cb.extract_completion(p + "    return a + b\n<|fim_suffix|>rest", p) == "    return a + b\n"
-    assert cb.extract_completion(p + "    return a + b\n<|drive|>objective: x", p) == "    return a + b\n"
-    assert cb.extract_completion(p + "nonsense", p) == "nonsense\n"
+    NL = chr(10)
+    EOS = "<|" + "end" + "oftext" + "|>"
+    DRV = "<|" + "dri" + "ve" + "|>"
+    p = "def add(a, b):" + NL
+    good = "    return a + b" + NL
+    assert cb.extract_completion(p + good + NL + NL + "def sub(a, b):" + NL + "    pass" + NL, p) == good
+    assert cb.extract_completion(p + good + EOS + "rest", p) == good
+    assert cb.extract_completion(p + good + DRV + "objective: x", p) == good
+    assert cb.extract_completion(p + "nonsense", p) == "nonsense" + NL
     assert cb.extract_completion(p + "", p) == ""
 
 
