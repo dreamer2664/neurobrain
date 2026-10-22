@@ -1,31 +1,100 @@
-# checkpoint step 3000
+# checkpoint step 3600
 # prompt:
-
-A-raoir
-a-riamh
-A-riamh
-a-rithist
-A-rithist
-a-rèiste
-A-rèiste
-a-rìs
-A-rìs
-a-seo
-A-seo
-a-sin
-A-sin
+An seothach
+an sin
+An sin
+an sineach
+An sineach
+an siod
+An siod
+an siud
+An siud
+an siudach
+An siudach
+an toiseach
+An toiseach
+an uair
+An uair
+an 
 # ---- continuation ----
-
-A-raoir
-a-riamh
-A-riamh
-a-rithist
-A-rithist
-a-rèiste
-A-rèiste
-a-rìs
-A-rìs
-a-seo
-A-seo
-a-sin
-A-sin-hè-héhéhéhure-héhéchéhure-héchéhure-héchéhure-héhure-héhure-héhure-hure-héhure-héhure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-memo-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-ure-hure-hure-aure-pure-cure-
+An seothach
+an sin
+An sin
+an sineach
+An sineach
+an siod
+An siod
+an siud
+An siud
+an siudach
+An siudach
+an toiseach
+An toiseach
+an uair
+An uair
+an uair
+An huh
+Anska
+Ansa
+Anska
+Anska
+Computation
+Anska
+Anska
+Anska
+Anska
+Anska
+Anska
+Anska
+Anska
+Anska
+Anna
+Anska
+Antiska
+Anna
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan
+Antan

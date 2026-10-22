@@ -1,51 +1,51 @@
 {
-  "step": 3000,
+  "step": 3600,
   "format_rate": 1.0,
   "action_type_rate": 1.0,
-  "in_widget_rate": 0.083,
+  "in_widget_rate": 0.042,
   "exact_rate": 0.0,
   "n": 48,
   "examples": [
     {
       "task": "pick refresh",
       "ref": "click(945,885)",
-      "pred": "click(1470,1470)",
+      "pred": "click(930,1440)",
       "inside": false
     },
     {
       "task": "focus settings",
       "ref": "type(1410,1095)",
-      "pred": "type(570,1470)",
+      "pred": "type(960,1440)",
       "inside": false
     },
     {
       "task": "open the rename tab",
       "ref": "click(960,1020)",
-      "pred": "click(1470,1125)",
+      "pred": "click(930,1455)",
       "inside": false
     },
     {
       "task": "select the home icon",
       "ref": "click(870,510)",
-      "pred": "click(1470,1470)",
+      "pred": "click(450,1140)",
       "inside": false
     },
     {
       "task": "move the play slider",
       "ref": "drag(1020,405)",
-      "pred": "drag(1470,1440)",
+      "pred": "drag(1410,1185)",
       "inside": false
     },
     {
       "task": "open the share tab",
       "ref": "click(1410,1470)",
-      "pred": "click(1470,1470)",
-      "inside": true
+      "pred": "click(930,1440)",
+      "inside": false
     },
     {
       "task": "open refresh",
       "ref": "click(1425,495)",
-      "pred": "click(1470,1470)",
+      "pred": "click(930,1455)",
       "inside": false
     },
     {
@@ -57,73 +57,73 @@
     {
       "task": "drag the cancel slider",
       "ref": "drag(960,480)",
-      "pred": "drag(1470,1470)",
+      "pred": "drag(1410,1410)",
       "inside": false
     },
     {
       "task": "check download",
       "ref": "toggle(840,480)",
-      "pred": "toggle(1515,1470)",
+      "pred": "toggle(1410,1455)",
       "inside": false
     },
     {
       "task": "focus delete",
       "ref": "type(1410,435)",
-      "pred": "type(1470,1470)",
+      "pred": "type(1410,1455)",
       "inside": false
     },
     {
       "task": "drag the settings slider",
       "ref": "drag(525,840)",
-      "pred": "drag(1470,525)",
+      "pred": "drag(930,1410)",
       "inside": false
     },
     {
       "task": "select the save icon",
       "ref": "click(1410,825)",
-      "pred": "click(1470,1470)",
+      "pred": "click(1410,1410)",
       "inside": false
     },
     {
       "task": "click the pause icon",
       "ref": "click(1350,810)",
-      "pred": "click(1470,1125)",
+      "pred": "click(1455,1140)",
       "inside": false
     },
     {
       "task": "click the archive menu item",
       "ref": "click(1305,735)",
-      "pred": "click(1470,1470)",
+      "pred": "click(870,1440)",
       "inside": false
     },
     {
       "task": "click the play icon",
       "ref": "click(1485,510)",
-      "pred": "click(525,1470)",
+      "pred": "click(1410,1410)",
       "inside": false
     },
     {
       "task": "choose logout from the menu",
       "ref": "click(495,1440)",
-      "pred": "click(1470,1440)",
+      "pred": "click(930,1410)",
       "inside": false
     },
     {
       "task": "open profile",
       "ref": "click(525,1125)",
-      "pred": "click(1470,1470)",
+      "pred": "click(1425,1140)",
       "inside": false
     },
     {
       "task": "open profile",
       "ref": "click(300,690)",
-      "pred": "click(1425,1470)",
+      "pred": "click(1410,1410)",
       "inside": false
     },
     {
       "task": "select the share icon",
       "ref": "click(885,1470)",
-      "pred": "click(1470,1470)",
+      "pred": "click(1425,1410)",
       "inside": false
     }
   ]
