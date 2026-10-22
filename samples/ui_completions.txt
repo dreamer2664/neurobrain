@@ -2,59 +2,59 @@ checkpoint step 4600
 
 task:    turn on save
   ref:   toggle(390,1170)
-  model: toggle(1440,1425)
+  model: toggle(1485,495)
 
 task:    click the settings button
   ref:   click(1335,1185)
-  model: click(1455,1425)
+  model: click(1440,1425)
 
 task:    check print
   ref:   toggle(360,420)
-  model: toggle(1425,795)
+  model: toggle(1440,1110)
 
 task:    hit the login button
   ref:   click(420,870)
-  model: click(1440,1110)
+  model: click(495,1485)
 
 task:    press delete
   ref:   click(420,1050)
-  model: click(1485,450)
+  model: click(1425,1110)
 
 task:    hit the logout button
   ref:   click(1500,510)
-  model: click(1545,1110)
+  model: click(1545,495)
 
 task:    select the rename icon
   ref:   click(510,585)
-  model: click(1485,1425)
+  model: click(1545,1440)
 
 task:    focus export
   ref:   type(855,780)
-  model: type(450,1485)
+  model: type(495,1125)
 
 task:    click the cart icon
   ref:   click(1455,1410)
-  model: click(1425,1125)
+  model: click(1440,450)
 
 task:    click the archive button
   ref:   click(900,1200)
-  model: click(1485,1110)
+  model: click(1425,1125)
 
 task:    adjust submit
   ref:   drag(810,525)
-  model: drag(1485,1125)
+  model: drag(945,1110)
 
 task:    select the pause icon
   ref:   click(885,1200)
-  model: click(1440,1425)
+  model: click(1425,1110)
 
 task:    toggle the search checkbox
   ref:   toggle(570,465)
-  model: toggle(1485,1110)
+  model: toggle(1440,450)
 
 task:    click the save tab
   ref:   click(360,375)
-  model: click(1485,1110)
+  model: click(1440,1440)
 
 task:    turn on archive
   ref:   toggle(525,705)
@@ -62,11 +62,11 @@ task:    turn on archive
 
 task:    click the cancel button
   ref:   click(1020,450)
-  model: click(1485,1425)
+  model: click(945,1425)
 
 task:    open the export tab
   ref:   click(570,840)
-  model: click(1485,1125)
+  model: click(1545,495)
 
 task:    toggle the help checkbox
   ref:   toggle(945,765)
@@ -74,9 +74,9 @@ task:    toggle the help checkbox
 
 task:    turn on delete
   ref:   toggle(465,1155)
-  model: toggle(1545,1455)
+  model: toggle(1440,1110)
 
 task:    hit the pause button
   ref:   click(1395,870)
-  model: click(495,1425)
+  model: click(1485,1110)
 
