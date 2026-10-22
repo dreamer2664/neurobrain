@@ -63,6 +63,16 @@ TASKS = [
 ]
 
 
+def bench_tasks() -> list[tuple[str, str, str]]:
+    """The codebench v1 bank (49 tasks) as (prompt, tests, fn) triples.
+
+    Expert iteration should select on the same distribution codebench measures;
+    the builtin 12-task list above stays as the quick smoke bank.
+    """
+    from .codebench import load_tasks
+    return [(t["prompt"], t["tests"], t["fn"]) for t in load_tasks()]
+
+
 def run_candidate(prompt: str, completion: str, test: str, fn: str) -> tuple[bool, str]:
     """Execute a candidate in a subprocess: syntax, then the hidden test."""
     body = prompt + completion
@@ -109,10 +119,11 @@ def sample_completions(model, tok, prompt: str, n: int, max_tokens: int = 96) ->
     return out
 
 
-def evaluate(model, tok, n_per_task: int = 4) -> dict:
+def evaluate(model, tok, n_per_task: int = 4, tasks: list | None = None) -> dict:
+    tasks = TASKS if tasks is None else tasks
     passed = total = 0
     detail = []
-    for prompt, test, fn in TASKS:
+    for prompt, test, fn in tasks:
         p = 0
         for comp in sample_completions(model, tok, prompt, n_per_task, max_tokens=80):
             ok, why = run_candidate(prompt, comp, test, fn)
@@ -161,6 +172,8 @@ def main() -> None:
     ap.add_argument("--samples", type=int, default=12, help="candidates per task per round")
     ap.add_argument("--steps", type=int, default=200, help="fine-tune steps per round")
     ap.add_argument("--lr", type=float, default=2e-4)
+    ap.add_argument("--bench", default="codebench", choices=["codebench", "builtin"],
+                    help="task bank: codebench v1 (49) or the builtin smoke list (12)")
     args = ap.parse_args()
 
     if not os.path.exists(args.ckpt):
@@ -168,8 +181,10 @@ def main() -> None:
         return
     model, tok, step = load(args.ckpt)
     torch.set_num_threads(2)
+    tasks = bench_tasks() if args.bench == "codebench" else TASKS
+    print(f"[ei] bench={args.bench}: {len(tasks)} tasks")
 
-    base = evaluate(model, tok)
+    base = evaluate(model, tok, tasks=tasks)
     print("[ei] baseline:", json.dumps(base))
     history = [{"round": 0, **base}]
 
@@ -177,7 +192,7 @@ def main() -> None:
         winners: list[str] = []
         soft: list[str] = []
         kept = tried = 0
-        for prompt, test, fn in TASKS:
+        for prompt, test, fn in tasks:
             comps = sample_completions(model, tok, prompt, args.samples)
             first_failure = None
             for comp in comps:

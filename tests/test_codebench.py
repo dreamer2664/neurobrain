@@ -95,3 +95,12 @@ def test_prompts_fit_context():
     for t in TASKS:
         n = len(tok.encode(t["prompt"]))
         assert n + 128 <= 256, f"{t['id']}: prompt {n} tokens leaves no room to generate"
+
+
+def test_expert_iter_adapter():
+    from neurobrain.expert_iter import bench_tasks, TASKS as SMOKE
+    ts = bench_tasks()
+    assert len(ts) == len(TASKS) >= 40
+    for prompt, tests, fn in ts:
+        assert prompt.startswith("def ") and fn in prompt and tests
+    assert len(SMOKE) == 12, "builtin smoke bank unchanged"
