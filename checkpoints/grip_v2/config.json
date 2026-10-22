@@ -6,7 +6,7 @@
   "d": 112,
   "d_stage2": 112,
   "grid": 32,
-  "top_k": 7,
+  "top_k": 12,
   "nms_radius_cells": 1,
   "stage1_weight": 0.5,
   "step": 3550,

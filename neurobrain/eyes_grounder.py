@@ -455,19 +455,21 @@ def extract_crop_tensor(
     return arr6, (x0, y0, rw, rh)
 
 
-def _normalize_exclude_box(exclude_box: Any) -> tuple[float, float, float, float] | None:
+def _normalize_exclude_boxes(exclude_box: Any) -> list[tuple[float, float, float, float]]:
     if exclude_box is None:
-        return None
+        return []
     if isinstance(exclude_box, dict):
-        return (
-            float(exclude_box["x"]),
-            float(exclude_box["y"]),
-            float(exclude_box["w"]),
-            float(exclude_box["h"]),
-        )
-    if len(exclude_box) == 4:
-        return (float(exclude_box[0]), float(exclude_box[1]), float(exclude_box[2]), float(exclude_box[3]))
-    raise ValueError(f"Unsupported exclude_box: {exclude_box}")
+        return [(float(exclude_box["x"]), float(exclude_box["y"]), float(exclude_box["w"]), float(exclude_box["h"]))]
+    if isinstance(exclude_box, (list, tuple)) and len(exclude_box) > 0:
+        if isinstance(exclude_box[0], (int, float)):
+            if len(exclude_box) != 4:
+                raise ValueError(f"Unsupported exclude_box: {exclude_box}")
+            return [(float(exclude_box[0]), float(exclude_box[1]), float(exclude_box[2]), float(exclude_box[3]))]
+        out: list[tuple[float, float, float, float]] = []
+        for item in exclude_box:
+            out.extend(_normalize_exclude_boxes(item))
+        return out
+    return []
 
 
 def topk_grid_candidates(
@@ -487,17 +489,16 @@ def topk_grid_candidates(
     offs = offsets_2d.detach().cpu().numpy()
     bwh = box_wh_2d.detach().cpu().numpy()
 
-    ex = _normalize_exclude_box(exclude_box)
+    ex_list = _normalize_exclude_boxes(exclude_box)
     cell_w = canvas_w / g
     cell_h = canvas_h / g
 
-    if ex is not None:
-        ex_x, ex_y, ex_w, ex_h = ex
+    if ex_list:
         for c_idx in range(hw):
             gy, gx = divmod(c_idx, g)
             px = (gx + 0.5 + 0.45 * offs[c_idx, 0]) * cell_w
             py = (gy + 0.5 + 0.45 * offs[c_idx, 1]) * cell_h
-            if ex_x <= px <= ex_x + ex_w and ex_y <= py <= ex_y + ex_h:
+            if any(ex_x <= px <= ex_x + ex_w and ex_y <= py <= ex_y + ex_h for (ex_x, ex_y, ex_w, ex_h) in ex_list):
                 logp[c_idx] = -1e9
 
     cands: list[dict[str, Any]] = []
@@ -569,7 +570,7 @@ class EyesGrounder:
     ) -> dict[str, Any]:
         rgb = self._to_rgb_array(png)
         H, W = rgb.shape[:2]
-        ex = _normalize_exclude_box(exclude_box)
+        ex_list = _normalize_exclude_boxes(exclude_box)
 
         with torch.no_grad():
             t = torch.tensor([encode_task(instruction)], dtype=torch.long)
@@ -587,7 +588,7 @@ class EyesGrounder:
                 canvas_w=W,
                 canvas_h=H,
                 k=self.top_k,
-                exclude_box=ex,
+                exclude_box=ex_list,
                 nms_radius_cells=self.nms_radius_cells,
             )
 
@@ -603,7 +604,7 @@ class EyesGrounder:
                     canvas_w=W,
                     canvas_h=H,
                     k=3,
-                    exclude_box=ex,
+                    exclude_box=ex_list,
                     nms_radius_cells=self.nms_radius_cells,
                 )
                 min_dist = max(7.0, 0.03 * max(W, H))
@@ -641,8 +642,8 @@ class EyesGrounder:
                     fx = float(np.clip(c["x"] + max_dx * float(delta_uv[idx_c, 0].item()), 0.0, W - 1.0))
                     fy = float(np.clip(c["y"] + max_dy * float(delta_uv[idx_c, 1].item()), 0.0, H - 1.0))
 
-                    # Enforce exclude_box strictly even after Stage-2 refinement shift!
-                    if ex is not None and (ex[0] <= fx <= ex[0] + ex[2] and ex[1] <= fy <= ex[1] + ex[3]):
+                    # Enforce exclude_box(es) strictly even after Stage-2 refinement shift!
+                    if any(bx <= fx <= bx + bw_e and by <= fy <= by + bh_e for (bx, by, bw_e, bh_e) in ex_list):
                         continue
 
                     s1_w = (

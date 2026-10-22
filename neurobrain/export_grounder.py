@@ -79,7 +79,7 @@ def export_grounder_checkpoint(
     ckpt_path: str,
     out_dir: str = "checkpoints/grip_v2",
     step: int = 3550,
-    top_k: int = 7,
+    top_k: int = 12,
     nms_radius_cells: int = 1,
     stage1_weight: float = 0.50,
     card_markdown: str | None = None,
