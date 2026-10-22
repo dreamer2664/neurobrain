@@ -408,169 +408,299 @@ def train_curriculum_hardneg_stage1(
     return model
 
 
-def _crop_heatmap_16(ux: float, uy: float, grid: int = 16) -> np.ndarray:
-    """ux, uy in [-1, 1] -> 16x16 soft heatmap."""
-    gx = (ux * 0.5 + 0.5) * grid - 0.5
-    gy = (uy * 0.5 + 0.5) * grid - 0.5
-    ys, xs = np.meshgrid(np.arange(grid, dtype=np.float32), np.arange(grid, dtype=np.float32), indexing="ij")
-    d2 = (ys - gy) ** 2 + (xs - gx) ** 2
-    hm = np.exp(-d2 / (2.0 * 0.85 * 0.85))
-    return hm / hm.sum()
+def build_screen_bank(n_per_tier: int = 700, seed: int = 8080) -> dict[str, list[tuple[np.ndarray, list[Any]]]]:
+    """Pre-render native 256x256 Hard World screens into a compact uint8 RAM bank (~412 MB for 2,100 screens)."""
+    rng = random.Random(seed)
+    bank: dict[str, list[tuple[np.ndarray, list[Any]]]] = {"easy": [], "medium": [], "crowded": []}
+    t0 = time.time()
+    for tier in ("easy", "medium", "crowded"):
+        items = []
+        while len(items) < n_per_tier:
+            layout = make_hard_layout(rng, tier=tier, split="seen", label_mode="text")
+            valid_els = [e for e in layout.elements if getattr(e, "state", "normal") != "disabled"]
+            if len(valid_els) < 2:
+                continue
+            rgb = render_hard(layout, size=HARD_CANVAS)
+            items.append((rgb, valid_els))
+        bank[tier] = items
+    n_tot = sum(len(v) for v in bank.values())
+    n_els = sum(len(els) for v in bank.values() for _, els in v)
+    print(
+        f"[screen_bank] rendered {n_tot} native 256x256 screens ({n_els} active widgets) "
+        f"in {time.time()-t0:.1f}s rss={peak_rss_mb():.0f}MB",
+        flush=True,
+    )
+    return bank
 
 
 def train_stage2_refiner(
     stage1: Stage1CoarseNet,
     steps: int = 2000,
-    screens_per_step: int = 6,
-    lr: float = 2.2e-3,
+    screens_per_step: int = 8,
+    max_siblings: int = 6,
+    lr: float = 2.4e-3,
     seed: int = 303,
     threads: int = 2,
     hard_neg_mining: bool = True,
-    finetune_text: bool = False,
+    curriculum: bool = True,
+    bank: dict[str, list[tuple[np.ndarray, list[Any]]]] | None = None,
     init_stage2: Stage2RefineNet | None = None,
     out_ckpt: str = "checkpoints/eyes_two_stage.pt",
 ) -> Stage2RefineNet:
-    """Train Stage2RefineNet on native 256x256 crops (jittered positives + distractor/Stage1-miss negatives)."""
+    """Train Stage2RefineNet on native 32x192 strips with controlled curriculum + hard-negative switches."""
     torch.set_num_threads(threads)
     torch.manual_seed(seed)
     rng = random.Random(seed)
 
+    if bank is None:
+        bank = build_screen_bank(n_per_tier=700, seed=seed + 5000)
+
     stage1.eval()
-    stage2 = init_stage2 if init_stage2 is not None else Stage2RefineNet(d_text=stage1.d_text)
+    stage2 = init_stage2 if init_stage2 is not None else Stage2RefineNet()
     stage2.train()
 
-    params = list(stage2.parameters())
-    if finetune_text:
-        stage1.text.train()
-        params += list(stage1.text.parameters())
-    opt = torch.optim.AdamW(params, lr=lr, weight_decay=1e-2)
+    opt = torch.optim.AdamW(stage2.parameters(), lr=lr, weight_decay=1e-2)
+    span_w = Stage2RefineNet.SPAN_W_FRAC * HARD_CANVAS
+    span_h = Stage2RefineNet.SPAN_H_FRAC * HARD_CANVAS
 
-    span = Stage2RefineNet.SPAN_FRAC * HARD_CANVAS
+    # Online label-confusion boost counts for hard-negative mining
+    conf_counts: dict[tuple[str, str], int] = {}
     t0 = time.time()
 
     for step in range(1, steps + 1):
         prog = step / float(steps)
-        tier = "mixed" if prog < 0.4 else ("crowded" if rng.random() < 0.65 else "medium")
-
-        crops_list = []
-        tasks_list = []
-        is_pos_list = []
-        ux_uy_list = []
-        wh_list = []
-        hm16_list = []
-
-        for _ in range(screens_per_step):
-            ex = sample_hard_example(rng, tier=tier, split="seen", label_mode="text")
-            rgb = render_hard(ex.layout, size=HARD_CANVAS)
-            tgt = ex.target
-            t_ids = encode_task(ex.task)
-
-            # 1) Positive crop jittered around target center so Stage 2 corrects up to +-26px coarse error!
-            jx = tgt.cx + rng.uniform(-22.0, 22.0)
-            jy = tgt.cy + rng.uniform(-22.0, 22.0)
-            pos_arr, (rx, ry, rw, rh) = extract_crop_tensor(rgb, jx, jy, span, span)
-            ux = float(np.clip(((tgt.cx - rx) / rw - 0.5) * 2.0, -0.98, 0.98))
-            uy = float(np.clip(((tgt.cy - ry) / rh - 0.5) * 2.0, -0.98, 0.98))
-            crops_list.append(pos_arr)
-            tasks_list.append(t_ids)
-            is_pos_list.append(1.0)
-            ux_uy_list.append((ux, uy))
-            wh_list.append((min(0.98, tgt.w / rw), min(0.98, tgt.h / rh)))
-            hm16_list.append(_crop_heatmap_16(ux, uy, 16))
-
-            # 2) Distractor widget crops on the SAME screen (prioritizing same-role wrong-label!)
-            others = [
-                e for e in ex.layout.elements
-                if e is not tgt and math.hypot(e.cx - tgt.cx, e.cy - tgt.cy) > 14.0
-            ]
-            if hard_neg_mining:
-                others.sort(key=lambda e: (0 if e.role == tgt.role else 1, rng.random()))
+        if curriculum:
+            if prog < 0.25:
+                tier_probs = [("easy", 0.65), ("medium", 0.30), ("crowded", 0.05)]
+            elif prog < 0.55:
+                tier_probs = [("easy", 0.20), ("medium", 0.50), ("crowded", 0.30)]
             else:
-                rng.shuffle(others)
+                tier_probs = [("easy", 0.10), ("medium", 0.30), ("crowded", 0.60)]
+        else:
+            tier_probs = [("easy", 0.333), ("medium", 0.333), ("crowded", 0.334)]
 
-            for neg_el in others[:2]:
-                ncx = neg_el.cx + rng.uniform(-8.0, 8.0)
-                ncy = neg_el.cy + rng.uniform(-8.0, 8.0)
-                neg_arr, (nrx, nry, nrw, nrh) = extract_crop_tensor(rgb, ncx, ncy, span, span)
-                # Check whether target center accidentally also fell inside this distractor crop!
-                tgt_inside = (nrx + 6.0 <= tgt.cx <= nrx + nrw - 6.0) and (nry + 6.0 <= tgt.cy <= nry + nrh - 6.0)
-                if tgt_inside:
-                    tux = float(np.clip(((tgt.cx - nrx) / nrw - 0.5) * 2.0, -0.98, 0.98))
-                    tuy = float(np.clip(((tgt.cy - nry) / nrh - 0.5) * 2.0, -0.98, 0.98))
-                    crops_list.append(neg_arr)
-                    tasks_list.append(t_ids)
-                    is_pos_list.append(1.0)
-                    ux_uy_list.append((tux, tuy))
-                    wh_list.append((min(0.98, tgt.w / nrw), min(0.98, tgt.h / nrh)))
-                    hm16_list.append(_crop_heatmap_16(tux, tuy, 16))
+        if hard_neg_mining:
+            # Multi-sibling (M x (M+1)) in-screen contrastive + spatial-rejection negative + offset refinement
+            all_crops: list[np.ndarray] = []
+            all_extra_neg_crops: list[np.ndarray] = []
+            all_tasks: list[list[int]] = []
+            all_duv: list[tuple[float, float]] = []
+            all_wh: list[tuple[float, float]] = []
+            group_sizes: list[int] = []
+            group_labels: list[list[str]] = []
+
+            for _ in range(screens_per_step):
+                r_tier = rng.random()
+                cum = 0.0
+                chosen_tier = "crowded"
+                for tn, tp in tier_probs:
+                    cum += tp
+                    if r_tier <= cum:
+                        chosen_tier = tn
+                        break
+                rgb, els = rng.choice(bank[chosen_tier])
+
+                # Oversample dense / worst-confusion roles (tab, menu, button, icon) as anchor
+                dense_els = [e for e in els if e.role in ("tab", "menu", "button", "icon")]
+                anchor = rng.choice(dense_els) if (dense_els and rng.random() < 0.72) else rng.choice(els)
+
+                # Pick distinct-label siblings on the SAME screen, prioritizing same-role & confused labels!
+                used_labels = {anchor.label}
+                chosen = [anchor]
+                cands_other = [e for e in els if e.label not in used_labels]
+                cands_other.sort(
+                    key=lambda e: (
+                        0 if e.role == anchor.role else 1,
+                        -conf_counts.get((anchor.label, e.label), 0),
+                        abs(e.cy - anchor.cy) * 0.5 + abs(e.cx - anchor.cx) * 0.15 + rng.uniform(0.0, 8.0),
+                    )
+                )
+                for e in cands_other:
+                    if e.label not in used_labels:
+                        chosen.append(e)
+                        used_labels.add(e.label)
+                        if len(chosen) >= max_siblings:
+                            break
+                if len(chosen) < 2:
+                    continue
+
+                for el in chosen:
+                    # Realistic Stage-1 candidate proposal jitter (matching measured dx/dy + 15% wider tail)
+                    if rng.random() < 0.85:
+                        jx = float(np.clip(el.cx + rng.gauss(0.0, 2.5), 2.0, HARD_CANVAS - 3.0))
+                        jy = float(np.clip(el.cy + rng.gauss(0.0, 2.5), 2.0, HARD_CANVAS - 3.0))
+                    else:
+                        jx = float(np.clip(el.cx + rng.uniform(-8.5, 8.5), 2.0, HARD_CANVAS - 3.0))
+                        jy = float(np.clip(el.cy + rng.uniform(-8.0, 8.0), 2.0, HARD_CANVAS - 3.0))
+                    arr6, (_, _, rw, rh) = extract_crop_tensor(rgb, jx, jy, span_w, span_h)
+                    max_dx = Stage2RefineNet.MAX_DX_PX * (rw / float(Stage2RefineNet.CROP_W))
+                    max_dy = Stage2RefineNet.MAX_DY_PX * (rh / float(Stage2RefineNet.CROP_H))
+                    du = float(np.clip((el.cx - jx) / max_dx, -0.99, 0.99))
+                    dv = float(np.clip((el.cy - jy) / max_dy, -0.99, 0.99))
+                    t_str = rng.choice(TASKS_HARD[el.role]).format(label=el.label)
+
+                    all_crops.append(arr6)
+                    all_tasks.append(encode_task(t_str))
+                    all_duv.append((du, dv))
+                    all_wh.append((min(0.96, el.w / float(HARD_CANVAS)), min(0.25, el.h / float(HARD_CANVAS))))
+
+                # Add 1 off-center / background spatial-rejection negative per screen
+                for _ in range(8):
+                    if rng.random() < 0.55:
+                        sgn_x = 1.0 if rng.random() < 0.5 else -1.0
+                        sgn_y = 1.0 if rng.random() < 0.5 else -1.0
+                        nx = float(np.clip(anchor.cx + sgn_x * rng.uniform(0.55 * anchor.w + 8.0, 0.55 * anchor.w + 26.0), 4.0, HARD_CANVAS - 5.0))
+                        ny = float(np.clip(anchor.cy + sgn_y * rng.uniform(0.55 * anchor.h + 6.0, 0.55 * anchor.h + 20.0), 4.0, HARD_CANVAS - 5.0))
+                    else:
+                        nx, ny = rng.uniform(12.0, 244.0), rng.uniform(12.0, 244.0)
+                    if all(not (e.x - 3 <= nx <= e.x + e.w + 3 and e.y - 3 <= ny <= e.y + e.h + 3) for e in chosen):
+                        break
+                neg_arr6, _ = extract_crop_tensor(rgb, nx, ny, span_w, span_h)
+                all_extra_neg_crops.append(neg_arr6)
+
+                group_sizes.append(len(chosen))
+                group_labels.append([e.label for e in chosen])
+
+            pos_crop_t = torch.from_numpy(np.stack(all_crops, axis=0)).permute(0, 3, 1, 2).contiguous()
+            neg_crop_t = torch.from_numpy(np.stack(all_extra_neg_crops, axis=0)).permute(0, 3, 1, 2).contiguous()
+            joint_crops = torch.cat([pos_crop_t, neg_crop_t], dim=0)
+            joint_crops[:, :3] = apply_palette_aug(joint_crops[:, :3], rng)
+
+            n_pos = pos_crop_t.shape[0]
+            task_t = torch.tensor(all_tasks, dtype=torch.long)
+            duv_t = torch.tensor(all_duv, dtype=torch.float32)
+            wh_t = torch.tensor(all_wh, dtype=torch.float32)
+
+            q_all = stage2.encode_instruction(task_t)
+            joint_repr = stage2.encode_crops(joint_crops)
+            pos_repr = {k: v[:n_pos] for k, v in joint_repr.items()}
+            neg_repr = {k: v[n_pos:] for k, v in joint_repr.items()}
+
+            # Diagonal offset/wh loss on the positive widget strips
+            q_heads = F.normalize(stage2.q_proj(q_all).view(n_pos, stage2.n_heads, stage2.head_dim), dim=2, eps=1e-6)
+            sim_h = torch.einsum("khd,khdp->khp", q_heads, pos_repr["k_map"])
+            attn = F.softmax(sim_h.mean(dim=1) * stage2.attn_temp.clamp(1.0, 12.0) + stage2.col_attn_bias, dim=-1)
+            v_attn = torch.einsum("kp,kdp->kd", attn, pos_repr["v_map"])
+            sub = stage2.sub_off(torch.cat([pos_repr["anc_vec"], v_attn, q_all], dim=1))
+            pred_duv = torch.tanh(sub[:, :2])
+            pred_wh = torch.sigmoid(sub[:, 2:4])
+            xy_loss = F.smooth_l1_loss(pred_duv, duv_t, beta=0.08)
+            wh_loss = F.smooth_l1_loss(pred_wh, wh_t, beta=0.05)
+
+            ce_loss = torch.tensor(0.0)
+            bce_loss = torch.tensor(0.0)
+            diag_hits = 0
+            diag_tot = 0
+            cur = 0
+            for g_idx, (gs, glbls) in enumerate(zip(group_sizes, group_labels)):
+                sub_repr = {
+                    k: torch.cat([pos_repr[k][cur : cur + gs], neg_repr[k][g_idx : g_idx + 1]], dim=0)
+                    for k in pos_repr
+                }
+                sub_q = q_all[cur : cur + gs]
+                mat = stage2.score_matrix(sub_repr, sub_q)  # (gs, gs + 1)
+                eye_idx = torch.arange(gs)
+                tgt_bce = torch.zeros((gs, gs + 1), dtype=torch.float32)
+                tgt_bce[eye_idx, eye_idx] = 1.0
+                ce_loss = ce_loss + 0.55 * F.cross_entropy(mat, eye_idx) + 0.45 * F.cross_entropy(mat[:, :gs].t(), eye_idx)
+                bce_loss = bce_loss + F.binary_cross_entropy_with_logits(
+                    mat, tgt_bce, pos_weight=torch.tensor(float(gs))
+                )
+                with torch.no_grad():
+                    preds = mat.argmax(dim=1).tolist()
+                    for qi, pi in enumerate(preds):
+                        diag_tot += 1
+                        if pi == qi:
+                            diag_hits += 1
+                        elif pi < gs:
+                            pair = (glbls[qi], glbls[pi])
+                            conf_counts[pair] = min(50, conf_counts.get(pair, 0) + 1)
+                cur += gs
+
+            n_g = max(1, len(group_sizes))
+            ce_loss = ce_loss / n_g
+            bce_loss = bce_loss / n_g
+            loss = ce_loss + 0.75 * bce_loss + 1.5 * xy_loss + 0.25 * wh_loss
+            acc_metric = diag_hits / max(1, diag_tot)
+        else:
+            # Controlled baseline without sibling hard-negative mining: 1 positive + 1 random negative per screen
+            crops_list = []
+            tasks_list = []
+            is_pos_list = []
+            duv_list = []
+            wh_list = []
+            for _ in range(screens_per_step):
+                r_tier = rng.random()
+                cum = 0.0
+                chosen_tier = "crowded"
+                for tn, tp in tier_probs:
+                    cum += tp
+                    if r_tier <= cum:
+                        chosen_tier = tn
+                        break
+                rgb, els = rng.choice(bank[chosen_tier])
+                tgt = rng.choice(els)
+                t_ids = encode_task(rng.choice(TASKS_HARD[tgt.role]).format(label=tgt.label))
+
+                jx = float(np.clip(tgt.cx + rng.gauss(0.0, 2.5), 2.0, HARD_CANVAS - 3.0))
+                jy = float(np.clip(tgt.cy + rng.gauss(0.0, 2.5), 2.0, HARD_CANVAS - 3.0))
+                pos_arr, (_, _, rw, rh) = extract_crop_tensor(rgb, jx, jy, span_w, span_h)
+                max_dx = Stage2RefineNet.MAX_DX_PX * (rw / float(Stage2RefineNet.CROP_W))
+                max_dy = Stage2RefineNet.MAX_DY_PX * (rh / float(Stage2RefineNet.CROP_H))
+                du = float(np.clip((tgt.cx - jx) / max_dx, -0.99, 0.99))
+                dv = float(np.clip((tgt.cy - jy) / max_dy, -0.99, 0.99))
+                crops_list.append(pos_arr)
+                tasks_list.append(t_ids)
+                is_pos_list.append(1.0)
+                duv_list.append((du, dv))
+                wh_list.append((min(0.96, tgt.w / float(HARD_CANVAS)), min(0.25, tgt.h / float(HARD_CANVAS))))
+
+                others = [e for e in els if e.label != tgt.label]
+                if others and rng.random() < 0.5:
+                    nel = rng.choice(others)
+                    nx, ny = nel.cx + rng.gauss(0.0, 2.5), nel.cy + rng.gauss(0.0, 2.5)
                 else:
-                    crops_list.append(neg_arr)
-                    tasks_list.append(t_ids)
-                    is_pos_list.append(0.0)
-                    ux_uy_list.append((0.0, 0.0))
-                    wh_list.append((0.2, 0.2))
-                    hm16_list.append(np.full((16, 16), 1.0 / 256.0, dtype=np.float32))
+                    nx, ny = rng.uniform(20.0, 236.0), rng.uniform(20.0, 236.0)
+                    if math.hypot(nx - tgt.cx, ny - tgt.cy) < 24.0:
+                        nx = (nx + 96.0) % 240.0 + 8.0
+                neg_arr, _ = extract_crop_tensor(rgb, nx, ny, span_w, span_h)
+                crops_list.append(neg_arr)
+                tasks_list.append(t_ids)
+                is_pos_list.append(0.0)
+                duv_list.append((0.0, 0.0))
+                wh_list.append((0.2, 0.08))
 
-            # 3) Confusable-query hard negative on the positive crop (zero extra crop extraction!)
-            if hard_neg_mining and others:
-                wrong_lbl = others[0].label
-                wrong_task = encode_task(rng.choice(TASKS_HARD[tgt.role]).format(label=wrong_lbl))
-                # Make sure wrong_lbl widget isn't also inside pos_arr
-                w_el = others[0]
-                w_inside = (rx + 6.0 <= w_el.cx <= rx + rw - 6.0) and (ry + 6.0 <= w_el.cy <= ry + rh - 6.0)
-                if not w_inside:
-                    crops_list.append(pos_arr)
-                    tasks_list.append(wrong_task)
-                    is_pos_list.append(0.0)
-                    ux_uy_list.append((0.0, 0.0))
-                    wh_list.append((0.2, 0.2))
-                    hm16_list.append(np.full((16, 16), 1.0 / 256.0, dtype=np.float32))
+            crop_t = torch.from_numpy(np.stack(crops_list, axis=0)).permute(0, 3, 1, 2).contiguous()
+            crop_t[:, :3] = apply_palette_aug(crop_t[:, :3], rng)
+            task_t = torch.tensor(tasks_list, dtype=torch.long)
+            pos_t = torch.tensor(is_pos_list, dtype=torch.float32)
+            duv_t = torch.tensor(duv_list, dtype=torch.float32)
+            wh_t = torch.tensor(wh_list, dtype=torch.float32)
 
-        crop_t = torch.from_numpy(np.stack(crops_list, axis=0)).permute(0, 3, 1, 2).contiguous()
-        crop_t = apply_palette_aug(crop_t, rng)
-        task_t = torch.tensor(tasks_list, dtype=torch.long)
-        pos_t = torch.tensor(is_pos_list, dtype=torch.float32)
-        xy_t = torch.tensor(ux_uy_list, dtype=torch.float32)
-        wh_t = torch.tensor(wh_list, dtype=torch.float32)
-        hm_t = torch.from_numpy(np.stack(hm16_list, axis=0)).flatten(1).float()
-
-        if finetune_text:
-            q = stage1.encode_instruction(task_t)
-        else:
+            q = stage2.encode_instruction(task_t)
+            v_logit, pred_duv, pred_wh = stage2(crop_t, q)
+            bce_loss = F.binary_cross_entropy_with_logits(v_logit, pos_t)
+            pos_mask = pos_t > 0.5
+            xy_loss = F.smooth_l1_loss(pred_duv[pos_mask], duv_t[pos_mask], beta=0.08)
+            wh_loss = F.smooth_l1_loss(pred_wh[pos_mask], wh_t[pos_mask], beta=0.05)
+            loss = bce_loss + 1.5 * xy_loss + 0.25 * wh_loss
             with torch.no_grad():
-                q = stage1.encode_instruction(task_t)
+                acc_metric = float(((v_logit > 0).float() == pos_t).float().mean().item())
 
-        v_logit, f_xy, f_wh, heat_logits = stage2.forward_with_map(crop_t, q)
-        verify_loss = F.binary_cross_entropy_with_logits(v_logit, pos_t)
-
-        pos_mask = pos_t > 0.5
-        if pos_mask.any():
-            logp16 = F.log_softmax(heat_logits[pos_mask], dim=1)
-            hm_pos = hm_t[pos_mask]
-            ce16 = 0.5 * (-(hm_pos * logp16).sum(dim=1).mean()) + 0.5 * F.cross_entropy(
-                heat_logits[pos_mask], hm_pos.argmax(dim=1).long()
-            )
-            xy_loss = F.smooth_l1_loss(f_xy[pos_mask], xy_t[pos_mask], beta=0.08)
-            wh_loss = F.smooth_l1_loss(f_wh[pos_mask], wh_t[pos_mask], beta=0.08)
-        else:
-            ce16 = xy_loss = wh_loss = torch.tensor(0.0)
-
-        loss = verify_loss + 0.7 * ce16 + 2.0 * xy_loss + 0.4 * wh_loss
         opt.zero_grad(set_to_none=True)
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(params, 2.0)
+        torch.nn.utils.clip_grad_norm_(stage2.parameters(), 2.0)
         opt.step()
 
-        cur_lr = lr * (0.08 + 0.92 * 0.5 * (1.0 + math.cos(math.pi * step / steps)))
+        cur_lr = lr * (0.06 + 0.94 * 0.5 * (1.0 + math.cos(math.pi * step / steps)))
         for g in opt.param_groups:
             g["lr"] = cur_lr
 
-        if step % 250 == 0 or step == steps:
-            with torch.no_grad():
-                v_acc = ((v_logit > 0).float() == pos_t).float().mean().item()
+        if step % 200 == 0 or step == steps:
             print(
-                f"[stage2] step {step}/{steps} loss={loss.item():.4f} v_bce={verify_loss.item():.3f} "
-                f"v_acc={v_acc:.3f} xy={xy_loss.item():.4f} rss={peak_rss_mb():.0f}MB elapsed={time.time()-t0:.1f}s",
+                f"[stage2 hn={int(hard_neg_mining)} curr={int(curriculum)}] "
+                f"step {step}/{steps} loss={loss.item():.4f} acc={acc_metric:.3f} "
+                f"xy={xy_loss.item():.4f} rss={peak_rss_mb():.0f}MB elapsed={time.time()-t0:.1f}s",
                 flush=True,
             )
 

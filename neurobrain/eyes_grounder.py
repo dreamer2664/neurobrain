@@ -263,80 +263,163 @@ class Stage1CoarseNet(nn.Module):
 
 
 class Stage2RefineNet(nn.Module):
-    """Native-resolution 64x64 crop verifier + sub-pixel pointer (`K` candidates per screen)."""
+    """Candidate-pinned 32x160 horizontal CRNN (`CNN + Vertical-Glyph-Collapse + BiGRU`) verifier & pointer."""
 
-    CROP_RES = 64
-    SPAN_FRAC = 88.0 / 256.0  # covers ~88x88 px on a 256x256 screen so full text + box fit inside
+    CROP_H = 32
+    CROP_W = 160
+    ANCHOR_FRAC_X = 0.70         # Candidate cx is ALWAYS pinned at col 112 ([-112px .. +48px] covers wide & centered!)
+    SPAN_H_FRAC = 32.0 / 256.0   # 1:1 native vertical pixels on 256x256
+    SPAN_W_FRAC = 160.0 / 256.0  # 1:1 native horizontal pixels on 256x256
+    MAX_DX_PX = 14.0
+    MAX_DY_PX = 12.0
 
     def __init__(self, d_text: int = 112):
         super().__init__()
         self.d_text = d_text
-        # 7 contrast/RGB channels + 2 crop-centered coordinate channels -> 9 channels
-        self.c32 = ConvBlockAA(9, 32, stride=2)      # 64 -> 32
-        self.c16 = ConvBlockAA(32, 64, stride=2)     # 32 -> 16
-        self.c16_ctx = ConvBlockAA(64, 72, stride=1) # 16 -> 16
+        self.text_enc = CharConvTextEncoder(d_out=d_text)
 
-        self.film = nn.Linear(d_text, 144)
-        self.post_film = ConvBlockAA(72, 72, stride=1)
+        # 7 contrast/RGB channels + 3 candidate-anchor channels (u, v, beacon) -> 10 channels
+        # Stride=1 native stroke stem preserves 1-px TrueType character strokes!
+        self.stem1 = nn.Sequential(
+            nn.Conv2d(10, 20, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(20),
+            nn.SiLU(inplace=True),
+        )
+        self.c16 = ConvBlockAA(20, 40, stride=2)   # 32x160 -> 16x80
+        self.c8 = ConvBlockAA(40, 72, stride=2)    # 16x80  -> 8x40
+        self.c8_ctx = ConvBlockAA(72, 72, stride=1)
+
+        # Full-height (8x1) vertical glyph+border collapse -> 40-column horizontal sequence!
+        self.v_collapse = nn.Sequential(
+            nn.Conv2d(72, 96, kernel_size=(8, 1), bias=False),
+            nn.BatchNorm2d(96),
+            nn.SiLU(inplace=True),
+        )
+        # Candidate-relative column positional embedding (col 28 == candidate cx!)
+        self.col_emb = nn.Parameter(torch.randn(1, 96, 40) * 0.02)
+        # Horizontal BiGRU reads sequential characters AND propagates left-aligned labels up to widget borders!
+        self.bigru = nn.GRU(input_size=96, hidden_size=80, num_layers=1, batch_first=True, bidirectional=True)
+        d_seq = 160
 
         self.n_heads = 4
-        self.v_proj = nn.Conv2d(72, 72, 1, bias=False)
-        self.q_proj = nn.Linear(d_text, 72, bias=False)
-        self.logit_scale = nn.Parameter(torch.tensor(2.5))
+        self.head_dim = 20  # 4 * 20 = 80
+        self.k_proj = nn.Linear(d_seq, self.n_heads * self.head_dim, bias=False)
+        self.v_proj = nn.Linear(d_seq, d_text, bias=False)
+        self.q_proj = nn.Linear(d_text, self.n_heads * self.head_dim, bias=False)
+        self.attn_temp = nn.Parameter(torch.tensor(4.5))
+        self.col_attn_bias = nn.Parameter(torch.zeros(1, 40))
 
-        self.spatial_head = nn.Sequential(
-            nn.Conv2d(72 + self.n_heads, 40, 3, padding=1),
+        # Anchor descriptor right around col 28 (cols 25..31 = cx +- 12px)
+        self.anc_proj = nn.Sequential(
+            nn.Linear(d_seq * 2, d_text),
             nn.SiLU(inplace=True),
-            nn.Conv2d(40, 1, 1),
+            nn.LayerNorm(d_text),
+        )
+
+        # Pairwise verification MLP takes [anc_vec, v_attn, q, anc_vec*q, v_attn*q, head_stats (8)]
+        self.verify_head = nn.Sequential(
+            nn.Linear(d_text * 5 + self.n_heads * 2, 128),
+            nn.SiLU(inplace=True),
+            nn.Linear(128, 1),
         )
         self.sub_off = nn.Sequential(
-            nn.Linear(72 + d_text, 64),
+            nn.Linear(d_text * 3, 64),
             nn.SiLU(inplace=True),
-            nn.Linear(64, 4),  # (dx_res, dy_res, w_frac, h_frac)
-        )
-        self.verify_head = nn.Sequential(
-            nn.Linear(72 * 2 + d_text + 1, 80),
-            nn.SiLU(inplace=True),
-            nn.Linear(80, 1),
+            nn.Linear(64, 4),  # (delta_u, delta_v, w_frac, h_frac)
         )
 
-    def forward_with_map(
+    def encode_instruction(self, task: torch.Tensor) -> torch.Tensor:
+        return self.text_enc(task)
+
+    def encode_crops(self, crops: torch.Tensor) -> dict[str, torch.Tensor]:
+        """Encode `(K, 6, 32, 160)` candidate-pinned strips ONCE per screen."""
+        K = crops.shape[0]
+        rgb = crops[:, :3]
+        anc = crops[:, 3:6]
+        ch = extract_visual_channels(rgb)
+        x = torch.cat([ch, anc], dim=1)  # (K, 10, 32, 160)
+
+        f8 = self.c8_ctx(self.c8(self.c16(self.stem1(x))))  # (K, 72, 8, 40)
+        seq = (self.v_collapse(f8).squeeze(2) + self.col_emb).transpose(1, 2)  # (K, 40, 96)
+        h_seq, _ = self.bigru(seq)  # (K, 40, 160)
+
+        # Direct readout at candidate anchor col 28 (cols 25..31 = [-12px .. +12px]) + narrow fovea cols 21..34
+        anc_mean = h_seq[:, 25:32, :].mean(dim=1)
+        anc_fovea = h_seq[:, 21:35, :].max(dim=1).values
+        anc_vec = self.anc_proj(torch.cat([anc_mean, anc_fovea], dim=1))  # (K, d_text)
+
+        k_map = F.normalize(
+            self.k_proj(h_seq).view(K, 40, self.n_heads, self.head_dim).permute(0, 2, 3, 1),
+            dim=2,
+            eps=1e-6,
+        )  # (K, H, Dh, 40)
+        v_map = self.v_proj(h_seq).transpose(1, 2).contiguous()  # (K, d_text, 40)
+        return {"k_map": k_map, "v_map": v_map, "anc_vec": anc_vec}
+
+    def score_matrix(self, crop_repr: dict[str, torch.Tensor], q: torch.Tensor) -> torch.Tensor:
+        """Compute `(Q, K)` verification logits matching every instruction `q[i]` against every crop `k`."""
+        k_map = crop_repr["k_map"]      # (K, H, Dh, 40)
+        v_map = crop_repr["v_map"]      # (K, D, 40)
+        anc_vec = crop_repr["anc_vec"]  # (K, D)
+
+        Q = q.shape[0]
+        K = k_map.shape[0]
+        q_heads = F.normalize(self.q_proj(q).view(Q, self.n_heads, self.head_dim), dim=2, eps=1e-6)
+        sim_h = torch.einsum("qhd,khdp->qkhp", q_heads, k_map)  # (Q, K, H, 40)
+        temp = self.attn_temp.clamp(1.0, 12.0)
+        attn = F.softmax(sim_h.mean(dim=2) * temp + self.col_attn_bias[None, :, :], dim=-1)
+        v_attn = torch.einsum("qkp,kdp->qkd", attn, v_map)      # (Q, K, D)
+
+        sim_max = sim_h.max(dim=-1).values                       # (Q, K, H)
+        sim_anc = sim_h[:, :, :, 24:33].mean(dim=-1)             # (Q, K, H)
+
+        q_exp = q[:, None, :].expand(Q, K, -1)
+        a_exp = anc_vec[None, :, :].expand(Q, K, -1)
+        cat = torch.cat([a_exp, v_attn, q_exp, a_exp * q_exp, v_attn * q_exp, sim_max, sim_anc], dim=-1)
+        return self.verify_head(cat).squeeze(-1)  # (Q, K)
+
+    def encode_and_offset(
         self, crops: torch.Tensor, q: torch.Tensor
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-        N, _, H, W = crops.shape
-        ch = extract_visual_channels(crops)
-        coords = _coord_grid(N, H, W, crops.device, crops.dtype)
-        f = self.c16_ctx(self.c16(self.c32(torch.cat([ch, coords], dim=1))))  # (N, 72, 16, 16)
+    ) -> tuple[dict[str, torch.Tensor], torch.Tensor, torch.Tensor]:
+        """Single-pass strip encoding + diagonal offset/wh prediction for fast matrix training."""
+        crop_repr = self.encode_crops(crops)
+        k_map = crop_repr["k_map"]
+        v_map = crop_repr["v_map"]
+        anc_vec = crop_repr["anc_vec"]
+        q_heads = F.normalize(self.q_proj(q).view(crops.shape[0], self.n_heads, self.head_dim), dim=2, eps=1e-6)
+        sim_h = torch.einsum("khd,khdp->khp", q_heads, k_map)
+        temp = self.attn_temp.clamp(1.0, 12.0)
+        attn = F.softmax(sim_h.mean(dim=1) * temp + self.col_attn_bias, dim=-1)
+        v_attn = torch.einsum("kp,kdp->kd", attn, v_map)
+        sub = self.sub_off(torch.cat([anc_vec, v_attn, q], dim=1))
+        return crop_repr, torch.tanh(sub[:, :2]), torch.sigmoid(sub[:, 2:4])
 
-        gamma, beta = self.film(q).chunk(2, dim=1)
-        f_mod = self.post_film(f * (1.0 + gamma[:, :, None, None]) + beta[:, :, None, None])
+    def forward(
+        self, crops: torch.Tensor, q: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Score paired `(K, 6, 32, 160)` candidate strips and `(K, d_text)` queries + predict residual offsets."""
+        crop_repr = self.encode_crops(crops)
+        k_map = crop_repr["k_map"]
+        v_map = crop_repr["v_map"]
+        anc_vec = crop_repr["anc_vec"]
 
-        _, C, Gh, Gw = f_mod.shape
-        vh = F.normalize(self.v_proj(f).view(N, self.n_heads, C // self.n_heads, Gh, Gw), dim=2, eps=1e-6)
-        qh = F.normalize(self.q_proj(q).view(N, self.n_heads, C // self.n_heads, 1, 1), dim=2, eps=1e-6)
-        cos_sim = (vh * qh).sum(dim=2) * self.logit_scale.clamp(0.5, 10.0)
+        K = crops.shape[0]
+        q_heads = F.normalize(self.q_proj(q).view(K, self.n_heads, self.head_dim), dim=2, eps=1e-6)
+        sim_h = torch.einsum("khd,khdp->khp", q_heads, k_map)
+        temp = self.attn_temp.clamp(1.0, 12.0)
+        attn = F.softmax(sim_h.mean(dim=1) * temp + self.col_attn_bias, dim=-1)
+        v_attn = torch.einsum("kp,kdp->kd", attn, v_map)
 
-        heat_logits = self.spatial_head(torch.cat([f_mod, cos_sim], dim=1)).flatten(1)  # (N, 256)
-        probs = F.softmax(heat_logits, dim=1).view(N, 1, Gh, Gw)
-        grid16 = _coord_grid(N, Gh, Gw, crops.device, crops.dtype)
-        scale_cell = (Gh - 1.0) / Gh
-        soft_xy = (probs * (grid16 * scale_cell)).sum(dim=(2, 3))
+        sim_max = sim_h.max(dim=-1).values
+        sim_anc = sim_h[:, :, 24:33].mean(dim=-1)
 
-        attn_feat = (f_mod * probs).sum(dim=(2, 3))
-        max_feat = F.adaptive_max_pool2d(f_mod, 1).flatten(1)
-        peak_val = heat_logits.max(dim=1, keepdim=True).values / 10.0
+        cat = torch.cat([anc_vec, v_attn, q, anc_vec * q, v_attn * q, sim_max, sim_anc], dim=-1)
+        verify_logit = self.verify_head(cat).squeeze(-1)
 
-        sub = self.sub_off(torch.cat([attn_feat, q], dim=1))
-        res_xy = 0.15 * torch.tanh(sub[:, :2])
-        fine_xy = (soft_xy + res_xy).clamp(-1.0, 1.0)
+        sub = self.sub_off(torch.cat([anc_vec, v_attn, q], dim=1))
+        delta_uv = torch.tanh(sub[:, :2])
         fine_wh = torch.sigmoid(sub[:, 2:4])
-
-        verify_logit = self.verify_head(torch.cat([attn_feat, max_feat, q, peak_val], dim=1)).squeeze(-1)
-        return verify_logit, fine_xy, fine_wh, heat_logits
-
-    def forward(self, crops: torch.Tensor, q: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        verify_logit, fine_xy, fine_wh, _ = self.forward_with_map(crops, q)
-        return verify_logit, fine_xy, fine_wh
+        return verify_logit, delta_uv, fine_wh
 
 
 def extract_crop_tensor(
@@ -345,41 +428,32 @@ def extract_crop_tensor(
     cy: float,
     span_w: float,
     span_h: float,
-    out_res: int = Stage2RefineNet.CROP_RES,
+    out_h: int = Stage2RefineNet.CROP_H,
+    out_w: int = Stage2RefineNet.CROP_W,
 ) -> tuple[np.ndarray, tuple[float, float, float, float]]:
-    """Extract padded crop `[cx - span_w/2, cy - span_h/2, span_w, span_h]` from native-res image."""
+    """Extract candidate-pinned `32x160` strip (`cx` ALWAYS at `0.70*span_w`, border-replicated at screen edges)."""
     H, W = img_rgb_uint8.shape[:2]
-    x0 = cx - span_w / 2.0
-    y0 = cy - span_h / 2.0
-    x1 = cx + span_w / 2.0
-    y1 = cy + span_h / 2.0
+    x0 = float(cx) - Stage2RefineNet.ANCHOR_FRAC_X * float(span_w)
+    y0 = float(cy) - 0.50 * float(span_h)
+    rw = float(span_w)
+    rh = float(span_h)
 
-    # Clamp crop window inside image while keeping exact affine mapping so coordinates never distort
-    if span_w < W:
-        if x0 < 0:
-            x1 -= x0
-            x0 = 0.0
-        elif x1 > W:
-            x0 -= (x1 - W)
-            x1 = float(W)
-    else:
-        x0, x1 = 0.0, float(W)
+    xs = x0 + (np.arange(out_w, dtype=np.float32) + 0.5) * (rw / out_w)
+    ys = y0 + (np.arange(out_h, dtype=np.float32) + 0.5) * (rh / out_h)
+    xi = np.clip(np.floor(xs).astype(np.int64), 0, W - 1)
+    yi = np.clip(np.floor(ys).astype(np.int64), 0, H - 1)
+    rgb_f = img_rgb_uint8[np.ix_(yi, xi)].astype(np.float32) / 127.5 - 1.0
 
-    if span_h < H:
-        if y0 < 0:
-            y1 -= y0
-            y0 = 0.0
-        elif y1 > H:
-            y0 -= (y1 - H)
-            y1 = float(H)
-    else:
-        y0, y1 = 0.0, float(H)
+    u = ((xs - float(cx)) / max(1.0, 0.5 * rw))[None, :]
+    v = ((ys - float(cy)) / max(1.0, 0.5 * rh))[:, None]
+    u_map = np.broadcast_to(u, (out_h, out_w))
+    v_map = np.broadcast_to(v, (out_h, out_w))
+    gx = (xs - float(cx)) / max(2.0, 0.14 * rw)
+    gy = (ys - float(cy)) / max(2.0, 0.35 * rh)
+    beacon = np.exp(-(gx[None, :] ** 2) - (gy[:, None] ** 2)).astype(np.float32)
 
-    ix0, iy0 = max(0, int(round(x0))), max(0, int(round(y0)))
-    ix1, iy1 = min(W, max(ix0 + 2, int(round(x1)))), min(H, max(iy0 + 2, int(round(y1))))
-    sub = Image.fromarray(img_rgb_uint8[iy0:iy1, ix0:ix1]).resize((out_res, out_res), Image.BILINEAR)
-    arr = np.asarray(sub, dtype=np.float32) / 127.5 - 1.0
-    return arr, (float(ix0), float(iy0), float(ix1 - ix0), float(iy1 - iy0))
+    arr6 = np.concatenate([rgb_f, u_map[:, :, None], v_map[:, :, None], beacon[:, :, None]], axis=2)
+    return arr6, (x0, y0, rw, rh)
 
 
 def _normalize_exclude_box(exclude_box: Any) -> tuple[float, float, float, float] | None:
@@ -403,9 +477,9 @@ def topk_grid_candidates(
     box_wh_2d: torch.Tensor,
     canvas_w: float,
     canvas_h: float,
-    k: int = 4,
+    k: int = 7,
     exclude_box: Any = None,
-    nms_radius_cells: int = 2,
+    nms_radius_cells: int = 1,
 ) -> list[dict[str, Any]]:
     """Extract top-K spatially distinct candidate peaks from a single image's coarse grid."""
     hw = scores_1d.shape[0]
@@ -448,7 +522,6 @@ def topk_grid_candidates(
             "w": est_w,
             "h": est_h,
         })
-        # Suppress local neighborhood so next peak is a distinct candidate widget!
         y0, y1 = max(0, gy - nms_radius_cells), min(g, gy + nms_radius_cells + 1)
         x0, x1 = max(0, gx - nms_radius_cells), min(g, gx + nms_radius_cells + 1)
         work[y0:y1, x0:x1] = -1e9
@@ -457,18 +530,22 @@ def topk_grid_candidates(
 
 
 class EyesGrounder:
-    """Unified runtime grounder supporting Stage-1, Stage-2 refine crops, multi-scale, and recovery `exclude_box`."""
+    """Unified runtime grounder supporting Stage-1, Stage-2 strip refiner, multi-scale, and recovery `exclude_box`."""
 
     def __init__(
         self,
         stage1: Stage1CoarseNet,
         stage2: Stage2RefineNet | None = None,
-        top_k: int = 4,
-        stage2_weight: float = 1.35,
+        top_k: int = 7,
+        nms_radius_cells: int = 1,
+        stage1_weight: float = 0.35,
+        stage2_weight: float = 1.0,
     ):
         self.stage1 = stage1.eval()
         self.stage2 = stage2.eval() if stage2 is not None else None
         self.top_k = top_k
+        self.nms_radius_cells = nms_radius_cells
+        self.stage1_weight = stage1_weight
         self.stage2_weight = stage2_weight
 
     @staticmethod
@@ -497,26 +574,40 @@ class EyesGrounder:
 
         with torch.no_grad():
             t = torch.tensor([encode_task(instruction)], dtype=torch.long)
-            q = self.stage1.encode_instruction(t)  # (1, d_text)
+            q1 = self.stage1.encode_instruction(t)
 
             im_pil = Image.fromarray(rgb)
             im128 = np.asarray(im_pil.resize((COARSE_SIZE, COARSE_SIZE), Image.BILINEAR), dtype=np.float32) / 127.5 - 1.0
             x128 = torch.from_numpy(im128).permute(2, 0, 1).unsqueeze(0)
-            s128, o128, wh128, act_logits = self.stage1.forward_with_query(x128, q)
+            s128, o128, wh128, act_logits = self.stage1.forward_with_query(x128, q1)
 
             cands = topk_grid_candidates(
-                s128[0], o128[0], wh128[0], canvas_w=W, canvas_h=H, k=self.top_k, exclude_box=ex
+                s128[0],
+                o128[0],
+                wh128[0],
+                canvas_w=W,
+                canvas_h=H,
+                k=self.top_k,
+                exclude_box=ex,
+                nms_radius_cells=self.nms_radius_cells,
             )
 
             if multi_scale:
-                im144 = np.asarray(im_pil.resize((144, 144), Image.BILINEAR), dtype=np.float32) / 127.5 - 1.0
-                x144 = torch.from_numpy(im144).permute(2, 0, 1).unsqueeze(0)
-                s144, o144, wh144, act144 = self.stage1.forward_with_query(x144, q)
-                act_logits = 0.5 * (act_logits + act144)
+                im160 = np.asarray(im_pil.resize((160, 160), Image.BILINEAR), dtype=np.float32) / 127.5 - 1.0
+                x160 = torch.from_numpy(im160).permute(2, 0, 1).unsqueeze(0)
+                s160, o160, wh160, act160 = self.stage1.forward_with_query(x160, q1)
+                act_logits = 0.5 * (act_logits + act160)
                 extra = topk_grid_candidates(
-                    s144[0], o144[0], wh144[0], canvas_w=W, canvas_h=H, k=2, exclude_box=ex
+                    s160[0],
+                    o160[0],
+                    wh160[0],
+                    canvas_w=W,
+                    canvas_h=H,
+                    k=3,
+                    exclude_box=ex,
+                    nms_radius_cells=self.nms_radius_cells,
                 )
-                min_dist = max(8.0, 0.04 * max(W, H))
+                min_dist = max(7.0, 0.03 * max(W, H))
                 for ec in extra:
                     if all(((ec["x"] - c["x"]) ** 2 + (ec["y"] - c["y"]) ** 2) ** 0.5 > min_dist for c in cands):
                         cands.append(ec)
@@ -530,8 +621,8 @@ class EyesGrounder:
             conf = float(np.exp(np.clip(best["stage1_logp"], -20.0, 0.0)))
 
             if use_stage2 and self.stage2 is not None and len(cands) > 0:
-                span_w = max(24.0, Stage2RefineNet.SPAN_FRAC * W)
-                span_h = max(24.0, Stage2RefineNet.SPAN_FRAC * H)
+                span_w = max(96.0, Stage2RefineNet.SPAN_W_FRAC * W)
+                span_h = max(24.0, Stage2RefineNet.SPAN_H_FRAC * H)
                 crop_arrs = []
                 crop_rects = []
                 for c in cands:
@@ -539,27 +630,28 @@ class EyesGrounder:
                     crop_arrs.append(arr)
                     crop_rects.append(rect)
                 crop_batch = torch.from_numpy(np.stack(crop_arrs, axis=0)).permute(0, 3, 1, 2)
-                q_rep = q.expand(len(cands), -1)
-                v_logits, f_xy, f_wh = self.stage2(crop_batch, q_rep)
+                q2 = self.stage2.encode_instruction(t)
+                q2_rep = q2.expand(len(cands), -1)
+                v_logits, delta_uv, f_wh = self.stage2(crop_batch, q2_rep)
 
                 best_score = -1e9
                 for idx_c, c in enumerate(cands):
-                    rx, ry, rw, rh = crop_rects[idx_c]
-                    fx = rx + (0.5 + 0.5 * float(f_xy[idx_c, 0].item())) * rw
-                    fy = ry + (0.5 + 0.5 * float(f_xy[idx_c, 1].item())) * rh
-                    fx = float(np.clip(fx, 0.0, W - 1.0))
-                    fy = float(np.clip(fy, 0.0, H - 1.0))
+                    _, _, rw, rh = crop_rects[idx_c]
+                    max_dx = Stage2RefineNet.MAX_DX_PX * (rw / float(Stage2RefineNet.CROP_W))
+                    max_dy = Stage2RefineNet.MAX_DY_PX * (rh / float(Stage2RefineNet.CROP_H))
+                    fx = float(np.clip(c["x"] + max_dx * float(delta_uv[idx_c, 0].item()), 0.0, W - 1.0))
+                    fy = float(np.clip(c["y"] + max_dy * float(delta_uv[idx_c, 1].item()), 0.0, H - 1.0))
 
                     # Enforce exclude_box strictly even after Stage-2 refinement shift!
                     if ex is not None and (ex[0] <= fx <= ex[0] + ex[2] and ex[1] <= fy <= ex[1] + ex[3]):
                         continue
 
-                    comb = c["stage1_logp"] + self.stage2_weight * float(v_logits[idx_c].item())
+                    comb = self.stage1_weight * c["stage1_logp"] + self.stage2_weight * float(v_logits[idx_c].item())
                     if comb > best_score:
                         best_score = comb
                         px, py = fx, fy
-                        bw = float(np.clip(float(f_wh[idx_c, 0].item()) * rw, 10.0, W * 0.65))
-                        bh = float(np.clip(float(f_wh[idx_c, 1].item()) * rh, 8.0, H * 0.45))
+                        bw = float(np.clip(float(f_wh[idx_c, 0].item()) * W, 16.0, W * 0.92))
+                        bh = float(np.clip(float(f_wh[idx_c, 1].item()) * H, 12.0, H * 0.25))
                         conf = float(1.0 / (1.0 + np.exp(-np.clip(float(v_logits[idx_c].item()), -15.0, 15.0))))
 
         ix = int(round(np.clip(px, 0, W - 1)))
@@ -576,3 +668,4 @@ class EyesGrounder:
             "confidence": round(conf, 4),
             "box": [bx, by, int(round(bw)), int(round(bh))],
         }
+
