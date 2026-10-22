@@ -46,3 +46,69 @@
 [grip] step 875/12000 loss 2.7112 ce 2.6738 act 0.0001 elapsed 113s
 [grip] step 900/12000 loss 2.7058 ce 2.7844 act 0.0002 elapsed 117s
 [grip] step 925/12000 loss 2.7101 ce 2.5629 act 0.0001 elapsed 120s
+[grip] resumed from step 750
+[grip] params: 0.65M, batch 16, steps 12000
+[grip] step 775/12000 loss 2.7594 ce 2.5418 act 0.0005 elapsed 3s
+[grip] step 800/12000 loss 2.7242 ce 2.7994 act 0.0001 elapsed 6s
+[grip] step 825/12000 loss 2.6986 ce 2.5723 act 0.0002 elapsed 9s
+[grip] step 850/12000 loss 2.7593 ce 2.8734 act 0.0002 elapsed 12s
+[grip] step 875/12000 loss 2.7194 ce 2.6724 act 0.0006 elapsed 14s
+[grip] step 900/12000 loss 2.7179 ce 2.6791 act 0.0002 elapsed 18s
+[grip] step 925/12000 loss 2.7120 ce 2.8530 act 0.0000 elapsed 21s
+[grip] step 950/12000 loss 2.7276 ce 2.7073 act 0.0001 elapsed 24s
+[grip] step 975/12000 loss 2.6733 ce 2.6304 act 0.0000 elapsed 26s
+[grip] step 1000/12000 loss 2.6959 ce 2.5542 act 0.0000 elapsed 29s
+[grip] eval @ 1000: hit_widget 0.352  hit_point 0.113  action_acc 1.000  click_iou 0.070
+[grip] step 1025/12000 loss 2.7121 ce 2.8411 act 0.0001 elapsed 33s
+[grip] step 1050/12000 loss 2.6943 ce 2.6833 act 0.0001 elapsed 36s
+[grip] step 1075/12000 loss 2.7082 ce 2.6102 act 0.0001 elapsed 38s
+[grip] step 1100/12000 loss 2.6265 ce 2.6990 act 0.0000 elapsed 41s
+[grip] step 1125/12000 loss 2.6938 ce 2.8463 act 0.0003 elapsed 44s
+[grip] step 1150/12000 loss 2.6574 ce 2.5404 act 0.0001 elapsed 47s
+[grip] step 1175/12000 loss 2.6833 ce 2.7311 act 0.0000 elapsed 50s
+[grip] step 1200/12000 loss 2.6612 ce 2.6763 act 0.0004 elapsed 53s
+[grip] step 1225/12000 loss 2.6488 ce 2.4916 act 0.0004 elapsed 55s
+[grip] step 1250/12000 loss 2.6416 ce 2.5457 act 0.0000 elapsed 58s
+[grip] eval @ 1250: hit_widget 0.348  hit_point 0.086  action_acc 1.000  click_iou 0.061
+[grip] step 1275/12000 loss 2.6558 ce 2.7088 act 0.0000 elapsed 62s
+[grip] step 1300/12000 loss 2.6610 ce 2.5899 act 0.0001 elapsed 64s
+[grip] step 1325/12000 loss 2.6593 ce 2.6229 act 0.0000 elapsed 67s
+[grip] step 1350/12000 loss 2.6854 ce 2.6331 act 0.0001 elapsed 69s
+[grip] step 1375/12000 loss 2.6663 ce 2.7387 act 0.0001 elapsed 72s
+[grip] step 1400/12000 loss 2.6650 ce 2.3962 act 0.0002 elapsed 75s
+[grip] step 1425/12000 loss 2.6372 ce 2.5458 act 0.0000 elapsed 78s
+[grip] step 1450/12000 loss 2.6406 ce 2.7017 act 0.0000 elapsed 81s
+[grip] step 1475/12000 loss 2.6511 ce 2.7718 act 0.0099 elapsed 84s
+[grip] step 1500/12000 loss 2.6521 ce 2.4852 act 0.0001 elapsed 86s
+[grip] eval @ 1500: hit_widget 0.402  hit_point 0.082  action_acc 1.000  click_iou 0.072
+[grip] step 1525/12000 loss 2.6696 ce 2.6330 act 0.0008 elapsed 90s
+[grip] step 1550/12000 loss 2.6817 ce 2.7035 act 0.0000 elapsed 93s
+[grip] step 1575/12000 loss 2.6870 ce 2.5541 act 0.0001 elapsed 96s
+[grip] step 1600/12000 loss 2.6696 ce 2.6501 act 0.0000 elapsed 98s
+[grip] step 1625/12000 loss 2.6308 ce 2.5289 act 0.0000 elapsed 101s
+[grip] step 1650/12000 loss 2.6026 ce 2.7879 act 0.0000 elapsed 104s
+[grip] step 1675/12000 loss 2.6271 ce 2.5789 act 0.0001 elapsed 107s
+[grip] step 1700/12000 loss 2.6320 ce 2.5332 act 0.0000 elapsed 110s
+[grip] step 1725/12000 loss 2.6276 ce 2.4892 act 0.0001 elapsed 113s
+[grip] step 1750/12000 loss 2.6640 ce 2.4785 act 0.0000 elapsed 116s
+[grip] eval @ 1750: hit_widget 0.332  hit_point 0.098  action_acc 1.000  click_iou 0.062
+[grip] step 1775/12000 loss 2.6020 ce 2.7769 act 0.0000 elapsed 119s
+[grip] step 1800/12000 loss 2.6267 ce 2.7039 act 0.0000 elapsed 122s
+[grip] step 1825/12000 loss 2.6504 ce 2.7400 act 0.0000 elapsed 125s
+[grip] step 1850/12000 loss 2.6259 ce 2.6842 act 0.0000 elapsed 127s
+[grip] step 1875/12000 loss 2.6239 ce 2.5720 act 0.0001 elapsed 130s
+[grip] step 1900/12000 loss 2.6233 ce 2.5899 act 0.0000 elapsed 133s
+[grip] step 1925/12000 loss 2.6417 ce 2.5949 act 0.0000 elapsed 136s
+[grip] step 1950/12000 loss 2.6259 ce 2.6956 act 0.0001 elapsed 139s
+[grip] step 1975/12000 loss 2.6332 ce 2.5153 act 0.0017 elapsed 142s
+[grip] step 2000/12000 loss 2.6356 ce 2.6026 act 0.0100 elapsed 144s
+[grip] eval @ 2000: hit_widget 0.332  hit_point 0.121  action_acc 1.000  click_iou 0.066
+[grip] step 2025/12000 loss 2.5849 ce 2.5904 act 0.0000 elapsed 148s
+[grip] step 2050/12000 loss 2.6236 ce 2.6016 act 0.0000 elapsed 151s
+[grip] step 2075/12000 loss 2.6472 ce 2.4891 act 0.0000 elapsed 154s
+[grip] step 2100/12000 loss 2.5921 ce 2.7965 act 0.0000 elapsed 156s
+[grip] step 2125/12000 loss 2.6145 ce 2.6749 act 0.0000 elapsed 159s
+[grip] step 2150/12000 loss 2.5781 ce 2.6580 act 0.0000 elapsed 163s
+[grip] step 2175/12000 loss 2.6350 ce 2.6481 act 0.0023 elapsed 166s
+[grip] step 2200/12000 loss 2.6517 ce 2.5897 act 0.0000 elapsed 169s
+[grip] step 2225/12000 loss 2.6240 ce 2.6318 act 0.8207 elapsed 172s

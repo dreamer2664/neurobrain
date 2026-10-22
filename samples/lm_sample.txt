@@ -1,35 +1,31 @@
-# checkpoint step 2400
+# checkpoint step 3000
 # prompt:
- state_steps,
-                lambd=group["lambd"],
-                lr=group["lr"],
-                t0=group["t0"],
-                alpha=group["alpha"],
-                weight_decay=group["weight_decay"],
-                foreach=group["foreach"],
-                maximize
+
+A-raoir
+a-riamh
+A-riamh
+a-rithist
+A-rithist
+a-rèiste
+A-rèiste
+a-rìs
+A-rìs
+a-seo
+A-seo
+a-sin
+A-sin
 # ---- continuation ----
- state_steps,
-                lambd=group["lambd"],
-                lr=group["lr"],
-                t0=group["t0"],
-                alpha=group["alpha"],
-                weight_decay=group["weight_decay"],
-                foreach=group["foreach"],
-                maximize_decay=group["wpha"],
-                alpha_pre_free_decay=group["br"]),
-                src_threshold=group["br"],
-                src_threshold=col["br"])
-                self.register_br(br.copy(br)
-                self.register_br(br.copy(br.items(), src_threshold))
-            self._register_br(br.copy()),
-                src_threshold=group["br"])
-            self.register_br(br.copy(),storeach=storeach, src_threshold=src_threshold))
-            self.register_br(br.copy(), src_threshold=ssl_threshold)
-            self.register_br(br.tree().add((br.tree().br, src_threshold))
-            self.register_br(br.tree).copy()
 
-    def _register_br(self, br, pi_threshold=False):
-        return _register_br(br.tree())
-
-    def _register_br(self
+A-raoir
+a-riamh
+A-riamh
+a-rithist
+A-rithist
+a-rèiste
+A-rèiste
+a-rìs
+A-rìs
+a-seo
+A-seo
+a-sin
+A-sin-hè-héhéhéhure-héhéchéhure-héchéhure-héchéhure-héhure-héhure-héhure-hure-héhure-héhure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-memo-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-hure-ure-hure-hure-aure-pure-cure-
