@@ -1,0 +1,10 @@
+{
+ "category": "misc",
+ "difficulty": "easy",
+ "fn": "summarize",
+ "id": "cb-misc-06",
+ "prompt": "def summarize(items):\n    \"\"\"return {'ok': True, 'n': number of items}\"\"\"\n",
+ "reference": "    return {'ok': True, 'n': len(items)}\n",
+ "tests": "assert summarize([1, 2]) == {'ok': True, 'n': 2}\nassert summarize([]) == {'ok': True, 'n': 0}",
+ "timeout_s": 5
+}

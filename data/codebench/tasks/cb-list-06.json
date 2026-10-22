@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "easy",
+ "fn": "sum_squares",
+ "id": "cb-list-06",
+ "prompt": "def sum_squares(xs):\n    \"\"\"return the sum of the squares\"\"\"\n",
+ "reference": "    return sum(x * x for x in xs)\n",
+ "tests": "assert sum_squares([1, 2, 3]) == 14\nassert sum_squares([]) == 0",
+ "timeout_s": 5
+}

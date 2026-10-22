@@ -1,0 +1,10 @@
+{
+ "category": "sorting",
+ "difficulty": "hard",
+ "fn": "bubble_sort",
+ "id": "cb-sort-04",
+ "prompt": "def bubble_sort(items):\n    \"\"\"sort the list with the bubble sort algorithm\"\"\"\n",
+ "reference": "    out = list(items)\n    n = len(out)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if out[j] > out[j + 1]:\n                out[j], out[j + 1] = out[j + 1], out[j]\n    return out\n",
+ "tests": "assert bubble_sort([3, 1, 2]) == [1, 2, 3]\nassert bubble_sort([]) == []\nassert bubble_sort([2, 2, 1]) == [1, 2, 2]",
+ "timeout_s": 5
+}

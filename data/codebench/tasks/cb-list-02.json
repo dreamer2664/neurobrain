@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "easy",
+ "fn": "even_only",
+ "id": "cb-list-02",
+ "prompt": "def even_only(xs):\n    \"\"\"return only the even numbers\"\"\"\n",
+ "reference": "    return [x for x in xs if x % 2 == 0]\n",
+ "tests": "assert even_only([1, 2, 3, 4]) == [2, 4]\nassert even_only([1, 3]) == []",
+ "timeout_s": 5
+}

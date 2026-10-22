@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "easy",
+ "fn": "add",
+ "id": "cb-arith-01",
+ "prompt": "def add(a, b):\n    \"\"\"return the sum of a and b\"\"\"\n",
+ "reference": "    return a + b\n",
+ "tests": "assert add(2, 3) == 5\nassert add(-1, 1) == 0\nassert add(2.5, 0.5) == 3.0",
+ "timeout_s": 5
+}

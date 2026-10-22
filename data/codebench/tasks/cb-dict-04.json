@@ -1,0 +1,10 @@
+{
+ "category": "dicts",
+ "difficulty": "easy",
+ "fn": "merge",
+ "id": "cb-dict-04",
+ "prompt": "def merge(a, b):\n    \"\"\"return one dict with all pairs; values from b win\"\"\"\n",
+ "reference": "    out = dict(a)\n    out.update(b)\n    return out\n",
+ "tests": "assert merge({'x': 1}, {'y': 2}) == {'x': 1, 'y': 2}\nassert merge({'x': 1}, {'x': 2}) == {'x': 2}",
+ "timeout_s": 5
+}

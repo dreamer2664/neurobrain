@@ -1,0 +1,10 @@
+{
+ "category": "misc",
+ "difficulty": "easy",
+ "fn": "evens_upto",
+ "id": "cb-misc-05",
+ "prompt": "def evens_upto(n):\n    \"\"\"return the even numbers from 2 up to n inclusive\"\"\"\n",
+ "reference": "    return list(range(2, n + 1, 2))\n",
+ "tests": "assert evens_upto(6) == [2, 4, 6]\nassert evens_upto(7) == [2, 4, 6]\nassert evens_upto(1) == []",
+ "timeout_s": 5
+}

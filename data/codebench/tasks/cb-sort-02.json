@@ -1,0 +1,10 @@
+{
+ "category": "sorting",
+ "difficulty": "easy",
+ "fn": "sort_by_len",
+ "id": "cb-sort-02",
+ "prompt": "def sort_by_len(words):\n    \"\"\"return the words sorted by length, shortest first\"\"\"\n",
+ "reference": "    return sorted(words, key=len)\n",
+ "tests": "assert sort_by_len(['bb', 'a', 'ccc']) == ['a', 'bb', 'ccc']\nassert sort_by_len([]) == []",
+ "timeout_s": 5
+}

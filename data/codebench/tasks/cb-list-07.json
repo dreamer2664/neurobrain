@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "medium",
+ "fn": "chunk",
+ "id": "cb-list-07",
+ "prompt": "def chunk(xs, n):\n    \"\"\"split xs into consecutive chunks of length n (last may be shorter)\"\"\"\n",
+ "reference": "    return [xs[i:i + n] for i in range(0, len(xs), n)]\n",
+ "tests": "assert chunk([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]\nassert chunk([], 3) == []\nassert chunk([1, 2], 5) == [[1, 2]]",
+ "timeout_s": 5
+}

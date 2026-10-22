@@ -1,0 +1,10 @@
+{
+ "category": "logic",
+ "difficulty": "easy",
+ "fn": "is_even",
+ "id": "cb-logic-01",
+ "prompt": "def is_even(n):\n    \"\"\"true if n is even\"\"\"\n",
+ "reference": "    return n % 2 == 0\n",
+ "tests": "assert is_even(4)\nassert not is_even(7)\nassert is_even(0)",
+ "timeout_s": 5
+}

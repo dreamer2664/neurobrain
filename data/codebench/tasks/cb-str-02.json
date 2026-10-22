@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "first_word",
+ "id": "cb-str-02",
+ "prompt": "def first_word(text):\n    \"\"\"return the first word of a non-empty string\"\"\"\n",
+ "reference": "    return text.split()[0]\n",
+ "tests": "assert first_word('hi there') == 'hi'\nassert first_word('solo') == 'solo'",
+ "timeout_s": 5
+}

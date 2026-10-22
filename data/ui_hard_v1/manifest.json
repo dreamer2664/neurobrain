@@ -1,0 +1,72 @@
+{
+  "version": "v1",
+  "generated_by": "agent-03",
+  "world": "ui_world_hard",
+  "tier": "mixed",
+  "label_mode": "text",
+  "seed": 1000,
+  "n": 50000,
+  "shard_size": 5000,
+  "shards": [
+    {
+      "file": "shard-0000.npz",
+      "n": 5000,
+      "sha256": "a17442fab7542db5bf5e0cac69edbed96ca37a39836ab9d9f7b1aae02aa0ebf0",
+      "bytes": 41107619
+    },
+    {
+      "file": "shard-0001.npz",
+      "n": 5000,
+      "sha256": "93ab6b3d66bae882f4acdfdf9ac9fee5dfbe76fda24953d282883ff1c23afb4e",
+      "bytes": 40904827
+    },
+    {
+      "file": "shard-0002.npz",
+      "n": 5000,
+      "sha256": "515b12c97c981e80dce8d7203723e48565d7770aae9bbbe44daf3a50c841146c",
+      "bytes": 40870989
+    },
+    {
+      "file": "shard-0003.npz",
+      "n": 5000,
+      "sha256": "36a81ebe37eb2b87323940f9390abed40bccce17e64ebf7f6cc49056f7c9e560",
+      "bytes": 41102918
+    },
+    {
+      "file": "shard-0004.npz",
+      "n": 5000,
+      "sha256": "e187bdf591f306820196e40ae18b4e0ee8f484ed9257f29d6765698615d46bbc",
+      "bytes": 40767204
+    },
+    {
+      "file": "shard-0005.npz",
+      "n": 5000,
+      "sha256": "b31ac5032cb5fae122c3dc9d492b92a9f2e02335c4a399c4a4a5de5e7730a649",
+      "bytes": 41062569
+    },
+    {
+      "file": "shard-0006.npz",
+      "n": 5000,
+      "sha256": "3c5e6cd871cae0d4ba535d38cbf8b1445ece0d53d75ed5712eba5b5ea0962258",
+      "bytes": 41301041
+    },
+    {
+      "file": "shard-0007.npz",
+      "n": 5000,
+      "sha256": "9e0242b1fe03775608399bf627a050033440bbec5c19b68adebc589a67cd9073",
+      "bytes": 40948335
+    },
+    {
+      "file": "shard-0008.npz",
+      "n": 5000,
+      "sha256": "d6f2987acfe283286803b62d4d42cc1fbb4ca8cdafaa960390e20d222fe5ac10",
+      "bytes": 40992294
+    },
+    {
+      "file": "shard-0009.npz",
+      "n": 5000,
+      "sha256": "fa4d1e36c1f296cf174e21045717469c170e7238c9e471de9cbb8c0bc5d77745",
+      "bytes": 40976782
+    }
+  ]
+}
