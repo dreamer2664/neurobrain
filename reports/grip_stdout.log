@@ -314,3 +314,6 @@ Traceback (most recent call last):
   File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
     import torch
 ModuleNotFoundError: No module named 'torch'
+[grip] resumed from step 750
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 775/24000 loss 2.7885 ce 2.8181 off 0.098 act 0.0002 elapsed 18s

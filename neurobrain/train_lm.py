@@ -49,12 +49,15 @@ def main() -> None:
     os.makedirs("reports", exist_ok=True)
 
     tok = BPETokenizer.load(os.path.join(args.data, "tokenizer.json"))
+    # code teaches the language, drive teaches it to finish, ui teaches the screen
     mix = Mixture({
-        "code": (os.path.join(args.data, "code_train.bin"), 0.75),
-        "ui": (os.path.join(args.data, "ui_train.bin"), 0.25),
+        "code": (os.path.join(args.data, "code_train.bin"), 0.55),
+        "drive": (os.path.join(args.data, "drive_train.bin"), 0.25),
+        "ui": (os.path.join(args.data, "ui_train.bin"), 0.20),
     }, args.ctx)
     val_mix = {
         "code": (os.path.join(args.data, "code_val.bin"), 1.0),
+        "drive": (os.path.join(args.data, "drive_val.bin"), 1.0),
         "ui": (os.path.join(args.data, "ui_val.bin"), 1.0),
     }
     val_sources = {k: __import__("neurobrain.data", fromlist=["TokenSource"]).TokenSource(v[0], args.ctx)
@@ -70,8 +73,8 @@ def main() -> None:
         print("[lm] compiling model with torch.compile (inductor)")
         model = torch.compile(model)
     print(f"[lm] params: {model.num_params()/1e6:.2f}M (non-embedding {model.num_params(True)/1e6:.2f}M)")
-    print(f"[lm] vocab: {tok.vocab_size}, tokens: code={len(mix.sources['code'])/1e6:.2f}M "
-          f"ui={len(mix.sources['ui'])/1e6:.2f}M")
+    print("[lm] vocab: %d, tokens: " % tok.vocab_size +
+          " ".join(f"{k}={len(v)/1e6:.2f}M" for k, v in mix.sources.items()))
 
     decay, no_decay = [], []
     for n, p in model.named_parameters():

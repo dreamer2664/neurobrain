@@ -21,6 +21,10 @@ export MALLOC_ARENA_MAX=2
 export PYTHONUNBUFFERED=1
 
 # survival: large token streams can vanish in a rollback; rebuild if so
+if [ ! -f data/drive_train.bin ]; then
+  echo "[setup] drive corpus missing, building"
+  python3 scripts/build_drive_corpus.py --episodes 400000
+fi
 if [ ! -f data/code_train.bin ] || [ ! -f data/tokenizer.json ]; then
   echo "[setup] corpus missing, re-encoding with the checkpoint tokenizer"
   python3 scripts/retokenize.py

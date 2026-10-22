@@ -1,0 +1,82 @@
+[
+  {
+    "round": 0,
+    "pass_at_1": 0.0,
+    "n": 48,
+    "failures": [
+      {
+        "fn": "add",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "add",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "add",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "add",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: '(' was never closed"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: unmatched ')'"
+      },
+      {
+        "fn": "mean",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: expected ':'"
+      }
+    ]
+  },
+  {
+    "round": 1,
+    "kept": 0,
+    "tried": 48,
+    "pass_at_1": 0.0,
+    "n": 48,
+    "failures": [
+      {
+        "fn": "add",
+        "why": "syntax: unexpected indent"
+      },
+      {
+        "fn": "add",
+        "why": "syntax: closing parenthesis ']' does not match opening parenthesis '('"
+      },
+      {
+        "fn": "add",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "add",
+        "why": "syntax: unmatched ')'"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: invalid syntax"
+      },
+      {
+        "fn": "mean",
+        "why": "AssertionError"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: invalid syntax"
+      },
+      {
+        "fn": "mean",
+        "why": "syntax: invalid syntax"
+      }
+    ]
+  }
+]
