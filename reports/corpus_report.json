@@ -2,13 +2,13 @@
   "code_files": 17082,
   "code_bytes": 160039404,
   "tokens": {
-    "code_train": 47070897,
-    "code_val": 1612646,
-    "ui_train": 16722021,
-    "ui_val": 510676
+    "code_train": 53283194,
+    "code_val": 1820427,
+    "ui_train": 17156469,
+    "ui_val": 524223
   },
-  "vocab_size": 4100,
-  "code_bytes_per_token": 3.292,
+  "vocab_size": 2052,
+  "code_bytes_per_token": 2.908,
   "ui_examples": 150735,
   "sdist_roots": [
     "click-8.5.0",

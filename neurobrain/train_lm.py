@@ -64,7 +64,7 @@ def main() -> None:
     for k, src in val_sources.items():
         val_batches[k] = [src.sample(4, vrng) for _ in range(8)]
 
-    cfg = GPTConfig(vocab_size=tok.vocab_size, n_layer=8, n_head=8, d_model=256, ctx=args.ctx)
+    cfg = GPTConfig(vocab_size=tok.vocab_size, n_layer=6, n_head=7, d_model=224, ctx=args.ctx)
     model = GPT(cfg)
     if args.compile:
         print("[lm] compiling model with torch.compile (inductor)")

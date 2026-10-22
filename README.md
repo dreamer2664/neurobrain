@@ -6,7 +6,7 @@ tokenizer and a lot of Python source code + synthetic desktop-control data.
 
 **Two skills:**
 
-1. **Programming** — a 7.5M-parameter decoder-only transformer learns Python by
+1. **Programming** — a 4.25M-parameter decoder-only transformer learns Python by
    next-token prediction on real open-source source code (CPython stdlib,
    installed libraries, and released sdist tarballs).
 2. **Desktop control** — a from-scratch CNN (`GripNet`) looks at a 128×128
@@ -17,11 +17,11 @@ tokenizer and a lot of Python source code + synthetic desktop-control data.
 
 ```
                     ┌──────────────────────────────┐
-   python source ──▶│  byte-level BPE (4096 tok)   │──▶ uint16 token stream
+   python source ──▶│  byte-level BPE (2048 tok)   │──▶ uint16 token stream
    screen protocol ─┤  learned from scratch        │        │
                     └──────────────────────────────┘        ▼
                                               ┌──────────────────────────┐
-                                              │ transformer (8L, d=256)  │──▶ lm_best.pt
+                                              │ transformer (6L, d=224)  │──▶ lm_best.pt
                                               └──────────────────────────┘
    synthetic desktop ──▶ 128×128 renders ──▶ ┌──────────────────────────┐
    instruction text   ──▶ char encoder    ──▶│ GripNet CNN + text query │──▶ grip_best.pt
@@ -68,7 +68,7 @@ tokenizer and a lot of Python source code + synthetic desktop-control data.
 
 ```bash
 pip install -r requirements.txt
-python scripts/build_corpus.py --max-code-bytes 160000000 --vocab-size 4096
+python scripts/build_corpus.py --max-code-bytes 160000000 --vocab-size 2048
 python -m neurobrain.train_lm --resume --steps 40000 --batch 12 --accum 2 --ctx 256
 python -m neurobrain.train_grip --steps 4000 --batch 32
 python -m neurobrain.sample --ckpt checkpoints/lm_best.pt --prompt "# quicksort\n"
@@ -79,14 +79,15 @@ trainer); logs and metrics are committed continuously by `scripts/push.sh`.
 
 ## Status
 
-Training is running continuously on a 2-core CPU sandbox. See
+Training is running continuously on a 2-core / 2 GB CPU sandbox (the two models
+take turns, see `scripts/train_all.sh`). See
 `reports/lm_log.jsonl`, `reports/grip_log.jsonl` and the latest commit messages
 for live progress, and `samples/` for fresh generations.
 
 | | value |
 |---|---|
-| tokenizer | 4096-token byte-level BPE, learned from scratch |
-| language model | 7.5M params, 8 layers, d=256, ctx=256 |
+| tokenizer | 2048-token byte-level BPE, learned from scratch (2.9 bytes/token) |
+| language model | 4.25M params, 6 layers, d=224, ctx=256, ~6.5k tokens/s on 2 CPU cores |
 | corpus | see `reports/corpus_report.json` |
 | GripNet | 4-block CNN + char encoder + dot-product attention over 8×8 grid |
 

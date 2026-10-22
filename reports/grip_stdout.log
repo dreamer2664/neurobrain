@@ -35,3 +35,14 @@
 [grip] step 625/12000 loss 2.7319 ce 2.6095 act 0.0001 elapsed 79s
 [grip] step 650/12000 loss 2.7619 ce 2.8311 act 0.0001 elapsed 82s
 [grip] step 675/12000 loss 2.6949 ce 2.6337 act 0.0001 elapsed 86s
+[grip] step 700/12000 loss 2.6997 ce 2.7153 act 0.0017 elapsed 89s
+[grip] step 725/12000 loss 2.6867 ce 2.6743 act 0.0015 elapsed 92s
+[grip] step 750/12000 loss 2.6999 ce 2.8221 act 0.0001 elapsed 95s
+[grip] eval @ 750: hit_widget 0.316  hit_point 0.090  action_acc 1.000  click_iou 0.064
+[grip] step 775/12000 loss 2.7352 ce 2.5507 act 0.0004 elapsed 99s
+[grip] step 800/12000 loss 2.6752 ce 2.5669 act 0.0008 elapsed 102s
+[grip] step 825/12000 loss 2.7025 ce 2.7128 act 0.0013 elapsed 105s
+[grip] step 850/12000 loss 2.7108 ce 2.7686 act 0.0001 elapsed 109s
+[grip] step 875/12000 loss 2.7112 ce 2.6738 act 0.0001 elapsed 113s
+[grip] step 900/12000 loss 2.7058 ce 2.7844 act 0.0002 elapsed 117s
+[grip] step 925/12000 loss 2.7101 ce 2.5629 act 0.0001 elapsed 120s
