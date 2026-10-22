@@ -17,12 +17,15 @@ from .governor import Governor, rss_mb
 class BrainHost:
     def __init__(self, checkpoint: str | None = None, threads: int = 2,
                  governor: Governor | None = None,
-                 tokenizer_path: str | None = None, stub_seed: int = 0):
+                 tokenizer_path: str | None = None, stub_seed: int = 0,
+                 grounder=None, grip_checkpoint: str | None = None):
         self.checkpoint_arg = checkpoint
         self.threads = threads
         self.governor = governor or Governor()
         self.tokenizer_path = tokenizer_path
         self.stub_seed = stub_seed
+        self.grounder = grounder
+        self.grip_checkpoint_arg = grip_checkpoint
         self.model = None
         self.tok = None
         self.info: ckmod.CheckpointInfo | None = None
@@ -76,9 +79,20 @@ class BrainHost:
 
     def describe(self) -> dict:
         assert self.info is not None
-        return {**self.info.to_dict(), "boot_s": self.boot_s,
-                "threads": self.threads,
-                "vocab_size": self.tok.vocab_size if self.tok else None}
+        d = {**self.info.to_dict(), "boot_s": self.boot_s,
+             "threads": self.threads,
+             "vocab_size": self.tok.vocab_size if self.tok else None}
+        if self.grounder is not None:
+            d["grip"] = self.grounder.describe()
+        return d
+
+    def boot_grip(self) -> dict:
+        """Load the GripNet grounder (also lazy from ground())."""
+        if self.grounder is None:
+            from .grip import Grounder
+
+            self.grounder = Grounder.find(self.grip_checkpoint_arg)
+        return self.grounder.describe()
 
     def _ready(self):
         if self.model is None:
@@ -114,12 +128,21 @@ class BrainHost:
             self._ready()
             ids = self.tok.encode(prompt) or self.tok.encode("\n")
             x = torch.tensor([ids[-self.model.cfg.ctx:]], dtype=torch.long)
-            logits, _ = self.model(x)
+            with torch.no_grad():  # worker thread: boot's set_grad_enabled is main-thread only
+                logits, _ = self.model(x)
             logp = F.log_softmax(logits[0, -1, :].float(), dim=-1)
             vals, idxs = torch.topk(logp, min(top_k, logp.shape[-1]))
             return {"tokens": [self.tok.decode([int(i)]) for i in idxs],
                     "token_ids": [int(i) for i in idxs],
                     "logprobs": [float(v) for v in vals]}
+
+    def ground(self, png_bytes: bytes, instruction: str) -> dict:
+        """Spec shape {"x","y","action"} in the input image's pixels."""
+        with self._lock:
+            self._ready()
+            if self.grounder is None:
+                self.boot_grip()
+            return self.grounder.ground(png_bytes, instruction)
 
     def health(self) -> dict:
         return {"ok": self.model is not None, "rss_mb": int(rss_mb()),

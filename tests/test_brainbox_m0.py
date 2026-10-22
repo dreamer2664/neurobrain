@@ -194,10 +194,15 @@ class TestCLI(unittest.TestCase):
                            capture_output=True, text=True, cwd=ROOT, timeout=60)
         for verb in ("doctor", "bench", "serve", "run", "tasks", "logs", "kill", "undo"):
             self.assertIn(verb, r.stdout)
-        r2 = subprocess.run([sys.executable, "-m", "brainbox", "serve"],
-                            capture_output=True, text=True, cwd=ROOT, timeout=60)
-        self.assertEqual(r2.returncode, 2)
-        self.assertIn("M1", r2.stdout + r2.stderr)
+        # Any verb still in _NOT_YET must say so, name its milestone, exit 2.
+        # (Resilient: shrinks as milestones land — serve left this set in M1.)
+        from brainbox.cli import _NOT_YET
+
+        for verb, milestone in _NOT_YET.items():
+            r2 = subprocess.run([sys.executable, "-m", "brainbox", verb],
+                                capture_output=True, text=True, cwd=ROOT, timeout=60)
+            self.assertEqual(r2.returncode, 2, verb)
+            self.assertIn(milestone.split(" ")[0], r2.stdout + r2.stderr, verb)
 
 
 if __name__ == "__main__":

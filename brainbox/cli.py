@@ -1,7 +1,7 @@
 """brainbox CLI: doctor | bench | serve | run | tasks | logs | kill | undo.
 
-M0 implements doctor + bench for real; the other verbs exist, print the
-milestone that lands them, and exit 2. Nothing is faked.
+Implemented: doctor (M0), bench (M0), serve (M1). Remaining verbs print the
+milestone that lands them and exit 2. Nothing is faked.
 """
 
 from __future__ import annotations
@@ -19,7 +19,6 @@ _T0 = time.time()  # process-start marker, before any torch import
 from . import __version__  # noqa: E402
 
 _NOT_YET = {
-    "serve": "M1 (local API per specs/model_io.md)",
     "run": "M3 (drive loop per specs/drive.md)",
     "tasks": "M3 (task store per specs/task_schema.md)",
     "logs": "M3 (run records under ~/.brainbox/runs/)",
@@ -158,6 +157,35 @@ def cmd_bench(args) -> int:
     return 0
 
 
+def cmd_serve(args) -> int:
+    from .governor import Governor, rss_mb
+    from .host import BrainHost
+    from .server import make_server
+
+    governor = Governor(cap_mb=args.ram_cap_mb) if args.ram_cap_mb else None
+    host = BrainHost(checkpoint=args.checkpoint,
+                     grip_checkpoint=args.grip_checkpoint,
+                     threads=args.threads, governor=governor)
+    info = host.boot()
+    grip_desc = "grip=unavailable (/ground -> 503)"
+    try:
+        g = host.boot_grip()
+        grip_desc = f"grip step={g['step']} stub={g['stub']}"
+    except Exception as e:
+        print(f"brainbox serve: grounder not loaded ({e})", file=sys.stderr)
+    server = make_server(host, port=args.port)
+    print(f"brainbox {__version__} serve http://127.0.0.1:{args.port} "
+          f"lm step={info['step']} stub={info['stub']} params={info['params']:,} "
+          f"{grip_desc} boot={info['boot_s']}s rss={rss_mb():.0f}MB", flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\nbrainbox serve: stopped")
+    finally:
+        server.server_close()
+    return 0
+
+
 def _not_yet(verb: str):
     def handler(_args) -> int:
         print(f"brainbox {verb}: not implemented yet — lands in {_NOT_YET[verb]}")
@@ -188,6 +216,19 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--json", action="store_true")
     b.add_argument("--out", default=None, help="also write the JSON report here")
     b.set_defaults(fn=cmd_bench)
+
+    s = sub.add_parser("serve", help="local API on 127.0.0.1 (specs/model_io.md)")
+    s.add_argument("--port", type=int,
+                   default=int(os.environ.get("BRAINBOX_PORT", "8321")),
+                   help="port on 127.0.0.1 (default 8321, env BRAINBOX_PORT)")
+    s.add_argument("--checkpoint", default=None,
+                   help="LM checkpoint dir or legacy .pt (default: search)")
+    s.add_argument("--grip-checkpoint", default=None,
+                   help="GripNet checkpoint dir or legacy .pt (default: search)")
+    s.add_argument("--threads", type=int, default=2)
+    s.add_argument("--ram-cap-mb", type=float, default=None,
+                   help="governor hard cap (default 3800, env BRAINBOX_RAM_CAP_MB)")
+    s.set_defaults(fn=cmd_serve)
 
     for verb, milestone in _NOT_YET.items():
         s = sub.add_parser(verb, help=f"({milestone})")
