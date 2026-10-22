@@ -4,8 +4,8 @@
   "tokens": {
     "code_train": 53283194,
     "code_val": 1820427,
-    "ui_train": 17156469,
-    "ui_val": 524223
+    "ui_train": 17032491,
+    "ui_val": 521032
   },
   "vocab_size": 2052,
   "code_bytes_per_token": 2.908,

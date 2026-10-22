@@ -2,58 +2,68 @@
   "step": 4600,
   "val_loss": 2.307,
   "val_ppl": 10.04,
-  "syntax_valid": 1,
-  "syntax_total": 10,
-  "syntax_rate": 0.1,
+  "syntax_valid": 0,
+  "syntax_total": 12,
+  "syntax_rate": 0.0,
   "samples": [
     {
       "prompt": "def add(a, b):\n",
-      "generation": "# pyrefly: ignore [bad-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument-argument",
-      "parses": true
+      "generation": "\n# Computer to be retrieved to the constants of the constants\n# (N) or the consting conditions.\n# In the const_expr, for the constants of a producer, e.g. the constants\n# which is here to use the symbol, so that it's always beginning and its\nsymbolic and",
+      "parses": false
     },
     {
       "prompt": "def factorial(n):\n",
-      "generation": "s = [n - 1, n - 1, n - 2, n, n - 2, n - 2, n - 2, n - 1, n + 2, n - 2, n - 2, n - 1, n - 2, n - 1, n - 1, n - 2, n - 2, n - 2, n - 2]\n\n\ndef _cats(n, n, n, n, n, n",
+      "generation": "@nx._dispatchable(n)\ndef draw_dispatchable(n, v):\n    return v\n\n\n@nx._dispatchable(M, S, A, B=True)\n@nx._dispatchable(graph=True)\ndef draw_dispatchable(n, v):\n    \"\"\"\n    Compute below and the dispatchable disp",
       "parses": false
     },
     {
       "prompt": "class Point:\n    def __init__(self, x, y):\n",
-      "generation": "\nclass Point:\n    \"\"\"\n    To avoid the terms of the FQG as a squares or squares polynomials of the\n    SQG coefficients from the pieudo-free creation.\n\n    The terms of the SQG coefficients the product of the Maire polynomial coefficients.\n    Fir",
+      "generation": "\nclass FeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGeautGe",
       "parses": false
     },
     {
       "prompt": "def read_file(path):\n",
-      "generation": "# Use the file.py\n# This module is used by the file name, and the file name is a file, so a tempfile and the file\n# (see #666667) and the file is not in the file.\n# This module is deprecated by the file name (see #6667).\n# This module is not read from the file and file, and the file name",
+      "generation": "# This module is a path. This specifies a file or reads a file.\n# This module is not a path.\n# This module is a file without reading the file and reads a file to read from the file.\n# This module is a file by the file without readable file, and there's\n# the file with a file.\ndef read_file(path, path,",
       "parses": false
     },
     {
       "prompt": "def is_even(n):\n",
-      "generation": " # type: ignore[return-value]\nStringDict = {}\n\n\nclass _TupleGetItemValue(Mutable[Tuple[Any], Tuple[Tuple[Any], Any]], Tuple[Any], Tuple[Any, ...]):\n    \"\"\"\n    Tuple gmail-array-like-like objects to find the new ``NestedDict`` find on the\n    impl",
+      "generation": "# ------------------------------------------------------------------------------\n\n\ndef pre_even(n, d):\n    \"\"\"\n    Returns a pre-even method that transitions added sequence of a given d.\n    \"\"\"\n    return len(n) >= 1\n\n\ndef pre_even(n, d):\n    \"\"\"\n    Returns a pre-even if an is even if not the non-even after a",
       "parses": false
     },
     {
       "prompt": "def main():\n",
-      "generation": "@dataclass\nclass TemplateDict(Base):\n    \"\"\"\n    A dataclass of objects that may be included in them.\n\n    This function is not included in a script.\n    \"\"\"\n\n    # find the template_objects that have a dedicated dict,\n    # which is a scriptable.\n    return _get_dedicated_objects(self.te",
+      "generation": "def main():\n    try:\n    # pyrefly: ignore [bad-argument-type]\n    except (TypeError, TypeError):\n        pass\n    else:\n        # pyrefly: ignore [bad-argument-type]\n        # pyrefly: ignore [bad-argument-type]\n        pass\n\n\n@dataclass\nclass GenericCheckpoint(object):\n    \"\"\"\n    A callable that main",
       "parses": false
     },
     {
       "prompt": "for i in range(10):\n",
-      "generation": "# This is a no-op defined function, in the first element of the\n    # class of launch (or a singleton, the launch is a bounch)\n    for i in range(10):\n    for i in range(10):\n        if i in range(10):\n            if i in range(10):\n                continue\n            if i in range(10):\n                i = i + j + 1\n            if",
+      "generation": "# This is a TensorMethod, TensorMethod, redistributed to find the first modules\n# with this module.\n# This is the first module redistributions that the module is improved\n# (disting a module, so that it is either a subclass of callable)\ndef _check_check_check_check_check_check_check",
       "parses": false
     },
     {
       "prompt": "import json\n\ndef load_config(path):\n",
-      "generation": "\nif __name__ == '__main__':\n    pass\n\n# -----------------------------------------------------------------\n\n\nclass MaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMaxMax',\n)\nclass MaxMaxMaxMaxMaxM",
+      "generation": "\nimport sys\nimport sys\nimport types\nfrom typing import TemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateTemplateT",
       "parses": false
     },
     {
       "prompt": "def bubble_sort(items):\n",
-      "generation": "def flex_schema_from_sort(values, sequence, value) -> Any:\n    \"\"\"\n    Flex the optimizer of a sort (sort,) that are recommended by a sort,\n    the sort is sort by the value of these to the sort.\n    \"\"\"\n    return _flex_schema_from_sort(values)\n\n\n",
+      "generation": "sort: Optional[Any]] = None\n\n# This is a longer below.\n# This is a future for resting this soft below.\ndef _get_sort(key):\n    \"\"\"\n    Sort the sort and return the resulting.\n\n    Parameters\n    ----------\n    key : object\n        Future of key.\n    \"\"\"\n    if key in key:\n        key = key.find",
       "parses": false
     },
     {
       "prompt": "def greet(name):\n",
-      "generation": "# This module is imported in a module to treat the\n# registration\n# and these are not used in the module so we\n# appear the module.\n# This module is a module of python modules, which is used in\n# the modules of sys.modules.\nimport pickle as pickle as Pickle\nfrom collections.abc import (\n    TemplateR",
+      "generation": "# mypy: ignore [bad-argument-type]\n\n__all__ = [\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"__all__\",\n    \"",
+      "parses": false
+    },
+    {
+      "prompt": "try:\n    value = int(text)\n",
+      "generation": "\nclass LinearRelational(TextRelational):\n    \"\"\"\n    LinearRelational.\n\n    :param text: The text to be used in the text.\n    \"\"\"\n    def __init__(text, text, value):\n        # Try to use form\n        self.text = \"text/\"\n        self.text = sent\n\n        # Try to use the text.\n        self.text = text.split",
+      "parses": false
+    },
+    {
+      "prompt": "def average(values):\n",
+      "generation": "\nclass MetadataIndex(Value):\n    \"\"\"\n    Try to use faster form here.\n    \"\"\"\n    def __init__(self, value):\n        self._value = value\n\n    def __init__(self, value):\n        # type: () -> None\n        for key, value in self._value.items():\n            value = value.items()\n        else:\n            value = value\n        self._value = value.items()\n\n        #",
       "parses": false
     }
   ]
