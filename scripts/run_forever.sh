@@ -11,7 +11,7 @@ while true; do
   i=$((i+1))
   echo "=== segment $i  $(date -u +%FT%TZ) ==="
   python3 -m neurobrain.train_lm --resume --steps "$TOTAL" --time_budget "$SEGMENT" \
-      --batch 12 --accum 2 --ctx 256 2>&1 | tee -a reports/train_stdout.log
+      --batch 8 --accum 3 --ctx 256 2>&1 | tee -a reports/train_stdout.log
   python3 -m neurobrain.sample --ckpt checkpoints/lm_best.pt --tokens 400 \
       --out samples/lm_sample.txt 2>&1 | tail -30
   bash scripts/push.sh "train: segment $i @ $(date -u +%FT%TZ) [$(python3 - <<'PY'

@@ -57,7 +57,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="checkpoints")
     ap.add_argument("--steps", type=int, default=4000)
-    ap.add_argument("--batch", type=int, default=32)
+    ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--lr", type=float, default=2e-3)
     ap.add_argument("--time_budget", type=float, default=float("inf"))
     ap.add_argument("--resume", action="store_true")
