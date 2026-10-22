@@ -60,11 +60,37 @@ def repo_root() -> str:
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def bundled_tokenizer_path() -> str | None:
+    """The tokenizer shipped inside the brainbox package (M5). Identical to
+    data/tokenizer.json (a test pins the sha256 of both copies). In a zipapp
+    the file has no real path, so it is extracted to the brainbox home."""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tokenizer.json")
+    if os.path.exists(p):
+        return p
+    try:
+        import pkgutil
+
+        from .trash import brainbox_home
+
+        data = pkgutil.get_data("brainbox", "tokenizer.json")
+        if data is None:
+            return None
+        dest = os.path.join(brainbox_home(), "tokenizer.json")
+        if not os.path.exists(dest):
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            with open(dest, "wb") as f:
+                f.write(data)
+        return dest
+    except Exception:
+        return None
+
+
 def default_tokenizer_path() -> str | None:
     candidates = [
         os.environ.get("BRAINBOX_TOKENIZER"),
         os.path.join(os.getcwd(), "data", "tokenizer.json"),
         os.path.join(repo_root(), "data", "tokenizer.json"),
+        bundled_tokenizer_path(),
         os.path.expanduser("~/neurobrain/data/tokenizer.json"),
     ]
     for c in candidates:

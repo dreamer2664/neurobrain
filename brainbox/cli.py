@@ -19,7 +19,6 @@ _T0 = time.time()  # process-start marker, before any torch import
 from . import __version__  # noqa: E402
 
 _NOT_YET = {
-    "kill": "M6 (watch/autostart supervision)",
 }
 
 
@@ -248,6 +247,37 @@ def cmd_run(args) -> int:
                         ScriptedPlanner, ShellWorld, SimulatedDesktop, TaskStore)
 
     store = TaskStore()
+    if args.watch:
+        import signal as _signal
+
+        from .watch import AlreadyRunning, RunnerLock, Watcher
+
+        lock = RunnerLock()
+        try:
+            lock.acquire()
+        except AlreadyRunning as e:
+            print(f"brainbox run --watch: {e}", file=sys.stderr)
+            return 1
+        watcher = Watcher(store, args.watch, poll_s=args.poll)
+        for sig in (_signal.SIGTERM, _signal.SIGINT):
+            _signal.signal(sig, lambda *_: watcher.request_stop())
+        print(f"brainbox {__version__} watching {args.watch} "
+              f"(home {store.home}, pid {os.getpid()})", flush=True)
+        try:
+            rep = watcher.run(max_cycles=args.max_cycles)
+        finally:
+            lock.release()
+        if args.json:
+            print(json.dumps(rep, indent=2))
+        else:
+            print(f"watch stopped: processed={rep['processed']} "
+                  f"cycles={rep['cycles']} "
+                  f"recovered_failed={rep['recovered']['recovered_failed']}")
+        return 0
+    if not args.instruction:
+        print("usage: brainbox run <instruction> | brainbox run --watch <dir>",
+              file=sys.stderr)
+        return 2
     budget = {}
     if args.max_steps:
         budget["max_steps"] = args.max_steps
@@ -256,24 +286,12 @@ def cmd_run(args) -> int:
 
     grounder = None
     if args.script:
+        from .drive import build_scripted_run
+
         with open(args.script) as f:
             spec = json.load(f)
-        planner = ScriptedPlanner(spec.get("steps", []),
-                                  replan_script=spec.get("replan_steps"),
-                                  shell_steps=spec.get("shell_steps"),
-                                  decompose_steps=spec.get("decompose_steps"))
-        task = store.create(args.instruction, budget=budget or None,
-                            checks=spec.get("checks"),
-                            workspace=spec.get("workspace"))
-        if spec.get("world", "shell") == "shell":
-            world = ShellWorld(spec["workspace"], spec.get("checks", []))
-        else:
-            from neurobrain import ui_world
-
-            ex = ui_world.sample_example(_random.Random(spec.get("seed", 0)))
-            world = SimulatedDesktop(ex, **spec.get("world_options", {}))
-            grounder = OracleGrounder(world)  # scripted == loop mechanics
-            task["world"] = "simulated (scripted, oracle grounder)"
+        task, world, planner, grounder = build_scripted_run(
+            store, args.instruction, spec, budget=budget or None)
     else:
         from neurobrain import ui_world
 
@@ -359,6 +377,65 @@ def cmd_logs(args) -> int:
     return 0
 
 
+def cmd_kill(args) -> int:
+    from .watch import kill_runner
+
+    rep = kill_runner()
+    if args.json:
+        print(json.dumps(rep, indent=2))
+    elif rep["killed"]:
+        print(f"killed brainbox runner pid {rep['pid']} via {rep.get('via')}")
+    else:
+        print(f"brainbox kill: {rep['detail']}")
+    return 0 if rep["killed"] else 1
+
+
+def cmd_autostart(args) -> int:
+    import platform
+    import subprocess
+
+    from . import autostart as A
+    from .trash import brainbox_home
+
+    watch = args.watch or os.path.join(brainbox_home(), "inbox")
+    action = args.action
+    if action == "status":
+        st = A.status()
+        print(json.dumps(st, indent=2) if args.json else
+              f"platform={st['platform']} systemd_unit={st['systemd_unit']} "
+              f"({st['systemd_path']})")
+        return 0
+    system = platform.system()
+    if action == "install":
+        if system == "Windows":
+            exe = os.path.join(os.path.dirname(sys.executable), "Scripts",
+                               "brainbox.exe")
+            cmd = A.schtasks_create_command(exe, watch)
+            r = subprocess.run(cmd, shell=True)
+            return r.returncode
+        exe = A.default_exec()
+        path = A.install_systemd(exe, watch, home=brainbox_home())
+        print(f"wrote {path}")
+        enable = "systemctl --user daemon-reload && systemctl --user enable --now brainbox"
+        if args.enable:
+            r = subprocess.run(enable, shell=True)
+            if r.returncode != 0:
+                print("enable failed here (no user systemd?); unit file is in "
+                      "place, run on the target:\n  " + enable)
+            return 0
+        print("enable with:\n  " + enable)
+        if system == "Windows":
+            pass
+        return 0
+    if action == "uninstall":
+        if system == "Windows":
+            return subprocess.run(A.schtasks_delete_command(), shell=True).returncode
+        removed = A.uninstall_systemd()
+        print("removed systemd unit" if removed else "no systemd unit found")
+        return 0 if removed else 1
+    return 2
+
+
 def _not_yet(verb: str):
     def handler(_args) -> int:
         print(f"brainbox {verb}: not implemented yet — lands in {_NOT_YET[verb]}")
@@ -412,7 +489,12 @@ def build_parser() -> argparse.ArgumentParser:
     u.set_defaults(fn=cmd_undo)
 
     r = sub.add_parser("run", help="run a task through the drive loop (M3)")
-    r.add_argument("instruction")
+    r.add_argument("instruction", nargs="?")
+    r.add_argument("--watch", default=None, metavar="DIR",
+                   help="watch an inbox dir of task specs (M6; survives reboot/kill -9)")
+    r.add_argument("--poll", type=float, default=2.0)
+    r.add_argument("--max-cycles", type=int, default=None,
+                   help="stop after N watch cycles (default: run forever)")
     r.add_argument("--script", default=None,
                    help="JSON scripted task {world, workspace, checks, steps...}")
     r.add_argument("--checkpoint", default=None)
@@ -431,6 +513,18 @@ def build_parser() -> argparse.ArgumentParser:
     lg.add_argument("task_id", nargs="?")
     lg.add_argument("--json", action="store_true")
     lg.set_defaults(fn=cmd_logs)
+
+    k = sub.add_parser("kill", help="stop the watch runner holding the lock (M6)")
+    k.add_argument("--json", action="store_true")
+    k.set_defaults(fn=cmd_kill)
+
+    a = sub.add_parser("autostart", help="register brainbox at login (M6)")
+    a.add_argument("action", choices=("install", "uninstall", "status"))
+    a.add_argument("--watch", default=None, metavar="DIR")
+    a.add_argument("--enable", action="store_true",
+                   help="also run systemctl --user enable --now (Linux)")
+    a.add_argument("--json", action="store_true")
+    a.set_defaults(fn=cmd_autostart)
 
     for verb, milestone in _NOT_YET.items():
         s = sub.add_parser(verb, help=f"({milestone})")
