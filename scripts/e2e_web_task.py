@@ -38,7 +38,7 @@ def main() -> None:
     host = BrainHost(checkpoint=args.ckpt)
     host.boot()
     print(f"[web] checkpoint step {getattr(host.info, 'step', '?')}")
-    driver = LMDriver(host, max_steps=args.max_steps, max_tokens=28, seed=13, temperature=0.0, top_k=1)
+    driver = LMDriver(host, max_steps=args.max_steps, max_tokens=32, seed=13, temperature=0.0, top_k=1)
 
     rows, transcripts = [], []
     for i in range(args.n):

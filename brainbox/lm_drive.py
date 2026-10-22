@@ -83,15 +83,21 @@ class LMDriver:
         obs0 = world.observe()
         world_scale = obs0.get("scale", SCALE)
         scan = scan_from_obs(obs0)
-        head = f"<|drive|>objective: {objective}" + scan
-        tail = ""            # recent steps only: the model's context is 256 tokens
-        transcript = [head]
+        head = f"<|drive|>objective: {objective}"
+        scan_now = scan      # the current screen, always shown in full
+        tail = ""            # only the last step survives; the scan is what matters
+        transcript = [head + scan]
         claims: list[dict] = []
         executed = 0
         terminal: dict | None = None
 
+        def push_step(text: str) -> None:
+            nonlocal tail
+            tail = text[-self.TAIL_CHARS:]
+
         def prompt_now() -> str:
-            return head + tail[-self.TAIL_CHARS:] if tail else head
+            # order matches the training data exactly: ... check ... scan -> step
+            return head + tail + scan_now
 
         for step in range(1, self.max_steps + 1):
             out = self.host.generate(prompt_now(), max_tokens=self.max_tokens,
@@ -107,9 +113,10 @@ class LMDriver:
                 claims.append({"step": step, "claim": term, "verified": bool(ok)})
                 if term == "success" and not ok:
                     # the runtime, not the model, decides: keep working
-                    tail += ("<|check|>objective not satisfied: nothing on the "
-                             "screen changed as required<|retry|>act on an "
-                             "element from the scan")
+                    push_step(("<|check|>objective not satisfied: nothing on the "
+                               "screen changed as required<|retry|>act on an "
+                               "element from the scan"))
+                    scan_now = scan_from_obs(world.observe())
                     transcript.append(comp.strip())
                     continue
                 terminal = {"kind": term, "verified": bool(ok) if term == "success" else None,
@@ -118,7 +125,8 @@ class LMDriver:
                 break
 
             if act is None:
-                tail += "<|obs|>no action taken<|check|>objective not satisfied"
+                push_step("<|obs|>no action taken<|check|>objective not satisfied")
+                scan_now = scan_from_obs(world.observe())
                 transcript.append(comp.strip())
                 continue
 
@@ -132,10 +140,10 @@ class LMDriver:
             verdict, detail = world.verify(before, after, step, res)
             satisfied = world.progress() >= 1.0
             px, py = act["protocol_point"]
-            tail += f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}"
-            tail += ("<|check|>objective satisfied" if satisfied
-                     else f"<|check|>objective not satisfied: {detail}")
-            tail += scan_from_obs(after)
+            push_step(f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}"
+                      + ("<|check|>objective satisfied" if satisfied
+                         else f"<|check|>objective not satisfied: {detail}"))
+            scan_now = scan_from_obs(after)
             transcript.append(comp.strip())
 
         solved = world.progress() >= 1.0

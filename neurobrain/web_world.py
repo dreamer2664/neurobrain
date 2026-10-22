@@ -121,8 +121,9 @@ class WebWorld:
         return _grid(DESKTOP_ICONS, "icon", 120, 1700, 6, 220, 120, 30)
 
     def _desktop(self) -> Win:
-        els = _grid(DESKTOP_ICONS, "icon", 160, 260, 3, 260, 200, 40) + self._dock()
-        return Win("desktop", 0, 0, CANVAS, CANVAS, els)
+        # no app icons on the wallpaper: a label that appears twice on one scan
+        # is ambiguous, and an ambiguous scan teaches the policy to guess
+        return Win("desktop", 0, 0, CANVAS, CANVAS, self._dock())
 
     def _chrome(self) -> Win:
         els = [_el("field", "address", 200, 90, 900, 90),
@@ -187,9 +188,12 @@ class WebWorld:
         label, state = el.label, self.state
 
         # the dock is always live: chrome and docs are one click away from any app
-        if self.state != "desktop" and label in ("chrome", "docs"):
-            self.state = label
-            return {"ok": True, "detail": f"{label} brought to the front"}
+        if label == "chrome" and self.state != "chrome":
+            self.state = "chrome"
+            return {"ok": True, "detail": "chrome opened, search field ready"}
+        if label == "docs" and self.state != "docs":
+            self.state = "docs"
+            return {"ok": True, "detail": "google docs opened"}
 
         if state == "docs" and label == "document":
             return {"ok": True, "detail": f"clicked inside the document ({len(self.doc_text)} chars)"}
