@@ -4,6 +4,8 @@ __pycache__/
 .venv/
 data/*.bin
 data/*.npy
+data/*.npz
+data/**/*.npz
 checkpoints/*.pt
 samples/*.png
 /tmp/

@@ -283,20 +283,25 @@ def evaluate_gripnet_model(
     threads: int = 2,
     batch_size: int = 32,
     bench_frames: int = 64,
+    canvas_size: int = CANVAS,
+    render_128_fn: Callable[[Any], np.ndarray] | None = None,
+    render_full_fn: Callable[[Any], np.ndarray] | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     torch.set_num_threads(threads)
     model.eval()
     preds: list[tuple[float, float, int]] = []
+    r128 = render_128_fn or (lambda e: render(e.layout))
+    rfull = render_full_fn or r128
 
     # Pre-render images & tasks in mini-batches so memory stays tiny
     with torch.no_grad():
         for start in range(0, len(examples), batch_size):
             chunk = examples[start : start + batch_size]
-            imgs = np.stack([render(ex.layout) for ex in chunk], axis=0)
+            imgs = np.stack([r128(ex) for ex in chunk], axis=0)
             xs = torch.from_numpy(imgs.astype(np.float32) / 127.5 - 1.0).permute(0, 3, 1, 2)
             ts = torch.tensor([encode_task(ex.task) for ex in chunk], dtype=torch.long)
             scores, offsets, act_logits = model(xs, ts)
-            xy = model.click_xy(scores, offsets, CANVAS).cpu().numpy()
+            xy = model.click_xy(scores, offsets, canvas_size).cpu().numpy()
             acts = act_logits.argmax(dim=1).cpu().numpy()
             for i in range(len(chunk)):
                 preds.append((float(xy[i, 0]), float(xy[i, 1]), int(acts[i])))
@@ -304,21 +309,21 @@ def evaluate_gripnet_model(
         # Single-frame latency benchmark on 2 threads (warmed up)
         n_bench = min(bench_frames, len(examples))
         sample_imgs = [
-            torch.from_numpy(render(examples[i].layout).astype(np.float32) / 127.5 - 1.0).permute(2, 0, 1)[None]
+            torch.from_numpy(r128(examples[i]).astype(np.float32) / 127.5 - 1.0).permute(2, 0, 1)[None]
             for i in range(n_bench)
         ]
         sample_ts = [torch.tensor([encode_task(examples[i].task)], dtype=torch.long) for i in range(n_bench)]
         for i in range(min(4, n_bench)):
             s, o, _ = model(sample_imgs[i], sample_ts[i])
-            _ = model.click_xy(s, o, CANVAS)
+            _ = model.click_xy(s, o, canvas_size)
         latencies_ms = []
         for i in range(n_bench):
             t0 = time.perf_counter()
             s, o, _ = model(sample_imgs[i], sample_ts[i])
-            _ = model.click_xy(s, o, CANVAS)
+            _ = model.click_xy(s, o, canvas_size)
             latencies_ms.append((time.perf_counter() - t0) * 1000.0)
 
-    rep, misses = diagnose_predictions(examples, preds, canvas_w=CANVAS, canvas_h=CANVAS, render_fn=lambda e: render(e.layout))
+    rep, misses = diagnose_predictions(examples, preds, canvas_w=canvas_size, canvas_h=canvas_size, render_fn=rfull)
     rep["latency_ms_per_frame"] = round(float(statistics.median(latencies_ms)), 2)
     rep["latency_mean_ms"] = round(float(statistics.mean(latencies_ms)), 2)
     rep["peak_rss_mb"] = peak_rss_mb()
@@ -329,6 +334,7 @@ def evaluate_gripnet_model(
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", default="checkpoints/grip_latest.pt")
+    ap.add_argument("--world", choices=["easy", "hard", "hard-ood"], default="easy")
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=202603)
     ap.add_argument("--threads", type=int, default=2)
@@ -342,8 +348,23 @@ def main() -> None:
     model.load_state_dict(state)
     step = ck.get("step", -1) if isinstance(ck, dict) else -1
 
-    split = make_easy_val_split(n=args.n, seed=args.seed)
-    rep, misses = evaluate_gripnet_model(model, split, threads=args.threads)
+    if args.world == "easy":
+        split = make_easy_val_split(n=args.n, seed=args.seed)
+        rep, misses = evaluate_gripnet_model(model, split, threads=args.threads)
+    else:
+        from .ui_world_hard import HARD_CANVAS, make_hard_val_split, render_hard
+
+        split_kind = "seen" if args.world == "hard" else "ood"
+        split = make_hard_val_split(n=args.n, seed=args.seed, split=split_kind)
+        rep, misses = evaluate_gripnet_model(
+            model,
+            split,
+            threads=args.threads,
+            canvas_size=HARD_CANVAS,
+            render_128_fn=lambda e: render_hard(e.layout, size=CANVAS),
+            render_full_fn=lambda e: render_hard(e.layout, size=HARD_CANVAS),
+        )
+    rep["world"] = args.world
     rep["step"] = step
     rep["ckpt"] = args.ckpt
 
