@@ -54,7 +54,8 @@ if cb:
         print(f"codebench {m:8s} pass@1 {d['pass_at_1']:.3f} syntax {d['syntax_valid_rate']:.3f} body {d['body_rate']:.3f} ({d['gen_tok_s']} tok/s)")
 ce = get(f"code_eval_{name}.json")
 if ce:
-    print("eval_code val_loss", round(ce.get("val_loss", -1), 4), "ppl", round(ce.get("perplexity", -1), 3))
+    print(f"eval_code val_loss {ce.get('val_loss', -1):.4f} ppl {ce.get('val_ppl', -1):.3f} "
+          f"syntax_rate {ce.get('syntax_rate', -1):.3f} coherent {ce.get('coherent_rate', -1):.3f}")
 de = get(f"drive_eval_{name}.json")
 if de:
     keys = {k: v for k, v in de.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
