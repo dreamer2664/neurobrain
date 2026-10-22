@@ -79,6 +79,8 @@ trainer); logs and metrics are committed continuously by `scripts/push.sh`.
 
 ## Status
 
+Live metrics, plots and fresh samples: **[RESULTS.md](RESULTS.md)**.
+
 Training is running continuously on a 2-core / 2 GB CPU sandbox (the two models
 take turns, see `scripts/train_all.sh`). See
 `reports/lm_log.jsonl`, `reports/grip_log.jsonl` and the latest commit messages
