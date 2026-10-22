@@ -32,26 +32,49 @@ sys.path.insert(0, ROOT)
 from neurobrain.kb_basic import tables  # noqa: E402
 from neurobrain.tokenizer import BPETokenizer  # noqa: E402
 
+# The phrasing space is deliberately dense: a 4.25M model does not extrapolate
+# from two templates to a third, so every question it could be asked about a
+# fact is present with several wordings. What is held out is *facts*, not
+# syntax -- the held-out split in qa_eval measures recall of unseen facts.
 Q_TPL = [
     "What is the capital of {s}?",
     "Which city is the capital of {s}?",
     "Name the capital of {s}.",
+    "Can you tell me the capital of {s}?",
+    "The capital of {s} is what?",
+    "What is {s}'s capital city?",
+    "Which city serves as the capital of {s}?",
+    "Do you know the capital of {s}?",
+    "Capital of {s}?",
+    "What city is the capital of {s}?",
 ]
 CUR_TPL = [
     "What is the currency of {s}?",
     "Which currency is used in {s}?",
+    "Currency used in {s}?",
+    "What money is used in {s}?",
+    "What currency does {s} use?",
 ]
 CONT_TPL = [
     "Which continent is {s} in?",
     "On which continent is {s}?",
+    "Which continent does {s} belong to?",
+    "What is the continent of {s}?",
+    "Where is {s} located by continent?",
 ]
 LANG_TPL = [
     "What language is spoken in {s}?",
     "Which language do people speak in {s}?",
+    "Which language is spoken by people in {s}?",
+    "The language of {s} is what?",
+    "What language do they speak in {s}?",
 ]
-ELEM_SYM = ["What is the chemical symbol for {s}?", "Which symbol stands for {s}?"]
-ELEM_NUM = ["What is the atomic number of {s}?"]
-PLANET_TPL = ["What is {s}?", "Tell me about {s}."]
+ELEM_SYM = ["What is the chemical symbol for {s}?", "Which symbol stands for {s}?",
+            "Chemical symbol of {s}?", "Which chemical symbol is used for {s}?",
+            "What is the symbol of the element {s}?"]
+ELEM_NUM = ["What is the atomic number of {s}?", "Atomic number of {s}?",
+            "How many protons does {s} have?"]
+PLANET_TPL = ["What is {s}?", "Tell me about {s}.", "Describe {s} in one line."]
 
 # simple paraphrases so the answer text is not one frozen string
 def _answer_variants(ans: str) -> list[str]:
@@ -111,7 +134,7 @@ def main() -> None:
     ap.add_argument("--data", default=os.path.join(ROOT, "data"))
     ap.add_argument("--holdout", type=float, default=0.10)
     ap.add_argument("--seed", type=int, default=41)
-    ap.add_argument("--repeat", type=int, default=3, help="epochs over train facts")
+    ap.add_argument("--repeat", type=int, default=6, help="epochs over train facts")
     args = ap.parse_args()
 
     tok = BPETokenizer.load(os.path.join(args.data, "tokenizer.json"))
