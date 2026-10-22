@@ -42,6 +42,8 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--threads", type=int, default=2)
     ap.add_argument("--compile", action="store_true")
+    ap.add_argument("--honesty", default="", help="extra stream: impossible/failed terminals (stage 2)")
+    ap.add_argument("--honesty-weight", type=float, default=0.0)
     args = ap.parse_args()
 
     torch.set_num_threads(args.threads)
@@ -50,11 +52,18 @@ def main() -> None:
 
     tok = BPETokenizer.load(os.path.join(args.data, "tokenizer.json"))
     # code teaches the language, drive teaches it to finish, ui teaches the screen
-    mix = Mixture({
+    sources = {
         "code": (os.path.join(args.data, "code_train.bin"), 0.55),
         "drive": (os.path.join(args.data, "drive_train.bin"), 0.25),
         "ui": (os.path.join(args.data, "ui_train.bin"), 0.20),
-    }, args.ctx)
+    }
+    if args.honesty and args.honesty_weight > 0:
+        # stage 2: keep the language, pay much more attention to the terminals
+        # the main corpus shows rarely (impossible, failed)
+        scale = 1.0 - args.honesty_weight
+        sources = {k: (path, w * scale) for k, (path, w) in sources.items()}
+        sources["honesty"] = (args.honesty, args.honesty_weight)
+    mix = Mixture(sources, args.ctx)
     val_mix = {
         "code": (os.path.join(args.data, "code_val.bin"), 1.0),
         "drive": (os.path.join(args.data, "drive_val.bin"), 1.0),

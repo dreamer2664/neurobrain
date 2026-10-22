@@ -1,0 +1,35 @@
+{
+  "main_corpus": {
+    "episodes": 2000,
+    "mean_retries": 1.49,
+    "terminal_rate": 1.0,
+    "success": 0.802,
+    "failed": 0.119,
+    "blocked": 0.025,
+    "impossible": 0.054,
+    "failure_fraction": 0.946,
+    "mean_chars": 578.3
+  },
+  "streams": [
+    {
+      "name": "hon_train",
+      "tokens": 1500125,
+      "episodes": 8732,
+      "mix": {
+        "success": 0.549,
+        "impossible": 0.297,
+        "failed": 0.154
+      }
+    },
+    {
+      "name": "hon_val",
+      "tokens": 200121,
+      "episodes": 1183,
+      "mix": {
+        "success": 0.53,
+        "impossible": 0.32,
+        "failed": 0.15
+      }
+    }
+  ]
+}
