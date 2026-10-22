@@ -456,3 +456,29 @@ def test_code_tokenizer_roundtrips(tmp_path: Path):
     assert tok.vocab_size == 4096 and tok.n_bpe == 4096 - 4
     s = "def f(x):\n    return x * 2\n"
     assert tok.decode(tok.encode(s)) == s
+
+
+def test_terminal_mix_counts_impossible_objectives(tmp_path: Path):
+    """'failed' must be counted as a terminal outcome, not as the word that
+    appears in code retry text."""
+    from dataforge import tokenscan
+    from neurobrain.drive import drive_corpus
+    from neurobrain.tokenizer import BPETokenizer
+
+    tok = BPETokenizer.load(str(ROOT / "data" / "tokenizer.json"))
+    eot = tok.encode("<|endoftext|>")[0]
+    eps = list(drive_corpus(1500, seed=12))
+    ids = []
+    for e in eps:
+        ids.extend(tok.encode(e))
+        ids.append(eot)
+    arr = np.asarray(ids, dtype="<u2")
+    mix = tokenscan.scan(arr, tok)["terminal_mix"]
+    raw = {}
+    for e in eps:
+        k = e.rsplit("<|done|>", 1)[-1]
+        raw[k] = raw.get(k, 0) + 1
+    n = len(eps)
+    for k, v in raw.items():
+        assert abs(mix[k] - v / n) < 0.002, (k, mix[k], v / n)
+    assert mix["failed"] > 0.01

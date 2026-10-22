@@ -161,6 +161,32 @@ def cmd_link(args) -> int:
     return 0
 
 
+def cmd_index(args) -> int:
+    """Rebuild the top-level manifest from the per-dataset manifests on disk.
+
+    Needed after a partial rebuild (`--datasets drive`), which would otherwise
+    leave the index listing only what that one command produced.
+    """
+    root = os.path.abspath(args.dir)
+    datasets, skipped = {}, {}
+    seed = profile = None
+    for d, mf in M.dataset_dirs(root):
+        name = mf.get("dataset") or os.path.basename(d)
+        datasets[name] = {
+            "n": mf.get("n"), "units": mf.get("units"), "kind": mf.get("kind"),
+            "shards": [{"name": s["name"], "sha256": s["sha256"], "bytes": s["bytes"]}
+                       for s in list(mf.get("shards", [])) + list(mf.get("records", []) or [])],
+        }
+        seed = mf.get("seed", seed)
+        profile = mf.get("profile", profile)
+    M.write_manifest(root, {"version": M.VERSION, "generated_by": M.GENERATOR,
+                            "profile": profile, "seed": seed,
+                            "datasets": datasets, "skipped": skipped})
+    print(f"[index] {len(datasets)} datasets: " + ", ".join(
+        f"{k}({v['n']})" for k, v in sorted(datasets.items())))
+    return 0
+
+
 def cmd_diff(args) -> int:
     """Determinism proof: same seed + profile => same sha256 for every shard."""
     def hashes(root):
@@ -218,6 +244,10 @@ def build_parser() -> argparse.ArgumentParser:
     v.add_argument("--tokenizer", default=None)
     v.add_argument("--json", default=None)
     v.set_defaults(func=cmd_verify)
+
+    ix = sub.add_parser("index", help="rebuild the top-level manifest from dataset manifests")
+    ix.add_argument("--dir", required=True)
+    ix.set_defaults(func=cmd_index)
 
     df = sub.add_parser("diff", help="prove two builds produced identical shards")
     df.add_argument("--a", required=True)

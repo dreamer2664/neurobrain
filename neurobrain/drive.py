@@ -43,7 +43,7 @@ from __future__ import annotations
 
 import random
 
-from .ui_world import SCALE, make_layout, TASKS, ACTION_OF_ROLE
+from .ui_world import SCALE, LABELS, make_layout, TASKS, ACTION_OF_ROLE
 
 # --------------------------------------------------------------------- helpers
 
@@ -109,6 +109,24 @@ UI_FAILS = [
 TERMINALS = ["success"] * 86 + ["success-partial"] * 6 + ["budget-exhausted"] * 8
 
 
+IMPOSSIBLE = [
+    "the {label} button is not on this screen",
+    "no {label} field exists in this window",
+    "the {label} menu is greyed out and stays greyed out",
+    "this screen has no {label} control at all",
+]
+
+
+def _scan(layout) -> str:
+    """The element list the loop actually observes, on every episode.
+
+    Always emitted -- not only on impossible objectives -- so a model cannot
+    learn the shortcut "a scan means the task is impossible". That shortcut has
+    bitten this fleet once already (agent 01, 20:51).
+    """
+    return "<|scan|>" + " ".join(f"{e.role}[{e.label}]" for e in layout.elements)
+
+
 def ui_episode(rng: random.Random) -> str:
     """Wrong first attempt -> near miss -> recovery, or an honest park.
 
@@ -121,9 +139,40 @@ def ui_episode(rng: random.Random) -> str:
     action = ACTION_OF_ROLE[target.role]
     others = [e for e in layout.elements if e is not target]
 
-    parts = [f"<|drive|>objective: {task}"]
+    impossible = rng.random() < 0.08
+    if impossible:
+        # the objective must name something that is NOT in the scan, otherwise
+        # "impossible" would be a lie the model can catch for the wrong reason
+        present = {e.label for e in layout.elements}
+        missing = [l for l in LABELS if l not in present]
+        if missing:
+            task = rng.choice(TASKS[target.role]).format(label=rng.choice(missing))
+        else:
+            impossible = False
+    parts = [f"<|drive|>objective: {task}", _scan(layout)]
     step = 0
     fails: list[tuple[str, str, str]] = []
+
+    if impossible:
+        # nothing on this screen can satisfy it: the honest end is a failure,
+        # reported in one terminal token, after the attempts the loop would make
+        n_try = rng.randint(2, 4)
+        for i in range(1, n_try + 1):
+            step += 1
+            px, py = _coords(rng.choice(layout.elements), rng)
+            parts.append(f"<|step|>{step}<|act|>click({px},{py})")
+            parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
+            parts.append("<|check|>objective not satisfied: element not in the scan")
+            if i < n_try:
+                parts.append(f"<|retry|>{rng.choice(['the target is not on this screen',
+                                                     'no element matches the instruction',
+                                                     'scan again: still nothing matches'])}")
+        step += 1
+        parts.append(f"<|step|>{step}<|act|>{LADDER['escalate'].replace(' ', '_')}()")
+        parts.append("<|obs|>no element on this screen can satisfy the objective")
+        parts.append(f"<|check|>objective impossible: {rng.choice(IMPOSSIBLE).format(label=target.label)}")
+        parts.append("<|done|>failed")
+        return "".join(parts)
 
     if others and rng.random() < 0.6:
         distractor = rng.choice(others)

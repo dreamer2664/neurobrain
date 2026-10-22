@@ -26,3 +26,69 @@
 [ui_seed] shard-0004.npz: 5000 samples, 2.5 MB
 [ui_seed] 25000 samples, dupes exact=0 near=164, entropy=2.2605±0.1926
 [build] ui_seed: 25,000 samples in 32.1s
+[hard_ui] shard-0000.npz: 5000 samples, 94.7 MB
+[hard_ui] shard-0001.npz: 5000 samples, 94.7 MB
+[hard_ui] shard-0002.npz: 5000 samples, 94.4 MB
+[hard_ui] shard-0003.npz: 5000 samples, 94.8 MB
+[hard_ui] shard-0004.npz: 5000 samples, 95.1 MB
+[hard_ui] shard-0005.npz: 5000 samples, 94.8 MB
+[hard_ui] shard-0006.npz: 5000 samples, 95.2 MB
+[hard_ui] shard-0007.npz: 5000 samples, 94.6 MB
+[hard_ui] shard-0008.npz: 5000 samples, 94.3 MB
+[hard_ui] shard-0009.npz: 5000 samples, 95.8 MB
+[hard_ui] shard-0010.npz: 5000 samples, 95.2 MB
+[hard_ui] shard-0011.npz: 5000 samples, 95.3 MB
+[hard_ui] shard-0012.npz: 5000 samples, 95.1 MB
+[hard_ui] shard-0013.npz: 5000 samples, 96.3 MB
+[hard_ui] shard-0014.npz: 5000 samples, 94.8 MB
+[hard_ui] shard-0015.npz: 5000 samples, 95.1 MB
+[hard_ui] shard-0016.npz: 5000 samples, 94.8 MB
+[hard_ui] shard-0017.npz: 5000 samples, 95.0 MB
+[hard_ui] shard-0018.npz: 5000 samples, 94.8 MB
+[hard_ui] shard-0019.npz: 5000 samples, 95.2 MB
+[hard_ui] 100000 samples, tiers [19745, 44968, 35287], themes [36671, 36519, 26810], dupes exact=0 near=811, entropy 5.5444
+[build] hard_ui: 100,000 samples in 947.6s
+[instructions] target 1,000,000 (5,000 val), product space ~33,266,993,760
+[instructions] shard-0000.jsonl.gz: 100,000 records
+[instructions] shard-0001.jsonl.gz: 100,000 records
+[instructions] train: 250,000/1,000,000, 3,667 rejects, 4.2M tokens
+[instructions] shard-0002.jsonl.gz: 100,000 records
+[instructions] shard-0003.jsonl.gz: 100,000 records
+[instructions] shard-0004.jsonl.gz: 100,000 records
+[instructions] train: 500,000/1,000,000, 12,740 rejects, 9.4M tokens
+[instructions] shard-0005.jsonl.gz: 100,000 records
+[instructions] shard-0006.jsonl.gz: 100,000 records
+[instructions] train: 750,000/1,000,000, 26,029 rejects, 13.6M tokens
+[instructions] shard-0007.jsonl.gz: 100,000 records
+[instructions] shard-0008.jsonl.gz: 100,000 records
+[instructions] shard-0009.jsonl.gz: 100,000 records
+[instructions] train: 1,000,000/1,000,000, 42,914 rejects, 18.9M tokens
+[instructions] instructions_train.bin: 1,000,000 docs, 19.31M tokens
+[instructions] instructions_val.bin: 5,000 docs, 0.10M tokens
+[instructions] 1,005,000 unique, reject rate 4.13%, mean 50.4 chars, 11 families
+[build] instructions: 1,005,000 instructions in 55.9s
+[trajectories] shard-0000.jsonl.gz: 5,000 tasks
+[trajectories] shard-0001.jsonl.gz: 5,000 tasks
+[trajectories] shard-0002.jsonl.gz: 5,000 tasks
+[trajectories] shard-0003.jsonl.gz: 5,000 tasks
+[trajectories] shard-0004.jsonl.gz: 5,000 tasks
+[trajectories] shard-0005.jsonl.gz: 5,000 tasks
+[trajectories] shard-0006.jsonl.gz: 5,000 tasks
+[trajectories] shard-0007.jsonl.gz: 5,000 tasks
+[trajectories] shard-0008.jsonl.gz: 5,000 tasks
+[trajectories] shard-0009.jsonl.gz: 5,000 tasks
+[trajectories] 50,000 tasks, 176,414 history entries, failure 58.8%, recovery 100.0%, mix {'code': 0.3978, 'plan': 0.1496, 'ui': 0.4526}
+[build] trajectories: 50,000 tasks in 13.2s
+[code_v2] 3899 files, 40.0 MB on disk
+[code_v2] 3899 files parsed, 43,702 unique functions (351 files with none), split 42,285/1,417
+[code_v2] training 4096 BPE on 12.0 MB of code
+[code_v2] code_tokenizer_4096.json vocab 4096
+[code_v2] codev2_2052_train.bin: 42,285 docs, 8.68M tokens, 2.86 bytes/token
+[code_v2] codev2_2052_val.bin: 1,417 docs, 0.26M tokens, 2.80 bytes/token
+[code_v2] codev2_4096_train.bin: 42,285 docs, 7.52M tokens, 3.30 bytes/token
+[code_v2] codev2_4096_val.bin: 1,417 docs, 0.23M tokens, 3.20 bytes/token
+[code_v2] codev2_instr_train.bin: 13,258 docs, 3.92M tokens, 3.03 bytes/token
+[code_v2] codev2_instr_val.bin: 301 docs, 0.09M tokens, 3.03 bytes/token
+[code_v2] bytes/token 2052=2.8572 4096=3.2989 (+15.5%), 13,559 instruction pairs
+[build] code_v2: 43,702 functions in 56.8s
+[build] done in 1420.1s (stats skipped)

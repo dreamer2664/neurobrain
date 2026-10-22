@@ -146,13 +146,12 @@ def build(dirpath: str, cfg: dict, seed: int, tok, log=print) -> dict:
                                < val_frac * 1000) else "train"
         before = len(docs)
         for fh, body, doc, cat in extract_functions(p, src):
-            split = seen.get(fh)
-            if split is None:
-                # the first file wins; a later copy follows its split, so a
-                # function is never on both sides of the wall
-                split = file_split
-                seen[fh] = split
-            docs.append((split, body, doc, cat))
+            # the same function copy-pasted across the stdlib is ONE sample:
+            # emit the first occurrence only, in the split that file owns
+            if fh in seen:
+                continue
+            seen[fh] = file_split
+            docs.append((file_split, body, doc, cat))
         if len(docs) == before:
             parse_fail += 1
     train = [d for d in docs if d[0] == "train"]

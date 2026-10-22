@@ -155,8 +155,7 @@ def scan(arr: np.ndarray, tok, sample_docs: int | None = None) -> dict:
     n_err = count_in("err")
     n_code_marker = count_in("task")
     n_plan = count_in("plan")
-    n_partial = int(pos["term_partial"].size) if "term_partial" in pos else 0
-    n_failed = int(pos["term_failed"].size) if "term_failed" in pos else 0
+    mix = terminal_mix(arr, tok, pos["done"])
 
     # I2: every retry must be followed by an attempt before the episode's EOT
     retry_pos = pos.get("retry", np.empty(0, np.int64))
@@ -197,11 +196,7 @@ def scan(arr: np.ndarray, tok, sample_docs: int | None = None) -> dict:
                 "code": round(float(code.sum()) / total, 4),
                 "plan": round(float(plan.sum()) / total, 4)},
         "retry_hist": _hist(n_retry, 8),
-        "terminal_mix": {
-            "success": round(max(0, int(n_done.sum()) - n_partial - n_failed) / total, 4),
-            "success-partial": round(n_partial / total, 4),
-            "budget-exhausted": round(n_failed / total, 4),
-        },
+        "terminal_mix": {k: round(v / total, 4) for k, v in mix.items()},
         "failures": {"terminal": [], "retry_gap": []},
     }
     if stats["terminal_rate"] < 1.0:
@@ -226,6 +221,38 @@ def sample_bad_retry_episodes(retry_pos, acts, eots, bounds, limit=5) -> list[in
         if 0 <= ep < len(bounds):
             out.append(ep)
     return out
+
+
+OUTCOMES = ["success", "success-partial", "budget-exhausted", "failed"]
+
+
+def terminal_mix(arr: np.ndarray, tok, done_pos: np.ndarray) -> dict:
+    """Classify what follows each terminal marker.
+
+    Marker-string counting cannot do this: "failed" also appears in the code
+    retry text ("attempt 1 failed, patch the logic and rerun"). So the outcome
+    is matched as a token sequence *immediately after* each <|done|>, longest
+    match first.
+    """
+    counts = {k: 0 for k in OUTCOMES}
+    counts["other"] = 0
+    if done_pos.size == 0:
+        return counts
+    done_pat = list(tok.encode(drive_rules.TERMINAL))
+    after = done_pos + len(done_pat)
+    todo = np.ones(done_pos.size, dtype=bool)
+    for name in sorted(OUTCOMES, key=lambda n: -len(tok.encode(n))):
+        pat = tok.encode(name)
+        ok = todo.copy()
+        for k, tid in enumerate(pat):
+            idx = after + k
+            valid = idx < len(arr)
+            ok &= valid
+            ok[valid] &= np.asarray(arr[idx[valid]]) == tid
+        counts[name] = int(ok.sum())
+        todo &= ~ok
+    counts["other"] = int(todo.sum())
+    return counts
 
 
 def _hist(x: np.ndarray, nbins: int) -> list[int]:
