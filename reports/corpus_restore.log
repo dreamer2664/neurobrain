@@ -1,0 +1,15 @@
+[retok] 17862 files, 160.0 MB
+[retok] code_train.bin 53.44M tokens
+[retok] code_val.bin 1.80M tokens
+[retok] ui_train.bin 17.03M tokens
+[retok] ui_val.bin 0.52M tokens
+[drive] stats: {"episodes": 3000, "mean_retries": 1.25, "terminal_rate": 1.0, "mean_chars": 440.0}
+[drive] drive_train: 50000 episodes, 8.93M tokens
+[drive] drive_train: 100000 episodes, 17.88M tokens
+[drive] drive_train: 150000 episodes, 26.83M tokens
+[drive] drive_train: 200000 episodes, 35.76M tokens
+[drive] drive_train: 250000 episodes, 44.69M tokens
+[drive] drive_train: 300000 episodes, 53.64M tokens
+[drive] drive_train: 350000 episodes, 62.57M tokens
+[drive] drive_train.bin 69.68M tokens
+[drive] drive_val.bin 1.78M tokens

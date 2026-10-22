@@ -1,0 +1,40 @@
+{
+  "step": 4600,
+  "terminal_rate": 0.0,
+  "retry_after_failure": 0.0,
+  "honest_completion": 0.0,
+  "mean_steps": 0.0,
+  "n": 24,
+  "examples": [
+    {
+      "objective": "<|drive|>objective: drag the cart slider",
+      "terminal": false,
+      "text": " level, used for\n            the middles.\n        \"\"\"\n        # We can only be removed for this context.\n        self.check_build_context(self.context)\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n        self.check_build_context()\n   "
+    },
+    {
+      "objective": "<|drive|>objective: check cart",
+      "terminal": false,
+      "text": "esrc for this object.\n\n    This method can be used for the :class:`~sklearn.Metadata` objects.\n    This method is not choice for the :class:`~sklearn.Metadata` objects.\n    \"\"\"\n    def __init__(self, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, fig, "
+    },
+    {
+      "objective": "<|drive|>objective: drag the settings slider",
+      "terminal": false,
+      "text": "<|action|>drag(450,855)"
+    },
+    {
+      "objective": "<|drive|>objective: type into the upload field",
+      "terminal": false,
+      "text": " of the fields.\n    \"\"\"\n    \"\"\"\n    return _check_from_drive(drive)\n\n\n@dataclass\nclass DjangoMetadata:\n    \"\"\"\n    Additional AdjangoMetadata objects.\n    \"\"\"\n    def __init__(drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, drive, "
+    },
+    {
+      "objective": "<|drive|>objective: turn on archive",
+      "terminal": false,
+      "text": "<|action|>type(1005,1425)"
+    },
+    {
+      "objective": "<|drive|>objective: open the print tab",
+      "terminal": false,
+      "text": "<|action|>type(object)s.\n\n        The 'object' property is an enumeration that may be specified as:\n          - One of the following enumeration values:\n                ['normal', 'small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-small-caps', 'all-sma"
+    }
+  ]
+}

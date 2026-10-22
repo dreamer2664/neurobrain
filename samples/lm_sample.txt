@@ -1,26 +1,36 @@
 # checkpoint step 4600
 # prompt:
 
-class PostDecrement(Basic):
-    """ Represents the post-decrement operator
-
-    Examples
-    ========
-
-    >>> from sympy.abc import x
-    >>> from sympy.codegen.cnodes import PostDecrement
-    >>> from sympy import ccode
-    >>> ccode(PostDecrement
+def _check_chunk_size(reduced, chunk_size):
+    """Checks chunk is a sequence of expected size or a tuple of same."""
+    if reduced is None:
+        return
+    is_tuple = isinstance(reduced, tuple)
+    if not is_tuple:
+        reduced = (redu
 # ---- continuation ----
 
-class PostDecrement(Basic):
-    """ Represents the post-decrement operator
+def _check_chunk_size(reduced, chunk_size):
+    """Checks chunk is a sequence of expected size or a tuple of same."""
+    if reduced is None:
+        return
+    is_tuple = isinstance(reduced, tuple)
+    if not is_tuple:
+        reduced = (reduced, reduced, sorted), reduce(list)
 
-    Examples
-    ========
+    if sorted is not None:
+        return (
+        reduce(
+            reduced,
+            reduced,
+            reduced,
+            reduced,
+            reduce(reduced, reduce(reduced), reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduced)))))))))))))
+        )
 
-    >>> from sympy.abc import x
-    >>> from sympy.codegen.cnodes import PostDecrement
-    >>> from sympy import ccode
-    >>> ccode(PostDecrement(PostDecrement(PostDecrement(Code)))
-    PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrer(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostDecrement(PostEventIO(PostDecrement(PostDecrement(PostDecrement(Po
+    # Specify to reduce a reduce on any parts.
+    if reduce(reduce(reduced, reduce)):
+        # The listening to reduce the form as a listening to reduce the
+        # existing to reduce a reduce, so we assuce the reduce to
+        # seem.
+        reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduce(reduce_arg(reduce(reduce(reduce(reduce(pu_
