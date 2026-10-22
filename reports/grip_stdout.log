@@ -290,3 +290,9 @@
 [grip] eval @ 750: hit_widget 0.484  hit_point 0.484  action_acc 0.977  click_iou 0.068
 [grip] step 775/24000 loss 2.7657 ce 2.9681 off 0.056 act 0.0002 elapsed 472s
 [grip] step 800/24000 loss 2.8684 ce 2.9684 off 0.079 act 0.0014 elapsed 487s
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/neurobrain/neurobrain/train_grip.py", line 13, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
