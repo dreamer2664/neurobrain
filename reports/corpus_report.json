@@ -1,24 +1,14 @@
 {
-  "code_files": 17082,
-  "code_bytes": 160039404,
+  "code_files": 17465,
+  "code_bytes": 160003341,
   "tokens": {
-    "code_train": 53283194,
-    "code_val": 1820427,
-    "ui_train": 17032491,
-    "ui_val": 521032
+    "code_train": 53142798,
+    "code_val": 2005442,
+    "ui_train": 17102195,
+    "ui_val": 523286
   },
   "vocab_size": 2052,
-  "code_bytes_per_token": 2.908,
+  "code_bytes_per_token": 2.902,
   "ui_examples": 150735,
-  "sdist_roots": [
-    "click-8.5.0",
-    "django-6.1.2",
-    "fastapi-0.159.1",
-    "flask-3.1.3",
-    "jinja2-3.1.6",
-    "pytest-9.1.1",
-    "requests-2.34.2",
-    "sqlalchemy-2.1.6",
-    "werkzeug-3.1.9"
-  ]
+  "sdist_roots": []
 }

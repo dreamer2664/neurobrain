@@ -5,6 +5,13 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
+# survival: sandbox rollbacks wipe installed packages
+python3 -c "import torch, numpy, PIL" 2>/dev/null || {
+  echo "[setup] reinstalling stack"
+  python3 -m pip install --quiet --no-input torch --index-url https://download.pytorch.org/whl/cpu
+  python3 -m pip install --quiet --no-input numpy pillow matplotlib
+}
+
 LM_SEG=${LM_SEG:-1200}       # seconds of language training per cycle
 GRIP_SEG=${GRIP_SEG:-300}    # seconds of vision training per cycle
 LM_TOTAL=${LM_TOTAL:-16000}  # total LM steps (resumable)
@@ -12,6 +19,12 @@ GRIP_TOTAL=${GRIP_TOTAL:-24000}
 FIRST=${FIRST:-lm}
 export MALLOC_ARENA_MAX=2
 export PYTHONUNBUFFERED=1
+
+# survival: large token streams can vanish in a rollback; rebuild if so
+if [ ! -f data/code_train.bin ] || [ ! -f data/tokenizer.json ]; then
+  echo "[setup] corpus missing, re-encoding with the checkpoint tokenizer"
+  python3 scripts/retokenize.py
+fi
 
 run_lm() {
   echo "=== [$(date -u +%FT%TZ)] language brain: ${LM_SEG}s ==="
