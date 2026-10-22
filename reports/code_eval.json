@@ -1,60 +1,60 @@
 {
-  "step": 200,
-  "val_loss": 4.6616,
-  "val_ppl": 105.8,
-  "syntax_valid": 4,
+  "step": 1000,
+  "val_loss": 3.0771,
+  "val_ppl": 21.69,
+  "syntax_valid": 0,
   "syntax_total": 10,
-  "syntax_rate": 0.4,
+  "syntax_rate": 0.0,
   "samples": [
     {
       "prompt": "def add(a, b):\n",
-      "generation": "<|endoftext|><|ui|><|screen|>1920x1920<|window|>Browser<el>checkbox[270,975,360,270]{upload}<el>tab[795,990,330,210]{download}<el>slider[1245,375,180,180]{share}<|task|>click the settings tab<|action|>click(1395,465)<|endoftext|><|endoftext|><|ui|><|screen|>1920x1920<|window|>Settings<el>checkbox[1245,1290,360",
-      "parses": true
+      "generation": "\n# Usecilar (inv.\n# This meta-formats)\n#: Assign for a diginations\n# Add a template string to have the coordinate script-laster:\n#\n# 20.203\n# Process to features in the regination of the comment of the regination.\n\n# This is f",
+      "parses": false
     },
     {
       "prompt": "def factorial(n):\n",
-      "generation": "import _plotly_utils.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators\n\n\nclass import import import import import _plotly_\n\n\n\nclass import _plotly_class_\n\n\n\n\n\n\n\n\n\nimport _init__ importelement import import ReriesError\n\n\n\n\n\n\n\n\n\ndef _plotly_name__(self, plotly_name=\"lt. import importel>\n<|endoftext|><|ui|><|screen|>1920x",
+      "generation": "\ndef reduct_normal(n, n, n):\n    \"\"\"\n    Return a new Negative matrix of a new matrix of a new matrix of a new\n    of the matrix of the Kero matrix of the matrix of ``n``.\n\n    Parameters\n    ----------\n    >>> from Graph.\n\n    >>> import numpy as np\n    >>> n = np.array([n, n, n)]\n    >>> n_n = np.array([n, n_",
       "parses": false
     },
     {
       "prompt": "class Point:\n    def __init__(self, x, y):\n",
-      "generation": "class _vect_utils.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators.basevalidators\n\n    def self[\"init__(self):\n        \"\"\"\n        self._requests.basevalidators.basevalidators.basevalidators.basevalidators.pop(\"edit_name__\"]):\n        return self[\"pjenction\"]\n        self[\"colorsrc\"] = arg.basevalidators.pop(\"edit_name\", **kwargs.pop(\"edit_namesrc\", parent_name",
+      "generation": "from sympy import xp\nfrom sympy.functions import xp\nfrom sympy.functions import xp\nfrom sympy import matplotlib\nfrom sympy.functions import xp\nfrom sympy.functions import yp\nfrom sympy.polynomials.elements import data\nfrom sympy.functions import BatchyType\nfrom sympy.functions import Z\nfrom sympy.functions import SciPyDict\nfrom sympy.",
       "parses": false
     },
     {
       "prompt": "def read_file(path):\n",
-      "generation": "<|endoftext|><|ui|><|screen|>1920x1920<|window|>Mail<el>slider[840,360,360,210]{cancel}<el>tab[270,1110,375,120]{logout}<el>checkbox[750,1305,360,180]{rename}<el>slider[1290,1305,360,210]{rename}<el>icon[1200,1305,360,180]{search}<el>menu[1230,1305,360,135",
-      "parses": true
+      "generation": "\nfrom .options import (\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    MeoLikeLike,\n    GeoLikeLike,\n    GeoLikeLike,\n    GeoLike,\n    ResoLikeLike,\n    GeoL",
+      "parses": false
     },
     {
       "prompt": "def is_even(n):\n",
-      "generation": "<|endoftext|><|ui|><|screen|>1920x1920<|window|>Settings<el>tab[300,465,330,120]{submit}<el>field[240,360,360,135]{profile}<el>field[1230,735,360,120]{archive}<el>checkbox[315,735,360,180]{play}<el>tab[240,1365,375,120]{cancel}<el>checkbox[1200,1290,360,180]{",
-      "parses": true
+      "generation": "\nThisible to get the Tree-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-to-one\nand-to-to-to-one-to-to-one-to-to-one\nand-to-one-to-one-to-one-to-",
+      "parses": false
     },
     {
       "prompt": "def main():\n",
-      "generation": "\n\n\n\nclass _plotly_utils.basevalidators.\n\n\n\n\n\n\n\n\n\nimport _plotly_\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#------------------------------------------------------------------------\n\n#\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "generation": "\n# RSCAST-SCALLATIN CAGUE\n# TRLATIN CUNAR CUNER_CORT: torch.CAGUS\n# TRLATIN CUNARATOR_CUNORS\n# NOLATIN CUNON CUNER_CUTOR_CUNOR = LATIN ST",
       "parses": false
     },
     {
       "prompt": "for i in range(10):\n",
-      "generation": ") -> None:\n    else:\n        if isinstance(self, find:\n        return len(self)\n\n\n#  #  #  # play from  # type: str,\n    _tkw_dir_sparse_spf_s_tensors: Lol,\n    _SetTIM_MERE_REOR_T:\n        \"\"\"\n        for a bal_funct.\n\n        Returns\n       ",
+      "generation": "\n# Prove that ourve script scripts and a custom scripting\n# of a custom\n# TODO: TI-Tensor: the custom tensor (Script) or remove\n# TODO: TI-Tensor (e.g. custom_tensors)\n# TODO: Try (Scripting)\n# TODO: TOD",
       "parses": false
     },
     {
       "prompt": "import json\n\ndef load_config(path):\n",
-      "generation": "\n\n\nclass _plotly_name__ import _plotly_\n\n\n\n\nimport_\n\n\n\n\n\nimport _plotly_\n\nfrom_ import import _plotly_\n\n\n\n\n\n\nfrom_\n\n\n\n\n\n\n\n\nfrom typing.\n\n\n\n__ import Stric\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "generation": "\n# load:\n\n# loads\n\n# load:\n#\n# :class:`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
       "parses": false
     },
     {
       "prompt": "def bubble_sort(items):\n",
-      "generation": "\nfrom_utils.is_utils.basevalidators.basevalidators.marks import _get_utils.basevalidators\n\n\nclass_utils._basevalidators\n\n\nclass_name__ven.basevalidators_utils._basevalidators.plotly_name__ import Iverler\n\n\n\nfrom sympy.basevalidators._name__ import _jlobarv_\n\n\n<|endoftext|><|ui|><|screen|>1920x1920x_name__ import Lampano_\n\n",
+      "generation": "\n# APOPOPOPOPOPENSE: POPOPENSE.\n# BUR: COPE: FieldField, Table: ClivingTree, Table: ClientApplication\n# Create: CreatedSQLApplication of Table Loke\n# BURLIC SQLATile class for",
       "parses": false
     },
     {
       "prompt": "def greet(name):\n",
-      "generation": "<|endoftext|><|endoftext|><|ui|><|screen|>1920x1920<|window|>Mail<el>slider[300,1350,375,180]{save}<el>menu[780,360,360,135]{delete}<el>tab[825,1035,375,150]{cancel}<el>button[1260,1350,375,150]{search}<el>slider[1260,1005,360,120]{download}<el>checkbox[315,300,360,180",
-      "parses": true
+      "generation": "\n# Dek: Import 3.3.3.2222222222222222222222222222222222222222222222222222222222222222222222322222222222",
+      "parses": false
     }
   ]
 }
