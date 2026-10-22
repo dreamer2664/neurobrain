@@ -8,5 +8,7 @@
   "stub": false,
   "char_vocab_string": "abcdefghijklmnopqrstuvwxyz0123456789 -",
   "params": 441256,
-  "weights_sha256": "d18df3cd23d7b438a95ae5c90928d3b8dc4256e208d374c01652aaa050e88157"
+  "weights_sha256": "d18df3cd23d7b438a95ae5c90928d3b8dc4256e208d374c01652aaa050e88157",
+  "weights_int8_sha256": "1f58331df12dac8ae43e08e25264ae359b0b9e0887b4baf9f13b762bcc35679d",
+  "quantized": "int8-weight-only per-row symmetric (sidecar)"
 }

@@ -18,7 +18,8 @@ class BrainHost:
     def __init__(self, checkpoint: str | None = None, threads: int = 2,
                  governor: Governor | None = None,
                  tokenizer_path: str | None = None, stub_seed: int = 0,
-                 grounder=None, grip_checkpoint: str | None = None):
+                 grounder=None, grip_checkpoint: str | None = None,
+                 quantize: str | None = None):
         self.checkpoint_arg = checkpoint
         self.threads = threads
         self.governor = governor or Governor()
@@ -26,6 +27,9 @@ class BrainHost:
         self.stub_seed = stub_seed
         self.grounder = grounder
         self.grip_checkpoint_arg = grip_checkpoint
+        self.quantize = quantize
+        self.quantized = None
+        self.quant_source = None
         self.model = None
         self.tok = None
         self.info: ckmod.CheckpointInfo | None = None
@@ -40,6 +44,26 @@ class BrainHost:
         torch.set_num_threads(self.threads)
         torch.set_grad_enabled(False)
         tok_path = self.tokenizer_path or ckmod.default_tokenizer_path()
+
+        if self.quantize == "int8":
+            cand = None
+            if self.checkpoint_arg and os.path.isdir(self.checkpoint_arg):
+                cand = self.checkpoint_arg
+            elif not self.checkpoint_arg:
+                found0 = ckmod.find_checkpoint()
+                if found0 and found0[1] == "dir":
+                    cand = found0[0]
+            if cand and os.path.exists(os.path.join(cand, "weights.int8.pt")):
+                try:
+                    from . import quant
+
+                    self.model, self.tok, self.info = quant.load_lm_int8_dir(cand)
+                    self.quantized = "int8"
+                    self.quant_source = "sidecar (fp32 never loaded)"
+                    self.boot_s = time.time() - t0
+                    return self.describe()
+                except Exception:
+                    self.model = None  # fall through to fp32 + in-place int8
 
         if self.checkpoint_arg:
             path = self.checkpoint_arg
@@ -74,14 +98,35 @@ class BrainHost:
                     params=self.model.num_params(),
                     config=self.model.cfg.to_dict())
 
-        self.boot_s = time.time()
+        if self.quantize == "int8":
+            self._apply_int8()
+        self.boot_s = time.time() - t0
         return self.describe()
+
+    def _apply_int8(self) -> None:
+        """Prefer the on-disk sidecar (no fp32 copy kept); the caller may
+        have already loaded fp32 — simplest correct path: re-derive from the
+        sidecar if present, else quantize the loaded weights in place."""
+        from . import quant
+
+        ckdir = self.info.path if self.info else None
+        if ckdir and os.path.isdir(str(ckdir)) and os.path.exists(
+                os.path.join(str(ckdir), "weights.int8.pt")):
+            quant.load_quantized_into(self.model,
+                                      quant.load_int8_sidecar(str(ckdir)))
+            self.quant_source = "sidecar (in-place over fp32 load)"
+        else:
+            quant.quantize_model(self.model)
+            self.quant_source = "quantized in memory from fp32"
+        self.quantized = "int8" 
 
     def describe(self) -> dict:
         assert self.info is not None
         d = {**self.info.to_dict(), "boot_s": self.boot_s,
              "threads": self.threads,
              "vocab_size": self.tok.vocab_size if self.tok else None}
+        d["quantized"] = self.quantized
+        d["quant_source"] = self.quant_source
         if self.grounder is not None:
             d["grip"] = self.grounder.describe()
         return d
@@ -91,7 +136,8 @@ class BrainHost:
         if self.grounder is None:
             from .grip import Grounder
 
-            self.grounder = Grounder.find(self.grip_checkpoint_arg)
+            self.grounder = Grounder.find(
+                self.grip_checkpoint_arg, quantize=self.quantize == "int8")
         return self.grounder.describe()
 
     def _ready(self):

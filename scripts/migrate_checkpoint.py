@@ -31,6 +31,8 @@ def main() -> int:
     ap.add_argument("--make-stub", default=None, metavar="DIR",
                     help="instead of migrating, write a stub checkpoint dir")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--int8", action="store_true",
+                    help="also write weights.int8.pt (int8 weight-only sidecar)")
     args = ap.parse_args()
 
     kind = args.kind
@@ -53,6 +55,17 @@ def main() -> int:
     else:
         info = ckmod.migrate_legacy(args.pt, tok, out)
     print(f"migrated {args.pt} ({kind}, step {info.step}) -> {info.path}")
+    if args.int8:
+        from brainbox.quant import write_int8_sidecar
+
+        if kind == "grip":
+            from brainbox.grip import Grounder
+
+            model = Grounder.from_dir(out).model
+        else:
+            model = ckmod.load_checkpoint_dir(out)[0]
+        p = write_int8_sidecar(out, model)
+        print(f"int8 sidecar -> {p}")
     return 0
 
 

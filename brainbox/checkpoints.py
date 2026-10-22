@@ -156,7 +156,7 @@ def inspect_checkpoint_dir(ckdir: str) -> dict:
     """Cheap doctor-grade inspection: config + file presence, no model build."""
     cfg = read_config(ckdir)
     files = {}
-    for name in ("weights.pt", "tokenizer.json", "card.md"):
+    for name in ("weights.pt", "weights.int8.pt", "tokenizer.json", "card.md"):
         p = os.path.join(ckdir, name)
         files[name] = os.path.getsize(p) if os.path.exists(p) else None
     return {"path": ckdir, "kind": cfg.get("kind", "lm"), "step": cfg.get("step", -1),

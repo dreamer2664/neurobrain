@@ -11,5 +11,7 @@
   "stub": false,
   "params": 4247264,
   "tokenizer_sha256": "198316dfad27b115e58868edc9b850e58ad23ebf596aed063aec023c8f30f8ab",
-  "weights_sha256": "ae7599cfd681afc9117fd3a978afd458e44e862052115a7a6325863b639d22a1"
+  "weights_sha256": "ae7599cfd681afc9117fd3a978afd458e44e862052115a7a6325863b639d22a1",
+  "weights_int8_sha256": "e90cfc760e8eb689bb7ad6834c6f1404c26e03cfb3bd3e08411d412d01a5f851",
+  "quantized": "int8-weight-only per-row symmetric (sidecar)"
 }

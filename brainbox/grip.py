@@ -36,7 +36,7 @@ class Grounder:
         return cls(model=model, step=int(ck.get("step", -1)), source=path)
 
     @classmethod
-    def from_dir(cls, path: str) -> "Grounder":
+    def from_dir(cls, path: str, quantize: bool = False) -> "Grounder":
         import torch
 
         from neurobrain.gripnet import GripNet
@@ -50,22 +50,43 @@ class Grounder:
         model = GripNet(char_vocab=cfg.get("char_vocab", 40),
                         max_len=cfg.get("max_len", 48),
                         d=cfg.get("d", 64), grid=cfg.get("grid", 32))
-        model.load_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+        if quantize and os.path.exists(os.path.join(path, "weights.int8.pt")):
+            from . import quant
+
+            quant.load_quantized_into(model, quant.load_int8_sidecar(path))
+        else:
+            model.load_state_dict(
+                torch.load(weights, map_location="cpu", weights_only=True))
+            if quantize:
+                from . import quant
+
+                quant.quantize_model(model)
         model.eval()
-        return cls(model=model, step=int(cfg.get("step", -1)), source=path,
-                   stub=bool(cfg.get("stub", False)))
+        g = cls(model=model, step=int(cfg.get("step", -1)), source=path,
+                stub=bool(cfg.get("stub", False)))
+        g.quantized = "int8" if quantize else None
+        return g
 
     @classmethod
-    def find(cls, explicit: str | None = None) -> "Grounder":
+    def find(cls, explicit: str | None = None, quantize: bool = False) -> "Grounder":
         found = ckmod.find_grip_checkpoint(explicit)
         if found is None:
             raise ckmod.CheckpointError(
                 "no grip checkpoint found (checkpoints/grip/ or grip_best.pt)")
         path, fmt = found
-        return cls.from_dir(path) if fmt == "dir" else cls.from_legacy(path)
+        if fmt == "dir":
+            return cls.from_dir(path, quantize=quantize)
+        g = cls.from_legacy(path)
+        if quantize:
+            from . import quant
+
+            quant.quantize_model(g.model)
+            g.quantized = "int8"
+        return g
 
     def describe(self) -> dict:
         return {"step": self.step, "source": self.source, "stub": self.stub,
+                "quantized": getattr(self, "quantized", None),
                 "params": sum(p.numel() for p in self.model.parameters())
                 if self.model is not None else 0}
 

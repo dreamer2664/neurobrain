@@ -138,7 +138,8 @@ def cmd_bench(args) -> int:
     from .governor import peak_rss_mb, rss_mb
     from .host import BrainHost
 
-    host = BrainHost(checkpoint=args.checkpoint, threads=args.threads)
+    host = BrainHost(checkpoint=args.checkpoint, threads=args.threads,
+                     quantize="int8" if args.int8 else None)
     info = host.boot()
     boot_s = time.time() - t_start
 
@@ -155,6 +156,7 @@ def cmd_bench(args) -> int:
         "peak_rss_mb": round(peak_rss_mb(), 1),
         "rss_mb": round(rss_mb(), 1),
         "threads": args.threads,
+        "quantized": info.get("quantized"),
         "prompt": args.prompt,
         "checkpoint": {k: info[k] for k in ("path", "kind", "step", "stub", "params")},
         "vocab_size": info["vocab_size"],
@@ -186,7 +188,8 @@ def cmd_serve(args) -> int:
     governor = Governor(cap_mb=args.ram_cap_mb) if args.ram_cap_mb else None
     host = BrainHost(checkpoint=args.checkpoint,
                      grip_checkpoint=args.grip_checkpoint,
-                     threads=args.threads, governor=governor)
+                     threads=args.threads, governor=governor,
+                     quantize="int8" if args.int8 else None)
     info = host.boot()
     grip_desc = "grip=unavailable (/ground -> 503)"
     try:
@@ -463,6 +466,8 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--temperature", type=float, default=0.8)
     b.add_argument("--threads", type=int, default=2)
     b.add_argument("--seed", type=int, default=0)
+    b.add_argument("--int8", action="store_true",
+                   help="int8 weight-only path (sidecar weights.int8.pt if present)")
     b.add_argument("--json", action="store_true")
     b.add_argument("--out", default=None, help="also write the JSON report here")
     b.set_defaults(fn=cmd_bench)
@@ -476,6 +481,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--grip-checkpoint", default=None,
                    help="GripNet checkpoint dir or legacy .pt (default: search)")
     s.add_argument("--threads", type=int, default=2)
+    s.add_argument("--int8", action="store_true",
+                   help="serve int8-quantized weights")
     s.add_argument("--ram-cap-mb", type=float, default=None,
                    help="governor hard cap (default 3800, env BRAINBOX_RAM_CAP_MB)")
     s.set_defaults(fn=cmd_serve)
