@@ -30,7 +30,7 @@ run_grip() {
 }
 
 if [ "$FIRST" = "grip" ]; then
-  run_grip
+  ( GRIP_SEG=${FIRST_GRIP_SEG:-$GRIP_SEG}; run_grip )
 fi
 
 i=0
