@@ -27,8 +27,16 @@ Vocabulary of the drive protocol (all inside the existing tokenizer):
 Invariants the trainer relies on:
   1. every episode ends with exactly one <|done|>
   2. no episode is emitted between <|retry|> and the next attempt
-  3. the first attempt fails in >= 50% of UI/code episodes, so "failure" is
+  3. the first attempt fails in >= 50% of episodes, so "failure" is
      correlated with "next attempt", never with "end"
+
+Diversity note (M0 measurement): the first version of these generators drew
+episodes from a fixed table, which made 32% of a 3k-episode sample exact
+duplicates -- at 1M episodes that is a corpus of a thousand sentences repeated
+a thousand times. Every generator now derives its literals (test arguments,
+file names, pids, paths, timings) from the episode RNG, and every code episode
+fails at least once. `dataforge stats` measures the duplicate rate on every
+build.
 """
 
 from __future__ import annotations
@@ -69,6 +77,12 @@ OBS_BY_ROLE = {
     "menu": "menu closed after {label}",
     "slider": "slider {label} moved to {pct}%",
 }
+NO_CHANGE = [
+    "no visible change",
+    "screen unchanged",
+    "focus did not move",
+    "no repaint in the target region",
+]
 
 
 def ui_episode(rng: random.Random) -> str:
@@ -95,7 +109,7 @@ def ui_episode(rng: random.Random) -> str:
     step += 1
     nx, ny = _near_miss(target, rng)
     parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
-    parts.append("<|obs|>no visible change")
+    parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
     parts.append("<|check|>objective not satisfied: click landed off target")
     parts.append(f"<|retry|>aim at the centre of the {target.role}, {target.label}")
 
@@ -109,41 +123,71 @@ def ui_episode(rng: random.Random) -> str:
 
 
 # ---------------------------------------------------------------- code episode
-BUGS = [
-    # (good body, buggy body, error line)
-    ("    return a + b", "    return a - b", "assert add(2, 2) == 4"),
-    ("    return n * 2", "    return n + 2", "assert double(3) == 6"),
-    ("    return [x for x in xs if x > 0]", "    return [x for x in xs if x < 0]",
-     "assert positives([-1, 2, 3]) == [2, 3]"),
-    ("    return max(items)", "    return min(items)", "assert biggest([4, 9, 2]) == 9"),
-    ("    return s[::-1]", "    return s[::2]", "assert flip('abcdef') == 'fedcba'"),
-    ("    return len(unique)", "    return len(items)", "assert count_unique([1,2,2,3]) == 3"),
-    ("    return round(total / len(values), 2)", "    return round(total * len(values), 2)",
-     "assert mean([2, 4, 6]) == 4.0"),
-    ("    return text.split()[0]", "    return text.split()[-1]", "assert first_word('hi there') == 'hi'"),
-    ("    return {'ok': True, 'n': len(items)}", "    return {'ok': False, 'n': len(items)}",
-     "assert summarize([1,2])['ok'] is True"),
-    ("    return [k for k in d if d[k] > 0]", "    return [k for k in d if d[k] < 0]",
-     "assert keys_positive({'a': 1, 'b': -1}) == ['a']"),
-]
-SIGS = {
-    "add": "def add(a, b):",
-    "double": "def double(n):",
-    "positives": "def positives(xs):",
-    "biggest": "def biggest(items):",
-    "flip": "def flip(s):",
-    "count_unique": "def count_unique(items):\n    unique = set(items)",
-    "mean": "def mean(values):\n    total = sum(values)",
-    "first_word": "def first_word(text):",
-    "summarize": "def summarize(items):",
-    "keys_positive": "def keys_positive(d):",
+def _fn(src_sig: str, body: str):
+    """Build the reference implementation: the expected value of a test comes
+    from executing the *good* body, so a randomised assertion can never lie."""
+    ns: dict = {}
+    exec(src_sig + "\n" + body, ns)  # noqa: S102 - our own literals only
+    name = src_sig.split("(")[0].replace("def ", "").strip()
+    return ns[name]
+
+
+def _ints(rng, k, lo=1, hi=24) -> list[int]:
+    return [rng.randint(lo, hi) for _ in range(k)]
+
+
+def _word(rng) -> str:
+    return rng.choice(["alpha", "beta", "delta", "gamma", "omega", "kilo", "sigma",
+                       "tango", "zulu", "rust", "forge", "atlas"])
+
+
+# name -> how to build the call arguments for one randomised test
+ARG_GEN = {
+    "add": lambda rng: f"{rng.randint(1, 40)}, {rng.randint(1, 40)}",
+    "double": lambda rng: f"{rng.randint(1, 50)}",
+    "positives": lambda rng: repr(_ints(rng, rng.randint(3, 6), -9, 9)),
+    "biggest": lambda rng: repr(_ints(rng, rng.randint(3, 6), 1, 99)),
+    "flip": lambda rng: repr("".join(rng.choice("abcdefgh") for _ in range(rng.randint(3, 8)))),
+    "count_unique": lambda rng: repr([rng.randint(1, 4) for _ in range(rng.randint(3, 7))]),
+    "mean": lambda rng: repr(_ints(rng, rng.randint(3, 6), 1, 20)),
+    "first_word": lambda rng: repr(" ".join(_word(rng) for _ in range(rng.randint(2, 4)))),
+    "summarize": lambda rng: repr(_ints(rng, rng.randint(2, 5), 0, 9)),
+    "keys_positive": lambda rng: repr({_word(rng): rng.randint(-3, 3)
+                                       for _ in range(rng.randint(2, 4))}),
 }
+
+BUGS = [
+    # (sig, good body, buggy body)
+    ("def add(a, b):", "    return a + b", "    return a - b"),
+    ("def double(n):", "    return n * 2", "    return n + 2"),
+    ("def positives(xs):", "    return [x for x in xs if x > 0]",
+     "    return [x for x in xs if x < 0]"),
+    ("def biggest(items):", "    return max(items)", "    return min(items)"),
+    ("def flip(s):", "    return s[::-1]", "    return s[::2]"),
+    ("def count_unique(items):\n    unique = set(items)", "    return len(unique)",
+     "    return len(items)"),
+    ("def mean(values):\n    total = sum(values)", "    return round(total / len(values), 2)",
+     "    return round(total * len(values), 2)"),
+    ("def first_word(text):", "    return text.split()[0]", "    return text.split()[-1]"),
+    ("def summarize(items):", "    return {'ok': True, 'n': len(items)}",
+     "    return {'ok': False, 'n': len(items)}"),
+    ("def keys_positive(d):", "    return [k for k in d if d[k] > 0]",
+     "    return [k for k in d if d[k] < 0]"),
+]
+
+WHY = [
+    "wrong operator", "wrong direction of the comparison", "off by one element",
+    "early return skips the result", "the branch checks the wrong variable",
+    "the loop mutates the list it is scanning", "the guard is inverted",
+    "integer division where a float is required",
+]
 
 
 def _mutate(body: str, rng: random.Random) -> str:
     """A plausible wrong variant, so repeated attempts are not identical."""
     swaps = [(" + ", " - "), (" - ", " + "), (" > ", " >= "), (" < ", " <= "),
-             ("max(", "min("), ("[0]", "[-1]"), ("True", "False"), ("**", "*")]
+             ("max(", "min("), ("[0]", "[-1]"), ("True", "False"), ("**", "*"),
+             ("len(", "sum(")]
     for a, b in rng.sample(swaps, k=len(swaps)):
         if a in body:
             return body.replace(a, b, 1)
@@ -151,11 +195,14 @@ def _mutate(body: str, rng: random.Random) -> str:
 
 
 def code_episode(rng: random.Random) -> str:
-    good, bad, assertion = rng.choice(BUGS)
-    name = SIGS and assertion.split("(")[0].replace("assert ", "")
-    sig = SIGS[name]
+    sig, good, bad = rng.choice(BUGS)
+    name = sig.split("(")[0].replace("def ", "").strip()
+    arg_src = ARG_GEN[name](rng)
+    want = repr(_fn(sig, good)(*eval(f"({arg_src},)", {"__builtins__": {}})))  # noqa: S307
+    assertion = f"assert {name}({arg_src}) == {want}"
+
+    attempts = rng.randint(2, 3)  # never zero failures: I3 is a hard invariant
     parts = [f"<|task|>make the tests pass for {name}()"]
-    attempts = rng.randint(1, 3)
     for attempt in range(1, attempts + 1):
         if attempt == attempts:
             body = good
@@ -168,44 +215,53 @@ def code_episode(rng: random.Random) -> str:
         parts.append("<|run|>pytest -q")
         if attempt < attempts:
             parts.append(f"<|err|>{assertion}  ->  AssertionError")
-            why = rng.choice([
-                "wrong operator", "wrong direction of the comparison",
-                "off by one element", "early return skips the result",
-                "the branch checks the wrong variable",
-            ])
-            parts.append(f"<|think|>{why}")
+            parts.append(f"<|think|>{rng.choice(WHY)}")
             parts.append(f"<|retry|>attempt {attempt} failed, patch the logic and rerun")
         else:
-            parts.append("<|ok|>1 passed")
+            parts.append(f"<|ok|>1 passed in {rng.uniform(0.01, 0.9):.2f}s")
             parts.append("<|check|>objective satisfied")
     parts.append("<|done|>success")
     return "".join(parts)
 
 
 # ---------------------------------------------------------------- plan episode
+DIRS = ["downloads", "desktop", "documents", "pictures", "tmp", "projects"]
+EXTS = ["iso", "log", "tmp", "png", "zip", "csv"]
+FRAMEWORKS = ["flask", "fastapi", "click", "aiohttp"]
+OBJECTIVES = [
+    lambda rng: f"delete every {rng.choice(EXTS)} file in {rng.choice(DIRS)}",
+    lambda rng: f"tidy the {rng.choice(DIRS)} folder into subfolders by type",
+    lambda rng: f"rename {rng.randint(3, 400)} screenshots to the date they were taken",
+    lambda rng: f"scaffold a {rng.choice(FRAMEWORKS)} app and run its tests",
+    lambda rng: f"close every window that has been idle for {rng.choice([15, 30, 45, 60, 90])} minutes",
+    lambda rng: f"export the {rng.choice(['q3', 'budget', 'roster', 'inventory'])} spreadsheet "
+                f"to csv and open the result",
+    lambda rng: f"move the {rng.randint(2, 40)} newest {rng.choice(EXTS)} files into an archive folder",
+]
+STEPS = [
+    "capture the screen", "list the matching files", "sort by the rule in the objective",
+    "apply the change", "verify the change on screen", "write the run log",
+    "check free space", "close stale handles",
+]
 OBSTACLES = [
-    ("file is locked by another process", "close the handle, then continue"),
-    ("permission denied", "retry with the user's own directory instead"),
-    ("window did not respond", "focus the window, wait, then continue"),
-    ("wrong menu opened", "press escape and open the intended menu"),
-    ("element scrolled out of view", "scroll to it, then click"),
+    (lambda rng: f"file {_word(rng)}.{rng.choice(EXTS)} is locked by pid {rng.randint(1000, 9999)}",
+     "close the handle, then continue"),
+    (lambda rng: f"permission denied on /{rng.choice(DIRS)}/{_word(rng)}.{rng.choice(EXTS)}",
+     "retry with the user's own directory instead"),
+    (lambda rng: f"window '{_word(rng).title()} {rng.randint(1, 40)}' did not respond",
+     "focus the window, wait, then continue"),
+    (lambda rng: "wrong menu opened", "press escape and open the intended menu"),
+    (lambda rng: "element scrolled out of view", "scroll to it, then click"),
+    (lambda rng: f"disk {rng.choice(['C:', 'D:', '/mnt/data'])} reports "
+                 f"{rng.randint(10, 900)} MB free", "free space first, then continue"),
 ]
 
 
 def plan_episode(rng: random.Random) -> str:
-    objective = rng.choice([
-        "tidy the desktop into folders by type",
-        "delete every iso file in downloads",
-        "scaffold a flask app and run its tests",
-        "rename screenshots to the date they were taken",
-        "close every window that has been idle for an hour",
-        "export the spreadsheet to csv and open the result",
-    ])
-    steps = rng.sample([
-        "capture the screen", "list the matching files", "sort by the rule in the objective",
-        "apply the change", "verify the change on screen", "write the run log",
-    ], k=4)
-    obstacle, fix = rng.choice(OBSTACLES)
+    objective = rng.choice(OBJECTIVES)(rng)
+    steps = rng.sample(STEPS, k=rng.randint(4, 6))
+    obstacle_fn, fix = rng.choice(OBSTACLES)
+    obstacle = obstacle_fn(rng)
 
     parts = [f"<|drive|>objective: {objective}", "<|plan|>"]
     for i, s in enumerate(steps, 1):
@@ -221,7 +277,7 @@ def plan_episode(rng: random.Random) -> str:
             parts.append(f"<|step|>{i}b<|act|>{fix_tok}()")
             parts.append("<|obs|>step completed")
         else:
-            parts.append("<|obs|>step completed")
+            parts.append(f"<|obs|>step completed ({rng.randint(1, 60)} items)")
     parts.append("<|check|>objective satisfied")
     parts.append("<|done|>success")
     return "".join(parts)
@@ -245,9 +301,11 @@ def drive_stats(n: int = 2000, seed: int = 0) -> dict:
     eps = list(drive_corpus(n, seed))
     retries = sum(e.count("<|retry|>") for e in eps)
     done = sum(e.count("<|done|>") for e in eps)
+    fails = sum(1 for e in eps if "<|retry|>" in e)
     return {
         "episodes": len(eps),
         "mean_retries": round(retries / len(eps), 2),
         "terminal_rate": round(done / len(eps), 3),
+        "failure_fraction": round(fails / len(eps), 3),
         "mean_chars": round(sum(len(e) for e in eps) / len(eps), 1),
     }

@@ -8,3 +8,4 @@ checkpoints/*.pt
 samples/*.png
 /tmp/
 reports/train_stdout.log
+data/forge/
