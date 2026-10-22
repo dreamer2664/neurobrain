@@ -82,38 +82,106 @@ NO_CHANGE = [
     "screen unchanged",
     "focus did not move",
     "no repaint in the target region",
+    "hover highlight only",
+]
+
+# specs/drive.md rung vocabulary: the model has to learn which rung follows
+# which failure, and that a rung is tried before the next one is reached.
+LADDER = {
+    "retry_exact": "try the same action again at the same coordinates",
+    "retry_shifted": "resample the click inside the target box",
+    "replan": "replan from the current screen",
+    "decompose": "split the objective into subtasks",
+    "tool_switch": "use the shell path instead of the GUI path",
+    "escalate": "park the task for the next idle window",
+}
+UI_FAILS = [
+    ("wrong element", "that was {other}, not {label}.", "retry_shifted"),
+    ("click landed off target", "aim at the centre of the {role}, {label}", "retry_shifted"),
+    ("element scrolled out of view", "scroll {label} into view first", "retry_exact"),
+    ("modal dialog blocked the click", "dismiss the dialog, then act on {label}", "retry_exact"),
+    ("focus stayed in another window", "focus the window that owns {label}", "replan"),
+    ("double activation toggled it twice", "act once on {label}", "retry_exact"),
+    ("window repainted late", "wait for the repaint, then act on {label}", "retry_exact"),
 ]
 
 
+TERMINALS = ["success"] * 86 + ["success-partial"] * 6 + ["budget-exhausted"] * 8
+
+
 def ui_episode(rng: random.Random) -> str:
+    """Wrong first attempt -> near miss -> recovery, or an honest park.
+
+    The failure sequence is drawn from UI_FAILS and each failure names the
+    ladder rung it belongs to, so the retry text always says *what changes*.
+    """
     layout = make_layout(rng)
     target = rng.choice(layout.elements)
     task = rng.choice(TASKS[target.role]).format(label=target.label)
     action = ACTION_OF_ROLE[target.role]
-    fails_first = rng.random() < 0.6
+    others = [e for e in layout.elements if e is not target]
 
     parts = [f"<|drive|>objective: {task}"]
     step = 0
+    fails: list[tuple[str, str, str]] = []
 
-    if fails_first:
-        distractor = rng.choice([e for e in layout.elements if e is not target])
+    if others and rng.random() < 0.6:
+        distractor = rng.choice(others)
+        fails.append(("wrong element", distractor.label, "retry_shifted"))
+    if rng.random() < 0.85:
+        fails.append((rng.choice([f[0] for f in UI_FAILS[1:]]), None, "retry_shifted"))
+    if rng.random() < 0.25:
+        fails.append((rng.choice([f[0] for f in UI_FAILS]), None, "retry_exact"))
+
+    terminal = rng.choice(TERMINALS)
+    # a parked episode stops early: it ran out of budget, not out of ideas.
+    # Every <|retry|> still gets an attempt before the episode ends (invariant 2),
+    # so the park is reported through <|check|> + <|done|>, never after a retry.
+    park_at = rng.randint(1, len(fails)) if (fails and terminal != "success") else 10**6
+
+    for i, (why, other, rung) in enumerate(fails, 1):
         step += 1
-        dx, dy = _coords(distractor, rng)
-        parts.append(f"<|step|>{step}<|act|>{ACTION_OF_ROLE[distractor.role]}({dx},{dy})")
-        parts.append(f"<|obs|>{OBS_BY_ROLE[distractor.role].format(label=distractor.label, state='off', pct=0)}")
-        parts.append("<|check|>objective not satisfied: wrong element")
-        parts.append(f"<|retry|>that was {distractor.label}, not {target.label}. "
-                     f"target the {target.role} labelled {target.label}")
+        if other:
+            el = next((e for e in others if e.label == other), target)
+            px, py = _coords(el, rng)
+            parts.append(f"<|step|>{step}<|act|>{ACTION_OF_ROLE[el.role]}({px},{py})")
+            parts.append(f"<|obs|>{OBS_BY_ROLE[el.role].format(label=el.label, state='off', pct=0)}")
+            parts.append("<|check|>objective not satisfied: wrong element")
+        elif why == "click landed off target":
+            nx, ny = _near_miss(target, rng)
+            parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
+            parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
+            parts.append("<|check|>objective not satisfied: click landed off target")
+        else:
+            px, py = _coords(target, rng)
+            parts.append(f"<|step|>{step}<|act|>{action}({px},{py})")
+            parts.append(f"<|obs|>{why}")
+            parts.append(f"<|check|>objective not satisfied: {why}")
+        fix = (f"that was {other}, not {target.label}. target the {target.role} labelled {target.label}"
+               if other else
+               f"aim at the centre of the {target.role}, {target.label}" if why == "click landed off target"
+               else f"{why}: {LADDER[rung]}")
+        parts.append(f"<|retry|>{fix}")
+        if i >= park_at:
+            break
+
+    if len(fails) and park_at <= len(fails):
+        step += 1
+        parts.append(f"<|step|>{step}<|act|>{LADDER['escalate'].replace(' ', '_')}()")
+        parts.append("<|obs|>task parked with the last screenshot attached")
+        parts.append("<|check|>objective not satisfied: budget reached")
+        parts.append(f"<|done|>{terminal}")
+        return "".join(parts)
 
     # one honest near-miss on the right element, then the exact hit
     step += 1
-    nx, ny = _near_miss(target, rng)
-    parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
-    parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
-    parts.append("<|check|>objective not satisfied: click landed off target")
-    parts.append(f"<|retry|>aim at the centre of the {target.role}, {target.label}")
-
-    step += 1
+    if rng.random() < 0.5:
+        nx, ny = _near_miss(target, rng)
+        parts.append(f"<|step|>{step}<|act|>{action}({nx},{ny})")
+        parts.append(f"<|obs|>{rng.choice(NO_CHANGE)}")
+        parts.append("<|check|>objective not satisfied: click landed off target")
+        parts.append(f"<|retry|>aim at the centre of the {target.role}, {target.label}")
+        step += 1
     gx, gy = _coords(target, rng)
     parts.append(f"<|step|>{step}<|act|>{action}({gx},{gy})")
     parts.append(f"<|obs|>{OBS_BY_ROLE[target.role].format(label=target.label, state='on', pct=rng.randint(20, 90))}")
@@ -154,6 +222,14 @@ ARG_GEN = {
     "summarize": lambda rng: repr(_ints(rng, rng.randint(2, 5), 0, 9)),
     "keys_positive": lambda rng: repr({_word(rng): rng.randint(-3, 3)
                                        for _ in range(rng.randint(2, 4))}),
+    "clamp": lambda rng: f"{rng.randint(-30, 30)}, {rng.randint(-10, 0)}, {rng.randint(1, 10)}",
+    "slug": lambda rng: repr(" ".join(_word(rng).capitalize() if rng.random() < 0.5 else _word(rng)
+                                      for _ in range(rng.randint(2, 4)))),
+    "dedupe": lambda rng: repr([rng.randint(1, 5) for _ in range(rng.randint(2, 6))]),
+    "median": lambda rng: repr(_ints(rng, rng.randint(3, 7), 0, 40)),
+    "is_even": lambda rng: f"{rng.randint(0, 40)}",
+    "pluralise": lambda rng: f"{rng.randint(0, 5)}, {rng.choice(['file', 'item', 'row', 'task'])!r}",
+    "pct": lambda rng: f"{rng.randint(0, 40)}, {rng.randint(41, 100)}",
 }
 
 BUGS = [
@@ -173,14 +249,26 @@ BUGS = [
      "    return {'ok': False, 'n': len(items)}"),
     ("def keys_positive(d):", "    return [k for k in d if d[k] > 0]",
      "    return [k for k in d if d[k] < 0]"),
+    ("def clamp(x, lo, hi):", "    return max(lo, min(hi, x))", "    return min(lo, max(hi, x))"),
+    ("def slug(text):", "    return '-'.join(text.lower().split())",
+     "    return '_'.join(text.lower().split())"),
+    ("def dedupe(xs):", "    return list(dict.fromkeys(xs))", "    return list(reversed(xs))"),
+    ("def median(xs):\n    s = sorted(xs)", "    return s[len(s) // 2]", "    return s[0]"),
+    ("def is_even(n):", "    return n % 2 == 0", "    return n % 2 == 1"),
+    ("def pluralise(n, word):", "    return word if n == 1 else word + 's'",
+     "    return word + 's' if n == 1 else word"),
+    ("def pct(part, whole):", "    return round(100.0 * part / whole, 1)",
+     "    return round(part / whole, 1)"),
 ]
 
 WHY = [
     "wrong operator", "wrong direction of the comparison", "off by one element",
     "early return skips the result", "the branch checks the wrong variable",
     "the loop mutates the list it is scanning", "the guard is inverted",
-    "integer division where a float is required",
+    "integer division where a float is required", "off by one in the slice",
+    "the accumulator is reset inside the loop",
 ]
+ERRORS = ["AssertionError", "TypeError", "ValueError", "IndexError", "NameError"]
 
 
 def _mutate(body: str, rng: random.Random) -> str:
@@ -201,7 +289,8 @@ def code_episode(rng: random.Random) -> str:
     want = repr(_fn(sig, good)(*eval(f"({arg_src},)", {"__builtins__": {}})))  # noqa: S307
     assertion = f"assert {name}({arg_src}) == {want}"
 
-    attempts = rng.randint(2, 3)  # never zero failures: I3 is a hard invariant
+    attempts = rng.randint(2, 4)  # never zero failures: I3 is a hard invariant
+    err_kind = rng.choices(ERRORS, weights=[70, 8, 8, 7, 7])[0]
     parts = [f"<|task|>make the tests pass for {name}()"]
     for attempt in range(1, attempts + 1):
         if attempt == attempts:
@@ -214,7 +303,7 @@ def code_episode(rng: random.Random) -> str:
         parts.append(f"<|code|>{sig}\n{body}")
         parts.append("<|run|>pytest -q")
         if attempt < attempts:
-            parts.append(f"<|err|>{assertion}  ->  AssertionError")
+            parts.append(f"<|err|>{assertion}  ->  {err_kind}")
             parts.append(f"<|think|>{rng.choice(WHY)}")
             parts.append(f"<|retry|>attempt {attempt} failed, patch the logic and rerun")
         else:
@@ -260,26 +349,31 @@ OBSTACLES = [
 def plan_episode(rng: random.Random) -> str:
     objective = rng.choice(OBJECTIVES)(rng)
     steps = rng.sample(STEPS, k=rng.randint(4, 6))
-    obstacle_fn, fix = rng.choice(OBSTACLES)
-    obstacle = obstacle_fn(rng)
+    n_obs = 1 if rng.random() < 0.55 else 2
 
     parts = [f"<|drive|>objective: {objective}", "<|plan|>"]
     for i, s in enumerate(steps, 1):
         parts.append(f"{i}.{s} ")
-    hit = rng.randint(2, len(steps))
+    hits = sorted(rng.sample(range(2, max(3, len(steps) + 1)), k=min(n_obs, max(1, len(steps) - 1))))
     for i, s in enumerate(steps, 1):
         parts.append(f"<|step|>{i}<|act|>{s.replace(' ', '_')}()")
-        if i == hit:
+        if i in hits:
+            obstacle_fn, fix = rng.choice(OBSTACLES)
+            obstacle = obstacle_fn(rng)
             parts.append(f"<|obs|>{obstacle}")
             parts.append("<|check|>objective not satisfied: blocked")
             parts.append(f"<|retry|>{fix}")
             fix_tok = "".join(c if c.isalnum() or c == "_" else "_" for c in fix.replace(" ", "_"))
             parts.append(f"<|step|>{i}b<|act|>{fix_tok}()")
             parts.append("<|obs|>step completed")
+            if len(hits) > 1 and i == hits[0]:
+                parts.append(f"<|retry|>{LADDER['tool_switch']}")
+                parts.append(f"<|step|>{i}c<|act|>shell_equivalent_of_{s.replace(' ', '_')}()")
+                parts.append("<|obs|>step completed without the GUI")
         else:
             parts.append(f"<|obs|>step completed ({rng.randint(1, 60)} items)")
     parts.append("<|check|>objective satisfied")
-    parts.append("<|done|>success")
+    parts.append(f"<|done|>{rng.choices(['success', 'success-partial'], weights=[88, 12])[0]}")
     return "".join(parts)
 
 
@@ -302,10 +396,15 @@ def drive_stats(n: int = 2000, seed: int = 0) -> dict:
     retries = sum(e.count("<|retry|>") for e in eps)
     done = sum(e.count("<|done|>") for e in eps)
     fails = sum(1 for e in eps if "<|retry|>" in e)
+    terms = {"success": 0, "success-partial": 0, "budget-exhausted": 0, "other": 0}
+    for e in eps:
+        tail = e.rsplit("<|done|>", 1)[-1] if "<|done|>" in e else "other"
+        terms[tail] = terms.get(tail, 0) + 1
     return {
         "episodes": len(eps),
         "mean_retries": round(retries / len(eps), 2),
         "terminal_rate": round(done / len(eps), 3),
         "failure_fraction": round(fails / len(eps), 3),
+        "terminal_mix": {k: round(v / len(eps), 3) for k, v in terms.items()},
         "mean_chars": round(sum(len(e) for e in eps) / len(eps), 1),
     }

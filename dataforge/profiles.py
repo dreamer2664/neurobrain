@@ -18,9 +18,9 @@ DATASETS = {
     "drive": ("implemented", "episodes"),
     "ui_seed": ("implemented", "samples"),
     "hard_ui": ("todo", "samples"),          # M1/M2
-    "instructions": ("todo", "instructions"),  # M3
-    "trajectories": ("todo", "tasks"),         # M5
-    "code_v2": ("todo", "functions"),          # M6
+    "instructions": ("implemented", "instructions"),  # M3
+    "trajectories": ("implemented", "tasks"),  # M5
+    "code_v2": ("implemented", "functions"),  # M6
 }
 
 BUILD_ORDER = ["code", "ui_protocol", "drive", "ui_seed",
@@ -33,9 +33,10 @@ PROFILES: dict[str, dict] = {
         "drive":       {"episodes": 3_000, "val_frac": 0.02},
         "ui_seed":     {"samples": 10_000, "shard_size": 5_000},
         "hard_ui":     {"samples": 2_000, "shard_size": 5_000},
-        "instructions": {"n": 0},
-        "trajectories": {"n": 0},
-        "code_v2":     {"functions": 0},
+        "instructions": {"n": 20_000, "val_frac": 0.01},
+        "trajectories": {"n": 2_000},
+        "code_v2":     {"max_bytes": 2_000_000, "val_frac": 0.03, "min_bytes": 400,
+                        "tok_bytes": 2_000_000},
     },
     "standard": {
         "code":        {"max_bytes": 40_000_000, "val_frac": 0.03, "min_bytes": 400},
@@ -43,9 +44,10 @@ PROFILES: dict[str, dict] = {
         "drive":       {"episodes": 1_000_000, "val_frac": 0.025},
         "ui_seed":     {"samples": 25_000, "shard_size": 5_000},
         "hard_ui":     {"samples": 100_000, "shard_size": 5_000},
-        "instructions": {"n": 1_000_000},
+        "instructions": {"n": 1_000_000, "val_frac": 0.005},
         "trajectories": {"n": 50_000},
-        "code_v2":     {"functions": 600_000},
+        "code_v2":     {"max_bytes": 40_000_000, "val_frac": 0.03, "min_bytes": 400,
+                        "tok_bytes": 12_000_000},
     },
     "max": {
         "code":        {"max_bytes": 160_000_000, "val_frac": 0.03, "min_bytes": 400},
@@ -53,9 +55,10 @@ PROFILES: dict[str, dict] = {
         "drive":       {"episodes": 5_000_000, "val_frac": 0.02},
         "ui_seed":     {"samples": 50_000, "shard_size": 5_000},
         "hard_ui":     {"samples": 300_000, "shard_size": 5_000},
-        "instructions": {"n": 5_000_000},
+        "instructions": {"n": 5_000_000, "val_frac": 0.002},
         "trajectories": {"n": 200_000},
-        "code_v2":     {"functions": 2_000_000},
+        "code_v2":     {"max_bytes": 160_000_000, "val_frac": 0.03, "min_bytes": 400,
+                        "tok_bytes": 40_000_000},
     },
 }
 

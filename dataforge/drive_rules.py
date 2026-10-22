@@ -24,6 +24,9 @@ MARKERS = {
     "retry": "<|retry|>", "done": "<|done|>", "try": "<|try|>", "err": "<|err|>",
     "ok": "<|ok|>", "code": "<|code|>", "run": "<|run|>", "think": "<|think|>",
     "endoftext": "<|endoftext|>",
+    # terminal outcomes (specs/drive.md): success | done-partial | failed
+    "term_partial": "success-partial",
+    "term_failed": "budget-exhausted",
 }
 
 

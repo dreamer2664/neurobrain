@@ -60,6 +60,8 @@ DATASET_OVERRIDES = {
                 "entropy_bits_min": 2.0},
     "ui_protocol": {"alpha_share_min": 0.15, "vocab_used_min": 150},
     "drive": {"vocab_used_min": 380},
+    # the brief's number: fewer than 1% duplicates per million instructions
+    "instructions": {"dup_rate_max": 0.01, "alpha_share_min": 0.40},
 }
 
 
@@ -159,7 +161,16 @@ def check_dataset(d: dict) -> list[str]:
         if e["black_share"] > r["image_black_share_max"]:
             bad.append(f"black_share {e['black_share']:.2f} > {r['image_black_share_max']}")
 
-    if "invariants" in d:
+    if d.get("kind") == "jsonl":
+        inv = d["invariants"]
+        if inv.get("invalid", 0) > 0:
+            bad.append(f"invalid trajectories {inv['invalid']}")
+        if inv.get("failure_fraction", 0) < r["failure_fraction_min"]:
+            bad.append(f"failure_fraction {inv.get('failure_fraction')} < {r['failure_fraction_min']}")
+        if inv.get("dup_ids", 0) > 0:
+            bad.append(f"duplicate task ids {inv['dup_ids']}")
+
+    if "invariants" in d and d.get("kind") != "jsonl":
         inv = d["invariants"]
         if inv["terminal_rate"] < r["terminal_rate_min"]:
             bad.append(f"I1 terminal_rate {inv['terminal_rate']} < {r['terminal_rate_min']}")

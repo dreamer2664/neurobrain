@@ -268,3 +268,191 @@ def test_diff_proves_determinism(tmp_path: Path):
     # a third build with a different seed must differ
     assert build(c, "smoke", 32, "drive,ui_seed").returncode == 0
     assert run("diff", "--a", str(a), "--b", str(c)).returncode == 1
+
+
+# --------------------------------------------------------------- M1: hard UI
+def test_hard_ui_shards_and_tiers(tmp_path: Path):
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "5",
+               "--datasets", "hard_ui", "--set", "hard_ui.samples=600")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "hard_ui" / "manifest.json").read_text())
+    assert mf["kind"] == "ui_shards" and mf["n"] == 600
+    shard = out / "hard_ui" / mf["shards"][0]["name"]
+    z = np.load(shard)
+    for k in ["images", "tasks", "heat", "offsets", "actions", "labels", "roles", "themes"]:
+        assert k in z.files, k
+    off = z["offsets"]
+    assert np.all(np.abs(off) <= 1.0)
+    # the hard world must not saturate its regression target
+    assert np.mean(np.abs(off) < 0.999) > 0.9, "offsets clip like the seed world"
+    tiers = out / "hard_ui" / "tiers" / (shard.stem + "-tier.npy")
+    assert tiers.exists() and np.load(tiers).shape == (600,)
+
+
+def test_hard_ui_touches_many_heat_cells(tmp_path: Path):
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "5",
+               "--datasets", "hard_ui", "--set", "hard_ui.samples=600")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    z = np.load(out / "hard_ui" / "shard-0000.npz")
+    cells = z["heat"].astype(np.float32).reshape(600, -1).argmax(axis=1)
+    assert len(set(cells.tolist())) > 150, "hard world still parks targets on a grid"
+
+
+# ---------------------------------------------------------- M3: instructions
+def test_instructions_records_and_dedupe(tmp_path: Path):
+    import gzip
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "9",
+               "--datasets", "instructions", "--set", "instructions.n=2000")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "instructions" / "manifest.json").read_text())
+    c = mf["content"]
+    assert c["unique"] >= 2000
+    assert c["reject_rate"] < 0.10
+    with gzip.open(out / "instructions" / mf["records"][0]["name"], "rt") as f:
+        rec = json.loads(f.readline())
+    for key in ["text", "target", "family", "variant"]:
+        assert key in rec
+    assert rec["target"]["label"] and rec["target"]["role"]
+
+    # every emitted instruction is unique (normalised)
+    from neurobrain.instructions import normalize
+    lines = []
+    for sh in mf["records"]:
+        with gzip.open(out / "instructions" / sh["name"], "rt") as f:
+            lines += [json.loads(l)["text"] for l in f]
+    norm = [normalize(t) for t in lines]
+    assert len(set(norm)) == len(norm)
+
+
+def test_instructions_include_the_hard_cases(tmp_path: Path):
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "9",
+               "--datasets", "instructions", "--set", "instructions.n=4000")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "instructions" / "manifest.json").read_text())
+    fam = mf["content"]["family"]
+    for family in ["multi", "relative", "type", "slider"]:
+        assert fam.get(family, 0) > 0.01, f"{family} under-represented: {fam}"
+    var = mf["content"]["variant"]
+    assert var.get("typo", 0) > 0.05 and var.get("lower", 0) > 0.2
+
+
+def test_build_set_override(tmp_path: Path):
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "3",
+               "--datasets", "drive", "--set", "drive.episodes=120")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "drive" / "manifest.json").read_text())
+    assert mf["n"] == 120
+
+
+# ------------------------------------------------------- M5: trajectories
+def test_trajectories_schema_and_invariants(tmp_path: Path):
+    import gzip
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "4",
+               "--datasets", "trajectories", "--set", "trajectories.n=800")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "trajectories" / "manifest.json").read_text())
+    assert mf["kind"] == "jsonl" and mf["n"] == 800
+    from neurobrain.trajectories import validate_trajectory, has_failure
+    n = fails = 0
+    ids = set()
+    for sh in mf["shards"]:
+        with gzip.open(out / "trajectories" / sh["name"], "rt") as f:
+            for line in f:
+                rec = json.loads(line)
+                assert validate_trajectory(rec) == []
+                assert rec["id"] not in ids
+                ids.add(rec["id"])
+                n += 1
+                fails += has_failure(rec)
+    assert n == 800
+    assert fails / n >= 0.5
+
+
+def test_verify_rejects_a_bad_trajectory(tmp_path: Path):
+    import gzip
+    out = tmp_path / "forge"
+    assert run("build", "--out", str(out), "--profile", "smoke", "--seed", "4",
+               "--datasets", "trajectories", "--set", "trajectories.n=50").returncode == 0
+    mf = json.loads((out / "trajectories" / "manifest.json").read_text())
+    p = out / "trajectories" / mf["shards"][0]["name"]
+    with gzip.open(p, "rt") as f:
+        lines = f.readlines()
+    rec = json.loads(lines[0])
+    rec["history"][0]["verdict"] = "brilliant"          # not in the enum
+    lines[0] = json.dumps(rec) + "\n"
+    with gzip.GzipFile(p, "wb", mtime=0) as f:
+        f.write("".join(lines).encode())
+    # hash no longer matches the manifest -> verify must fail either way
+    proc = run("verify", "--dir", str(out))
+    assert proc.returncode != 0
+
+
+# ---------------------------------------------------------- M6: code corpus v2
+def test_code_v2_ast_dedupe_and_tokenizers(tmp_path: Path):
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "8",
+               "--datasets", "code_v2")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    mf = json.loads((out / "code_v2" / "manifest.json").read_text())
+    c = mf["content"]
+    assert c["functions"] > 200
+    assert c["functions_val"] > 0 and c["functions_train"] > c["functions_val"]
+    # the 4096 tokenizer must actually pack code tighter than the 2052 one
+    assert c["bytes_per_token_4096"] > c["bytes_per_token_2052"] * 1.05
+    assert (out / "code_v2" / c["tokenizer_4096"]["name"]).exists()
+    names = {s["name"] for s in mf["shards"]}
+    assert {"codev2_2052_train.bin", "codev2_4096_train.bin",
+            "codev2_instr_train.bin"} <= names
+
+
+def test_code_v2_no_function_crosses_the_split(tmp_path: Path):
+    """A function hash may appear on exactly one side of the wall."""
+    import ast as _ast
+    import hashlib as _hashlib
+    out = tmp_path / "forge"
+    proc = run("build", "--out", str(out), "--profile", "smoke", "--seed", "8",
+               "--datasets", "code_v2")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+    from neurobrain.tokenizer import BPETokenizer
+    tok = BPETokenizer.load(str(ROOT / "data" / "tokenizer.json"))
+    eot = tok.encode("<|endoftext|>")[0]
+
+    def hashes_of(path):
+        arr = np.fromfile(path, dtype="<u2")
+        out_, cur = set(), []
+        for t in arr:
+            if t == eot:
+                text = tok.decode(cur)
+                try:
+                    node = _ast.parse(text).body[0]
+                    out_.add(_hashlib.sha1(_ast.dump(node, include_attributes=False)
+                                           .encode()).hexdigest())
+                except Exception:  # noqa: BLE001
+                    pass
+                cur = []
+            else:
+                cur.append(t)
+        return out_
+
+    tr = hashes_of(out / "code_v2" / "codev2_2052_train.bin")
+    va = hashes_of(out / "code_v2" / "codev2_2052_val.bin")
+    assert tr and va
+    assert not (tr & va), f"{len(tr & va)} functions leaked across the split"
+
+
+def test_code_tokenizer_roundtrips(tmp_path: Path):
+    out = tmp_path / "forge"
+    assert run("build", "--out", str(out), "--profile", "smoke", "--seed", "8",
+               "--datasets", "code_v2").returncode == 0
+    from neurobrain.tokenizer import BPETokenizer
+    tok = BPETokenizer.load(str(out / "code_v2" / "code_tokenizer_4096.json"))
+    assert tok.vocab_size == 4096 and tok.n_bpe == 4096 - 4
+    s = "def f(x):\n    return x * 2\n"
+    assert tok.decode(tok.encode(s)) == s

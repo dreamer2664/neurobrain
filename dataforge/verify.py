@@ -46,7 +46,7 @@ def verify_dir(root: str, tokenizer: str | None = None) -> tuple[bool, list[str]
     for d, mf in dirs:
         name = mf.get("dataset") or os.path.basename(d)
         info = {"shards": 0, "bytes": 0, "hashes_ok": True}
-        for sh in mf.get("shards", []):
+        for sh in list(mf.get("shards", [])) + list(mf.get("records", []) or []):
             p = os.path.join(d, sh["name"])
             info["shards"] += 1
             if not os.path.isfile(p):
@@ -64,7 +64,9 @@ def verify_dir(root: str, tokenizer: str | None = None) -> tuple[bool, list[str]
                 problems.append(f"FAIL {name}: size mismatch on {sh['name']} "
                                 f"(manifest {sh['bytes']} got {size})")
 
-        if mf.get("kind") == "token_streams":
+        if mf.get("kind") == "jsonl":
+            problems += _verify_jsonl(d, name, mf, info)
+        elif mf.get("kind") == "token_streams":
             problems += _verify_streams(d, name, mf, tok, info)
         elif mf.get("kind") == "ui_shards":
             problems += _verify_shards(d, name, mf, info)
@@ -91,7 +93,12 @@ def _verify_streams(d: str, name: str, mf: dict, tok, info: dict) -> list[str]:
             bad = drive_rules.check(scan)
             for b in bad:
                 problems.append(f"FAIL {name}: {sh['name']} invariant {b}")
-            declared = (mf.get("content") or {}).get("invariants", {})
+            # per-shard numbers beat the dataset aggregate: a 60-episode val
+            # shard has its own failure fraction, and comparing it to the
+            # aggregate (or vice versa) would be a false alarm
+            declared = sh.get("invariants") or (
+                (mf.get("content") or {}).get("invariants", {})
+                if len(mf.get("shards", [])) == 1 else {})
             for k in ("terminal_rate", "retry_after_failure_rate", "failure_fraction"):
                 if k in declared and abs(float(declared[k]) - float(scan[k])) > 1e-6:
                     problems.append(f"FAIL {name}: manifest {k}={declared[k]} but bytes say {scan[k]}")
@@ -103,6 +110,40 @@ def _verify_streams(d: str, name: str, mf: dict, tok, info: dict) -> list[str]:
         info["invariants"] = {k: merged[k] for k in
                               ("episodes", "terminal_rate", "retry_after_failure_rate",
                                "failure_fraction", "mix", "mean_retries")}
+    return problems
+
+
+def _verify_jsonl(d: str, name: str, mf: dict, info: dict, sample_per_shard: int = 200) -> list[str]:
+    import gzip
+    import json as _json
+    from neurobrain.trajectories import has_failure, has_recovery, validate_trajectory
+    problems = []
+    checked = invalid = fails = recs_with_fail = 0
+    for sh in mf.get("shards", []):
+        p = os.path.join(d, sh["name"])
+        if not os.path.isfile(p):
+            continue
+        with gzip.open(p, "rt", encoding="utf-8") as f:
+            for i, line in enumerate(f):
+                rec = _json.loads(line)
+                errs = validate_trajectory(rec)
+                checked += 1
+                if errs:
+                    invalid += 1
+                    if invalid <= 3:
+                        problems.append(f"FAIL {name}: {sh['name']} invalid record "
+                                        f"{rec.get('id')}: {errs[:2]}")
+                if has_failure(rec):
+                    recs_with_fail += 1
+                    if has_recovery(rec):
+                        fails += 1
+                if i >= sample_per_shard:
+                    break
+    if checked and recs_with_fail / checked < 0.5:
+        problems.append(f"FAIL {name}: failure_fraction {recs_with_fail/checked:.3f} < 0.5")
+    info["invariants"] = {"checked": checked, "invalid": invalid,
+                          "failure_fraction": round(recs_with_fail / max(1, checked), 4),
+                          "recovery_fraction": round(fails / max(1, recs_with_fail), 4)}
     return problems
 
 

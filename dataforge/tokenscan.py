@@ -68,10 +68,15 @@ def find_positions(arr: np.ndarray, patterns: dict[str, list[int]],
             for i in members:
                 name = names[i]
                 pat = patterns[name]
-                ok = np.ones(gc.shape, dtype=bool)
+                # a candidate too close to the end of the buffer has no room
+                # for the rest of the token sequence
+                gc_ok = gc[gc + len(pat) <= chunk.size]
+                if gc_ok.size == 0:
+                    continue
+                ok = np.ones(gc_ok.shape, dtype=bool)
                 for k in range(1, len(pat)):
-                    ok &= chunk[gc + k] == pat[k]
-                p = gc[ok]
+                    ok &= chunk[gc_ok + k] == pat[k]
+                p = gc_ok[ok]
                 if p.size:
                     hits[name].append(p.astype(np.int64) + s)
     return {n: (np.sort(np.concatenate(v)) if v else np.empty(0, np.int64))
@@ -150,6 +155,8 @@ def scan(arr: np.ndarray, tok, sample_docs: int | None = None) -> dict:
     n_err = count_in("err")
     n_code_marker = count_in("task")
     n_plan = count_in("plan")
+    n_partial = int(pos["term_partial"].size) if "term_partial" in pos else 0
+    n_failed = int(pos["term_failed"].size) if "term_failed" in pos else 0
 
     # I2: every retry must be followed by an attempt before the episode's EOT
     retry_pos = pos.get("retry", np.empty(0, np.int64))
@@ -190,6 +197,11 @@ def scan(arr: np.ndarray, tok, sample_docs: int | None = None) -> dict:
                 "code": round(float(code.sum()) / total, 4),
                 "plan": round(float(plan.sum()) / total, 4)},
         "retry_hist": _hist(n_retry, 8),
+        "terminal_mix": {
+            "success": round(max(0, int(n_done.sum()) - n_partial - n_failed) / total, 4),
+            "success-partial": round(n_partial / total, 4),
+            "budget-exhausted": round(n_failed / total, 4),
+        },
         "failures": {"terminal": [], "retry_gap": []},
     }
     if stats["terminal_rate"] < 1.0:

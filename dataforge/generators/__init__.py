@@ -8,7 +8,8 @@ partial build is always an honest one.
 
 from __future__ import annotations
 
-from . import code_corpus, drive_corpus, hard_ui, ui_protocol, ui_seed
+from . import (code_corpus, code_v2, drive_corpus, hard_ui, instructions,
+               trajectories, ui_protocol, ui_seed)
 
 IMPLEMENTED = {
     "code": code_corpus.build,
@@ -16,12 +17,12 @@ IMPLEMENTED = {
     "drive": drive_corpus.build,
     "ui_seed": ui_seed.build,
     "hard_ui": hard_ui.build,
+    "instructions": instructions.build,
+    "trajectories": trajectories.build,
+    "code_v2": code_v2.build,
 }
 
 TODO = {
-    "instructions": "M3: templates x slots x paraphrases, dedupe index",
-    "trajectories": "M5: task_schema.jsonl with failure branches",
-    "code_v2": "M6: AST filter, function-hash dedupe, categories, 4096 tokenizer",
 }
 
 

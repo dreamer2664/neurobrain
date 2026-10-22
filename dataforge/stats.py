@@ -120,6 +120,69 @@ def token_stream_stats(path: str, tok, sample_docs: int = 5000, scan_episodes: b
     return out
 
 
+# --------------------------------------------------------------- jsonl tasks
+def jsonl_stats(dirpath: str, manifest: dict, name: str, sample: int = 4000) -> dict:
+    """Re-validate sampled trajectories from the gzip on disk."""
+    import gzip
+    import json as _json
+    from neurobrain.trajectories import (FAIL_VERDICTS, has_failure, has_recovery,
+                                         validate_trajectory)
+
+    shards = manifest.get("shards", [])
+    n = sum(s.get("n", 0) for s in shards)
+    seen = 0
+    invalid = 0
+    failures = recoveries = 0
+    verdicts: dict[str, int] = {}
+    steps = hist = 0
+    ids: set[str] = set()
+    dup_ids = 0
+    per = max(1, sample // max(1, len(shards)))
+    for sh in shards:
+        p = os.path.join(dirpath, sh["name"])
+        with gzip.open(p, "rt", encoding="utf-8") as f:
+            for line in f:
+                rec = _json.loads(line)
+                if seen < sample * len(shards) and seen % max(1, (sh["n"] // per or 1)) == 0:
+                    errs = validate_trajectory(rec)
+                    if errs:
+                        invalid += 1
+                    if rec["id"] in ids:
+                        dup_ids += 1
+                    ids.add(rec["id"])
+                    steps += len(rec["plan"])
+                    hist += len(rec["history"])
+                    for h in rec["history"]:
+                        verdicts[h["verdict"]] = verdicts.get(h["verdict"], 0) + 1
+                    if has_failure(rec):
+                        failures += 1
+                        if has_recovery(rec):
+                            recoveries += 1
+                seen += 1
+    checked = len(ids)
+    return {
+        "kind": "jsonl",
+        "dataset": name,
+        "units": manifest.get("units", "tasks"),
+        "n": n,
+        "shards": len(shards),
+        "checked": checked,
+        "invalid": invalid,
+        "dup_ids": dup_ids,
+        "duplicates": {"sampled": checked, "exact_rate": round(dup_ids / max(1, checked), 6),
+                       "near_rate": 0.0},
+        "invariants": {
+            "terminal_rate": 1.0 if invalid == 0 else 0.0,
+            "failure_fraction": round(failures / max(1, checked), 4),
+            "recovery_fraction": round(recoveries / max(1, failures), 4) if failures else None,
+            "plan_steps_per_task": round(steps / max(1, checked), 2),
+            "history_per_task": round(hist / max(1, checked), 2),
+            "verdicts": {k: round(v / max(1, sum(verdicts.values())), 4)
+                         for k, v in sorted(verdicts.items())},
+        },
+    }
+
+
 # ----------------------------------------------------------------- ui shards
 def ui_shard_stats(dirpath: str, manifest: dict, max_image_shards: int = 4) -> dict:
     from .generators.ui_seed import dhash, image_entropy
@@ -230,17 +293,34 @@ def stats_dir(root: str, tokenizer: str | None = None, sample_docs: int = 5000,
         name = mf.get("dataset") or os.path.basename(d)
         if mf.get("kind") == "token_streams":
             per_file = []
+            cache: dict[str, object] = {}
             for sh in mf.get("shards", []):
                 p = os.path.join(d, sh["name"])
-                st = token_stream_stats(p, tok, sample_docs=sample_docs,
+                stok = tok
+                if sh.get("tokenizer"):
+                    tpath = sh["tokenizer"]
+                    if tpath not in cache:
+                        cache[tpath] = _load_tok(os.path.join(d, tpath))
+                    stok = cache[tpath]
+                st = token_stream_stats(p, stok, sample_docs=sample_docs,
                                         scan_episodes=(name == "drive"))
+                st["tokenizer"] = sh.get("tokenizer") or os.path.basename(tok_path)
+                st["role"] = sh.get("role", "primary")
                 per_file.append(st)
             agg = _merge_streams(per_file)
-            agg.update({"dataset": name, "profile": mf.get("profile"), "seed": mf.get("seed")})
+            agg.update({"dataset": name, "profile": mf.get("profile"), "seed": mf.get("seed"),
+                        "content": mf.get("content", {})})
             agg["ranges"] = {"ok": not checks.check_dataset(agg),
                              "violations": checks.check_dataset(agg),
                              "overrides": checks.DATASET_OVERRIDES.get(name, {})}
             report["datasets"][name] = agg
+        elif mf.get("kind") == "jsonl":
+            st = jsonl_stats(d, mf, name)
+            st.update({"profile": mf.get("profile"), "seed": mf.get("seed")})
+            st["ranges"] = {"ok": not checks.check_dataset(st),
+                            "violations": checks.check_dataset(st),
+                            "overrides": checks.DATASET_OVERRIDES.get(name, {})}
+            report["datasets"][name] = st
         elif mf.get("kind") == "ui_shards":
             st = ui_shard_stats(d, mf, max_image_shards=max_image_shards)
             st.update({"profile": mf.get("profile"), "seed": mf.get("seed")})
@@ -257,8 +337,12 @@ def stats_dir(root: str, tokenizer: str | None = None, sample_docs: int = 5000,
 
 
 def _merge_streams(parts: list[dict]) -> dict:
-    toks = sum(p["tokens"] for p in parts)
-    docs = sum(p["docs"] for p in parts)
+    """Merge per-file stats. Alternate tokenizer encodings of the same documents
+    are reported separately instead of double-counting the corpus."""
+    prim = [p for p in parts if p.get("role", "primary") in ("primary", "instruction_pairs")]
+    alt = [p for p in parts if p.get("role") == "alt_tokenizer"]
+    toks = sum(p["tokens"] for p in prim)
+    docs = sum(p["docs"] for p in prim)
     bal = {k: 0 for k in parts[0]["balance"]} if parts else {}
     for p in parts:
         for k, v in p["balance"].items():
@@ -284,6 +368,8 @@ def _merge_streams(parts: list[dict]) -> dict:
         },
         "doc_len": max(parts, key=lambda p: p["tokens"])["doc_len"] if parts else {},
         "files": [p["path"] for p in parts],
+        "alt_encodings": [{"file": p["path"], "tokens": p["tokens"], "tokenizer": p.get("tokenizer")}
+                          for p in alt],
     }
     inv = [p["invariants"] for p in parts if "invariants" in p]
     if inv:
@@ -308,6 +394,9 @@ def _merge_invariants(invs: list[dict]) -> dict:
         "terminal_missing": sum(i.get("terminal_missing", 0) for i in invs),
         "terminal_over": sum(i.get("terminal_over", 0) for i in invs),
         "bad_retries": sum(i.get("bad_retries", 0) for i in invs),
+        "terminal_mix": {k: round(sum(i["terminal_mix"][k] * i["episodes"] for i in invs)
+                                  / max(1, eps), 4)
+                         for k in ("success", "success-partial", "budget-exhausted")},
         "failures": {"terminal": [], "retry_gap": []},
     }
     merged["violations"] = drive_rules.check(merged)
@@ -335,11 +424,16 @@ def render(report: dict) -> str:
             toks = f"{d['tokens']/1e6:.2f}M"
             sh = d["balance"]["_share"]
             bal = f"a/d/s {sh['alpha']:.2f}/{sh['digit']:.2f}/{sh['space']:.2f} sp {sh['special']:.2f}"
-        else:
+        elif d["kind"] == "ui_shards":
             n = f"{d['n']:,} samples"
             toks = "-"
             lb = d["label_balance"]
             bal = f"label H/Hmax {lb['entropy_ratio']:.2f} ({lb['n_labels']} cls)"
+        else:  # jsonl tasks
+            n = f"{d['n']:,} {d.get('units', 'tasks')}"
+            toks = "-"
+            inv = d["invariants"]
+            bal = f"failure {100*inv['failure_fraction']:.0f}% recov {100*(inv['recovery_fraction'] or 0):.0f}%"
         dup = f"{100*d['duplicates']['exact_rate']:.2f}"
         verdict = "OK" if d["ranges"]["ok"] else "FAIL"
         lines.append(f"{name:<14}{d['kind']:<13}{n:>14}{toks:>10}{dup:>8}  {bal:<32}{verdict}")
@@ -359,13 +453,16 @@ def render(report: dict) -> str:
                      f"{sum(d['docs'] for d in st):,} documents; worst doc_len "
                      f"mean {lens['mean']:.0f} p99 {lens['p99']}")
     for name, d in report["datasets"].items():
-        if "invariants" in d:
+        if "invariants" in d and d["kind"] != "jsonl":
             inv = d["invariants"]
             mix = inv["mix"]
             lines.append(f"drive invariants  terminal_rate={inv['terminal_rate']:.3f}  "
                          f"retry_after_failure={inv['retry_after_failure_rate']:.3f}  "
                          f"failure_frac={inv['failure_fraction']:.3f}  retry/ep={inv['mean_retries']:.2f}  "
                          f"mix ui/code/plan {mix['ui']:.2f}/{mix['code']:.2f}/{mix['plan']:.2f}  "
+                         f"terminals {inv['terminal_mix']['success']:.2f}/"
+                         f"{inv['terminal_mix']['success-partial']:.2f}/"
+                         f"{inv['terminal_mix']['budget-exhausted']:.2f}  "
                          f"{'OK' if not inv['violations'] else 'FAIL'}")
     if ui:
         co = ui[0]["coordinate"]
@@ -389,6 +486,23 @@ def render(report: dict) -> str:
             f"{n} {100*c/max(1,sum(ui[0]['theme_balance']['counts'])):.0f}%"
             for n, c in zip(["light", "dark", "contrast"], ui[0]["theme_balance"]["counts"])))
 
+    for name, d in report["datasets"].items():
+        if d["kind"] == "jsonl":
+            inv = d["invariants"]
+            lines.append(f"trajectories    {d['n']:,} tasks, checked {d['checked']:,}, invalid {d['invalid']}, "
+                         f"failure {100*inv['failure_fraction']:.1f}%, "
+                         f"recovery {100*(inv['recovery_fraction'] or 0):.1f}%, "
+                         f"plan {inv['plan_steps_per_task']} steps, history {inv['history_per_task']}")
+            lines.append(f"verdicts        " + " ".join(
+                f"{k} {100*v:.0f}%" for k, v in inv["verdicts"].items()))
+        c = d.get("content") or {}
+        if name == "instructions" and c:
+            fam = c.get("family", {})
+            var = c.get("variant", {})
+            lines.append(f"instructions    {c.get('unique',0):,} unique, reject {100*c.get('reject_rate',0):.2f}%, "
+                         f"mean {c.get('chars_mean',0)} chars, multi {100*fam.get('multi',0):.1f}% "
+                         f"relative {100*fam.get('relative',0):.1f}% sequence {100*fam.get('sequence',0):.1f}%")
+            lines.append(f"surface forms   " + " ".join(f"{k} {100*v:.1f}%" for k, v in var.items()))
     ov = {n: d["ranges"]["overrides"] for n, d in report["datasets"].items() if d["ranges"].get("overrides")}
     if ov:
         lines.append("relaxed bounds  " + "  ".join(

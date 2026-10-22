@@ -1,0 +1,14 @@
+[build] profile=standard seed=23 out=/home/user/neurobrain/data/forge-drive tokenizer=/home/user/neurobrain/data/tokenizer.json
+[drive] train: 100,000 episodes, 26.2M tokens
+[drive] train: 200,000 episodes, 52.4M tokens
+[drive] train: 300,000 episodes, 78.7M tokens
+[drive] train: 400,000 episodes, 104.9M tokens
+[drive] train: 500,000 episodes, 132.1M tokens
+[drive] train: 600,000 episodes, 158.4M tokens
+[drive] train: 700,000 episodes, 184.6M tokens
+[drive] train: 800,000 episodes, 211.8M tokens
+[drive] train: 900,000 episodes, 238.1M tokens
+[drive] drive_train.bin: 975,000 episodes, 258.44M tokens, terminal=1.0 retry_ok=1.0 failure_frac=0.989825
+[drive] drive_val.bin: 25,000 episodes, 6.63M tokens, terminal=1.0 retry_ok=1.0 failure_frac=0.9894
+[build] drive: 1,000,000 episodes in 201.2s
+[build] running stats (out-of-range numbers fail the build)
