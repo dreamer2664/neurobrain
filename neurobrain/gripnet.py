@@ -22,30 +22,36 @@ import torch.nn.functional as F
 
 
 class ConvBlock(nn.Module):
-    def __init__(self, cin: int, cout: int):
+    """Two 3x3 convs; optional anti-aliased 2x stride via average pooling.
+
+    BlurPool-style downsampling (conv first, pool second) keeps thin high-
+    frequency structure -- here, the widget label glyphs -- from aliasing away.
+    """
+
+    def __init__(self, cin: int, cout: int, stride: int = 2):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Conv2d(cin, cout, 3, stride=2, padding=1, bias=False),
+            nn.Conv2d(cin, cout, 3, padding=1, bias=False),
             nn.BatchNorm2d(cout),
             nn.SiLU(inplace=True),
             nn.Conv2d(cout, cout, 3, padding=1, bias=False),
             nn.BatchNorm2d(cout),
             nn.SiLU(inplace=True),
         )
+        self.pool = nn.AvgPool2d(2) if stride == 2 else nn.Identity()
 
     def forward(self, x):
-        return self.net(x)
+        return self.pool(self.net(x))
 
 
 class GripNet(nn.Module):
-    def __init__(self, char_vocab: int = 40, max_len: int = 48, d: int = 64, grid: int = 8):
+    def __init__(self, char_vocab: int = 40, max_len: int = 48, d: int = 64, grid: int = 32):
         super().__init__()
         self.grid = grid
         self.vision = nn.Sequential(
-            ConvBlock(3, 32),     # 128 -> 64
-            ConvBlock(32, 64),    # 64 -> 32
-            ConvBlock(64, 96),    # 32 -> 16
-            ConvBlock(96, 128),   # 16 -> 8
+            ConvBlock(3, 32, stride=2),    # 128 -> 64
+            ConvBlock(32, 64, stride=2),   # 64 -> 32
+            ConvBlock(64, 96, stride=1),   # 32 -> 32 (full label detail)
         )
         self.text = nn.Sequential(
             nn.Embedding(char_vocab, 32, padding_idx=0),
@@ -55,23 +61,25 @@ class GripNet(nn.Module):
             nn.Linear(96, d),
             nn.LayerNorm(d),
         )
-        self.proj = nn.Conv2d(128, d, 1)
-        self.offset_head = nn.Sequential(
-            nn.Conv2d(128, 64, 3, padding=1), nn.SiLU(), nn.Conv2d(64, 2, 1), nn.Tanh()
+        # per-cell matcher over [vision feature; instruction query] -- much more
+        # expressive than a plain dot product for "find the cell with this label"
+        self.matcher = nn.Sequential(
+            nn.Conv2d(96 + d, 64, 1), nn.SiLU(), nn.Conv2d(64, 1, 1)
         )
-        self.act_head = nn.Sequential(nn.Linear(128 + d, 96), nn.SiLU(), nn.Linear(96, 4))
+        self.offset_head = nn.Sequential(
+            nn.Conv2d(96, 64, 3, padding=1), nn.SiLU(), nn.Conv2d(64, 2, 1), nn.Tanh()
+        )
+        self.act_head = nn.Sequential(nn.Linear(96 + d, 96), nn.SiLU(), nn.Linear(96, 4))
         self.temperature = nn.Parameter(torch.tensor(1.0))
 
     def forward(self, img: torch.Tensor, task: torch.Tensor):
-        f = self.vision(img)                       # (B,128,8,8)
-        feat = self.proj(f)                        # (B,d,8,8)
-        B, d, H, W = feat.shape
-        q = self.text(task).unsqueeze(1)           # (B,1,d)
-        keys = feat.flatten(2).transpose(1, 2)     # (B,HW,d)
-        scores = torch.bmm(keys, q.transpose(1, 2)).squeeze(-1) / (d ** 0.5)
-        scores = scores * self.temperature.clamp(0.25, 4.0)
+        f = self.vision(img)                        # (B,96,32,32)
+        B, C, H, W = f.shape
+        q = self.text(task)                         # (B,d)
+        qmap = q[:, :, None, None].expand(B, q.shape[1], H, W)
+        scores = self.matcher(torch.cat([f, qmap], dim=1)).flatten(1) / 2.0
         pool = F.adaptive_avg_pool2d(f, 1).flatten(1)
-        act_logits = self.act_head(torch.cat([pool, q.squeeze(1)], dim=1))
+        act_logits = self.act_head(torch.cat([pool, q], dim=1))
         offsets = self.offset_head(f).flatten(2).transpose(1, 2)  # (B, HW, 2) in [-1,1]
         return scores, offsets, act_logits
 

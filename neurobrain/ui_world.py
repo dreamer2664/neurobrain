@@ -115,19 +115,19 @@ def make_layout(rng: random.Random, n: int | None = None) -> Layout:
         role = rng.choice(roles)
         label = labels[i]
         if role == "slider":
-            w, h = int(cell_w - 8), 12
+            w, h = int(cell_w - 8), 18
         elif role == "menu":
-            w, h = int(cell_w - 8), 9
+            w, h = min(int(cell_w - 8), 55), 18
         elif role == "tab":
-            w, h = int(cell_w * 0.8), 10
+            w, h = min(int(cell_w * 0.9), 55), 18
         elif role == "field":
-            w, h = int(cell_w - 8), 14
+            w, h = int(cell_w - 8), 20
         elif role == "checkbox":
-            w, h = 12, 12
+            w, h = 20, 20
         elif role == "icon":
-            w, h = 18, 18
+            w, h = 22, 22
         else:
-            w, h = int(cell_w - 10), 14
+            w, h = min(int(cell_w - 10), 55), 20
         max_x = wx + ww - 6 - w
         max_y = wy + wh - 6 - h
         x = int(wx + 6 + c * cell_w + rng.randint(0, max(1, int(cell_w - w - 2))))
@@ -145,13 +145,14 @@ def make_layout(rng: random.Random, n: int | None = None) -> Layout:
 
 
 # ---------------------------------------------------------------- rendering
-def _draw_glyph(d: ImageDraw.ImageDraw, x: int, y: int, label: str, cell: int = 3) -> None:
+def _draw_glyph(d: ImageDraw.ImageDraw, x: int, y: int, label: str, cell: int = 6) -> None:
+    """3x2 grid of cell-sized blocks; 1 = light block, 0 = dark block."""
     code = label_code(label)
     for i, bit in enumerate(code):
         r, c = divmod(i, 3)
-        cx, cy = x + c * cell, y + r * cell
-        col = (250, 250, 250) if bit else (18, 18, 22)
-        d.rectangle([cx, cy, cx + cell - 2, cy + cell - 2], fill=col)
+        cx, cy = x + c * (cell + 1), y + r * (cell + 1)
+        col = (252, 252, 252) if bit else (20, 20, 24)
+        d.rectangle([cx, cy, cx + cell - 1, cy + cell - 1], fill=col)
 
 
 def render(layout: Layout, size: int = CANVAS) -> np.ndarray:
@@ -170,29 +171,29 @@ def render(layout: Layout, size: int = CANVAS) -> np.ndarray:
         c = ROLE_COLOR[el.role]
         if el.role == "button":
             d.rounded_rectangle([x, y, x + w, y + h], radius=3, fill=c)
-            _draw_glyph(d, x + 3, y + (h - 5) // 2 + 1, el.label, 2)
+            _draw_glyph(d, x + 3, y + (h - 13) // 2, el.label, 6)
         elif el.role == "field":
             d.rectangle([x, y, x + w, y + h], fill=c, outline=(160, 164, 176))
-            _draw_glyph(d, x + 3, y + (h - 5) // 2 + 1, el.label, 2)
+            _draw_glyph(d, x + 3, y + (h - 13) // 2, el.label, 6)
         elif el.role == "checkbox":
-            d.rectangle([x, y, x + w, y + h], fill=c, outline=(60, 120, 80))
-            _draw_glyph(d, x + 2, y + 2, el.label, 2)
+            d.rectangle([x, y, x + w, y + h], fill=(250, 250, 252), outline=(60, 140, 90), width=2)
+            _draw_glyph(d, x + 1, y + 4, el.label, 6)
         elif el.role == "tab":
             d.rectangle([x, y, x + w, y + h], fill=c)
-            _draw_glyph(d, x + 3, y + 2, el.label, 2)
+            _draw_glyph(d, x + 3, y + 2, el.label, 6)
         elif el.role == "icon":
             d.rectangle([x, y, x + w, y + h], fill=c)
-            _draw_glyph(d, x + 3, y + 3, el.label, 3)
+            _draw_glyph(d, x + 3, y + 4, el.label, 6)
         elif el.role == "menu":
             d.rectangle([x, y, x + w, y + h], fill=c, outline=(200, 200, 206))
-            _draw_glyph(d, x + 2, y + 1, el.label, 2)
+            _draw_glyph(d, x + 3, y + 2, el.label, 6)
         elif el.role == "slider":
             d.rectangle([x, y, x + w, y + h], fill=(236, 238, 243) if layout.theme == "light"
                         else (44, 46, 54), outline=c)
-            _draw_glyph(d, x + 2, y + 2, el.label, 2)
-            d.line([x + 10, y + h // 2, x + w - 2, y + h // 2], fill=c, width=2)
-            kx = x + 10 + int((w - 12) * 0.6)
-            d.ellipse([kx - 2, y + h // 2 - 2, kx + 3, y + h // 2 + 3], fill=c)
+            d.line([x + 24, y + h // 2, x + w - 3, y + h // 2], fill=c, width=3)
+            kx = x + 24 + int((w - 27) * 0.6)
+            d.ellipse([kx - 3, y + h // 2 - 3, kx + 3, y + h // 2 + 3], fill=c)
+            _draw_glyph(d, x + 3, y + 3, el.label, 6)
     return np.asarray(img, dtype=np.uint8)
 
 
@@ -245,7 +246,7 @@ def encode_task(task: str, max_len: int = 48) -> list[int]:
     return ids + [0] * (max_len - len(ids))
 
 
-def target_heatmap(ex: Example, grid: int = 8) -> np.ndarray:
+def target_heatmap(ex: Example, grid: int = 32) -> np.ndarray:
     """Soft gaussian target over the coarse grid, centred on the widget centre."""
     hm = np.zeros((grid, grid), dtype=np.float32)
     cell = CANVAS / grid
@@ -260,7 +261,7 @@ def target_heatmap(ex: Example, grid: int = 8) -> np.ndarray:
 ACTION_CLASSES = ["click", "type", "toggle", "drag"]
 
 
-def target_offset(ex: Example, grid: int = 8) -> tuple[int, list[float]]:
+def target_offset(ex: Example, grid: int = 32) -> tuple[int, list[float]]:
     """Index of the cell holding the widget centre + offset inside that cell."""
     cell = CANVAS / grid
     cx, cy = ex.target.cx / cell, ex.target.cy / cell
@@ -271,7 +272,7 @@ def target_offset(ex: Example, grid: int = 8) -> tuple[int, list[float]]:
     return iy * grid + ix, [max(-1.0, min(1.0, dx)), max(-1.0, min(1.0, dy))]
 
 
-def batch(n: int, rng: random.Random, grid: int = 8):
+def batch(n: int, rng: random.Random, grid: int = 32):
     xs = np.empty((n, CANVAS, CANVAS, 3), dtype=np.float32)
     tasks = np.empty((n, 48), dtype=np.int64)
     targets = np.empty((n, grid * grid), dtype=np.float32)
