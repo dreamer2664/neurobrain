@@ -93,7 +93,10 @@ def scan_line(layout) -> str:
     marker instead of the fact -- and then refuse a task on a real screen just
     because the runtime described the screen to it.
     """
-    return "<|scan|>elements on screen: " + ", ".join(sorted(e.label for e in layout.elements))
+    items = sorted(layout.elements, key=lambda e: e.label)
+    return ("<|scan|>elements on screen: "
+            + "; ".join(f"{e.label} {e.role} at {int(e.cx) * SCALE},{int(e.cy) * SCALE}"
+                        for e in items))
 
 
 def ui_episode(rng: random.Random) -> str:

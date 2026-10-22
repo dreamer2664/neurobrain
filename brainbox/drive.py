@@ -277,10 +277,15 @@ class SimulatedDesktop:
         return np.asarray(img)
 
     def observe(self, task=None) -> dict:
+        # centres are part of the observation on purpose: a real desktop agent
+        # gets bounding boxes from the accessibility tree, and the LM policy
+        # needs the same coordinate space the text protocol uses
         return {"kind": "sim", "window": getattr(self.layout, "title", "sim"),
                 "activated": sorted(self.layout.elements[i].label
                                     for i in self.activated),
-                "elements": [{"label": e.label, "role": e.role}
+                "elements": [{"label": e.label, "role": e.role,
+                              "cx": e.cx, "cy": e.cy,
+                              "x": e.x, "y": e.y, "w": e.w, "h": e.h}
                              for e in self.layout.elements]}
 
     def act(self, action, point, task=None) -> dict:

@@ -8,27 +8,27 @@
     "blocked": 0.025,
     "impossible": 0.054,
     "failure_fraction": 0.946,
-    "mean_chars": 578.3
+    "mean_chars": 628.3
   },
   "streams": [
     {
       "name": "hon_train",
-      "tokens": 1500125,
-      "episodes": 8732,
+      "tokens": 1500036,
+      "episodes": 6895,
       "mix": {
         "success": 0.549,
-        "impossible": 0.297,
-        "failed": 0.154
+        "impossible": 0.295,
+        "failed": 0.155
       }
     },
     {
       "name": "hon_val",
       "tokens": 200121,
-      "episodes": 1183,
+      "episodes": 932,
       "mix": {
-        "success": 0.53,
-        "impossible": 0.32,
-        "failed": 0.15
+        "success": 0.532,
+        "impossible": 0.322,
+        "failed": 0.146
       }
     }
   ]
