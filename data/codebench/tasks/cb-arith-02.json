@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "easy",
+ "fn": "double",
+ "id": "cb-arith-02",
+ "prompt": "def double(n):\n    \"\"\"return n times two\"\"\"\n",
+ "reference": "    return n * 2\n",
+ "tests": "assert double(3) == 6\nassert double(-2) == -4\nassert double(0) == 0",
+ "timeout_s": 5
+}

@@ -1,0 +1,10 @@
+{
+ "category": "dicts",
+ "difficulty": "easy",
+ "fn": "keys_positive",
+ "id": "cb-dict-02",
+ "prompt": "def keys_positive(d):\n    \"\"\"return the keys whose value is greater than zero\"\"\"\n",
+ "reference": "    return [k for k in d if d[k] > 0]\n",
+ "tests": "assert keys_positive({'a': 1, 'b': -1}) == ['a']\nassert keys_positive({}) == []",
+ "timeout_s": 5
+}

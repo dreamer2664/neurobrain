@@ -1,0 +1,10 @@
+{
+ "category": "dicts",
+ "difficulty": "medium",
+ "fn": "word_count",
+ "id": "cb-dict-01",
+ "prompt": "def word_count(s):\n    \"\"\"return a dict mapping each word to how often it appears\"\"\"\n",
+ "reference": "    counts = {}\n    for w in s.split():\n        counts[w] = counts.get(w, 0) + 1\n    return counts\n",
+ "tests": "assert word_count('a b a') == {'a': 2, 'b': 1}\nassert word_count('') == {}",
+ "timeout_s": 5
+}

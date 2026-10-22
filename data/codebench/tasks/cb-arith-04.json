@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "easy",
+ "fn": "celsius_to_fahrenheit",
+ "id": "cb-arith-04",
+ "prompt": "def celsius_to_fahrenheit(c):\n    \"\"\"convert celsius to fahrenheit\"\"\"\n",
+ "reference": "    return c * 9 / 5 + 32\n",
+ "tests": "assert celsius_to_fahrenheit(0) == 32\nassert celsius_to_fahrenheit(100) == 212\nassert abs(celsius_to_fahrenheit(37) - 98.6) < 1e-9",
+ "timeout_s": 5
+}

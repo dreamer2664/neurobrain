@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "count_vowels",
+ "id": "cb-str-05",
+ "prompt": "def count_vowels(s):\n    \"\"\"count the lowercase vowels a e i o u in s\"\"\"\n",
+ "reference": "    return sum(1 for c in s if c in 'aeiou')\n",
+ "tests": "assert count_vowels('hello') == 2\nassert count_vowels('xyz') == 0\nassert count_vowels('aeiou') == 5",
+ "timeout_s": 5
+}

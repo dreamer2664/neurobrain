@@ -1,0 +1,10 @@
+{
+ "category": "dicts",
+ "difficulty": "medium",
+ "fn": "count_by_first_letter",
+ "id": "cb-dict-06",
+ "prompt": "def count_by_first_letter(words):\n    \"\"\"count the words by their first letter\"\"\"\n",
+ "reference": "    counts = {}\n    for w in words:\n        counts[w[0]] = counts.get(w[0], 0) + 1\n    return counts\n",
+ "tests": "assert count_by_first_letter(['apple', 'avocado', 'bee']) == {'a': 2, 'b': 1}\nassert count_by_first_letter([]) == {}",
+ "timeout_s": 5
+}

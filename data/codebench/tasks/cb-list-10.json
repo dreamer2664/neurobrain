@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "medium",
+ "fn": "remove_first",
+ "id": "cb-list-10",
+ "prompt": "def remove_first(xs, v):\n    \"\"\"return a new list without the first occurrence of v\"\"\"\n",
+ "reference": "    out = list(xs)\n    if v in out:\n        out.remove(v)\n    return out\n",
+ "tests": "assert remove_first([1, 2, 3, 2], 2) == [1, 3, 2]\nassert remove_first([1], 9) == [1]\nassert remove_first([], 1) == []",
+ "timeout_s": 5
+}

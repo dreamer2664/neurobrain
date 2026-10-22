@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "easy",
+ "fn": "mean",
+ "id": "cb-arith-03",
+ "prompt": "def mean(xs):\n    \"\"\"return the arithmetic mean of a non-empty list\"\"\"\n",
+ "reference": "    return sum(xs) / len(xs)\n",
+ "tests": "assert mean([2, 4, 6]) == 4\nassert abs(mean([1, 2]) - 1.5) < 1e-9",
+ "timeout_s": 5
+}

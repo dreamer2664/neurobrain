@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "easy",
+ "fn": "clamp",
+ "id": "cb-arith-05",
+ "prompt": "def clamp(x, lo, hi):\n    \"\"\"return x limited to the range lo..hi\"\"\"\n",
+ "reference": "    return max(lo, min(x, hi))\n",
+ "tests": "assert clamp(5, 0, 10) == 5\nassert clamp(-3, 0, 10) == 0\nassert clamp(42, 0, 10) == 10",
+ "timeout_s": 5
+}

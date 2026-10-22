@@ -1,0 +1,10 @@
+{
+ "category": "misc",
+ "difficulty": "easy",
+ "fn": "squares_upto",
+ "id": "cb-misc-03",
+ "prompt": "def squares_upto(n):\n    \"\"\"return the squares of the integers from 1 to n\"\"\"\n",
+ "reference": "    return [i * i for i in range(1, n + 1)]\n",
+ "tests": "assert squares_upto(4) == [1, 4, 9, 16]\nassert squares_upto(0) == []",
+ "timeout_s": 5
+}

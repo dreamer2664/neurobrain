@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "shout",
+ "id": "cb-str-06",
+ "prompt": "def shout(s):\n    \"\"\"return s in upper case followed by an exclamation mark\"\"\"\n",
+ "reference": "    return s.upper() + '!'\n",
+ "tests": "assert shout('hi') == 'HI!'\nassert shout('') == '!'",
+ "timeout_s": 5
+}

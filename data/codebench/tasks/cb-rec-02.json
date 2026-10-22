@@ -1,0 +1,10 @@
+{
+ "category": "recursion",
+ "difficulty": "medium",
+ "fn": "fib",
+ "id": "cb-rec-02",
+ "prompt": "def fib(n):\n    \"\"\"return the nth fibonacci number, fib(0) == 0 and fib(1) == 1\"\"\"\n",
+ "reference": "    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)\n",
+ "tests": "assert fib(0) == 0\nassert fib(1) == 1\nassert fib(10) == 55",
+ "timeout_s": 5
+}

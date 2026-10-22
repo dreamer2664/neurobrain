@@ -1,0 +1,10 @@
+{
+ "category": "arithmetic",
+ "difficulty": "medium",
+ "fn": "gcd",
+ "id": "cb-arith-06",
+ "prompt": "def gcd(a, b):\n    \"\"\"return the greatest common divisor of a and b\"\"\"\n",
+ "reference": "    while b:\n        a, b = b, a % b\n    return a\n",
+ "tests": "assert gcd(12, 18) == 6\nassert gcd(7, 13) == 1\nassert gcd(0, 5) == 5",
+ "timeout_s": 5
+}

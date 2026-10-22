@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "is_palindrome",
+ "id": "cb-str-04",
+ "prompt": "def is_palindrome(s):\n    \"\"\"true if s reads the same both ways\"\"\"\n",
+ "reference": "    return s == s[::-1]\n",
+ "tests": "assert is_palindrome('racecar')\nassert not is_palindrome('abc')\nassert is_palindrome('')",
+ "timeout_s": 5
+}

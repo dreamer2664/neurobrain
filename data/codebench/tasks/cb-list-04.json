@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "easy",
+ "fn": "flatten1",
+ "id": "cb-list-04",
+ "prompt": "def flatten1(nested):\n    \"\"\"flatten one level of nested lists\"\"\"\n",
+ "reference": "    return [x for sub in nested for x in sub]\n",
+ "tests": "assert flatten1([[1, 2], [3]]) == [1, 2, 3]\nassert flatten1([[]]) == []\nassert flatten1([]) == []",
+ "timeout_s": 5
+}

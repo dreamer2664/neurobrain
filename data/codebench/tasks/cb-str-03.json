@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "count_char",
+ "id": "cb-str-03",
+ "prompt": "def count_char(s, ch):\n    \"\"\"count occurrences of ch in s\"\"\"\n",
+ "reference": "    return s.count(ch)\n",
+ "tests": "assert count_char('banana', 'a') == 3\nassert count_char('', 'x') == 0\nassert count_char('aaa', 'a') == 3",
+ "timeout_s": 5
+}

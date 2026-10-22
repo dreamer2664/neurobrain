@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "reverse",
+ "id": "cb-str-01",
+ "prompt": "def reverse(s):\n    \"\"\"return the string backwards\"\"\"\n",
+ "reference": "    return s[::-1]\n",
+ "tests": "assert reverse('abc') == 'cba'\nassert reverse('') == ''\nassert reverse('a') == 'a'",
+ "timeout_s": 5
+}

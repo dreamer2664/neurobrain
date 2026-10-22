@@ -1,0 +1,10 @@
+{
+ "category": "logic",
+ "difficulty": "easy",
+ "fn": "is_sorted",
+ "id": "cb-logic-04",
+ "prompt": "def is_sorted(xs):\n    \"\"\"true if the list is in non-decreasing order\"\"\"\n",
+ "reference": "    return xs == sorted(xs)\n",
+ "tests": "assert is_sorted([1, 2, 3])\nassert not is_sorted([3, 1])\nassert is_sorted([1, 1])\nassert is_sorted([])",
+ "timeout_s": 5
+}

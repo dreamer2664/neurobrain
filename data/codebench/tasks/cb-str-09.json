@@ -1,0 +1,10 @@
+{
+ "category": "strings",
+ "difficulty": "easy",
+ "fn": "repeat",
+ "id": "cb-str-09",
+ "prompt": "def repeat(s, n):\n    \"\"\"return s repeated n times\"\"\"\n",
+ "reference": "    return s * n\n",
+ "tests": "assert repeat('ab', 3) == 'ababab'\nassert repeat('x', 0) == ''\nassert repeat('', 5) == ''",
+ "timeout_s": 5
+}

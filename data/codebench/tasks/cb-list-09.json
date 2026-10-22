@@ -1,0 +1,10 @@
+{
+ "category": "lists",
+ "difficulty": "medium",
+ "fn": "cumsum",
+ "id": "cb-list-09",
+ "prompt": "def cumsum(xs):\n    \"\"\"return the cumulative sums: [1, 2, 3] becomes [1, 3, 6]\"\"\"\n",
+ "reference": "    out = []\n    total = 0\n    for x in xs:\n        total += x\n        out.append(total)\n    return out\n",
+ "tests": "assert cumsum([1, 2, 3]) == [1, 3, 6]\nassert cumsum([]) == []\nassert cumsum([5]) == [5]",
+ "timeout_s": 5
+}

@@ -1,0 +1,10 @@
+{
+ "category": "logic",
+ "difficulty": "easy",
+ "fn": "all_positive",
+ "id": "cb-logic-02",
+ "prompt": "def all_positive(xs):\n    \"\"\"true if every number is greater than zero\"\"\"\n",
+ "reference": "    return all(x > 0 for x in xs)\n",
+ "tests": "assert all_positive([1, 2])\nassert not all_positive([1, -2])\nassert all_positive([])",
+ "timeout_s": 5
+}

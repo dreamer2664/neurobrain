@@ -1,0 +1,10 @@
+{
+ "category": "misc",
+ "difficulty": "easy",
+ "fn": "multiples",
+ "id": "cb-misc-02",
+ "prompt": "def multiples(xs, k):\n    \"\"\"return the numbers in xs divisible by k\"\"\"\n",
+ "reference": "    return [x for x in xs if x % k == 0]\n",
+ "tests": "assert multiples([1, 2, 3, 4, 6], 2) == [2, 4, 6]\nassert multiples([], 3) == []",
+ "timeout_s": 5
+}
