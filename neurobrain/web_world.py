@@ -361,6 +361,14 @@ def web_episode(rng: random.Random) -> str:
     step = 0
 
     def click(label: str, obs: str | None = None) -> str:
+        """One action and the screen that follows it -- always, every time.
+
+        The runtime appends a full scan after *every* step, so the corpus has to
+        as well. When paste and save had no scan between them the model learned
+        "after a paste, click save" only in a history that never showed a scan;
+        at run time the scan was always there and it re-pasted instead, seven
+        times, until the budget ran out.
+        """
         nonlocal step
         step += 1
         el = next(e for e in world.view().elements if e.label == label)
@@ -370,17 +378,16 @@ def web_episode(rng: random.Random) -> str:
         check = world.check_text()
         parts.append("<|check|>" + check if check == "objective satisfied"
                      else f"<|check|>objective not satisfied: {check}")
+        parts.append(_scan(world.view().elements))
         return check
 
     parts.append(_scan(world.view().elements))
     click("chrome")
-    parts.append(_scan(world.view().elements))
 
     wrong = [r for r in task.results if r != task.topic]
     if wrong and rng.random() < 0.35:
         bad = rng.choice(wrong)
         click(bad)
-        parts.append(_scan(world.view().elements))
         if rng.random() < 0.3:
             # copying from the wrong article looks reasonable and is not
             click("copy", obs=f"copied {ANSWERS[bad]} to the clipboard")
@@ -388,10 +395,8 @@ def web_episode(rng: random.Random) -> str:
         else:
             parts.append(f"<|retry|>that was {bad}, open the result that matches the objective")
         click("back")
-        parts.append(_scan(world.view().elements))
 
     click(task.topic)
-    parts.append(_scan(world.view().elements))
 
     if rng.random() < 0.2:
         # a plausible mistake: the answer is not on the clipboard yet
@@ -399,12 +404,9 @@ def web_episode(rng: random.Random) -> str:
         click("paste", obs="clipboard is empty")
         parts.append("<|retry|>copy the answer from the article first")
         click("chrome")
-        parts.append(_scan(world.view().elements))
 
     click("copy")
-    parts.append(_scan(world.view().elements))
     click("docs")
-    parts.append(_scan(world.view().elements))
     click("paste")
     click("save")
     parts.append("<|done|>success")

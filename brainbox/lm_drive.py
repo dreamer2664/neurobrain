@@ -165,9 +165,12 @@ class LMDriver:
                 # the same click twice and nothing moved: say so, so the next
                 # prompt cannot be byte-identical to this one
                 check += "<|retry|>that click changed nothing, pick another element"
-            push_step(f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}" + check)
+            step_text = f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}" + check
+            push_step(step_text)
             scan_now = scan_from_obs(after)
-            transcript.append(comp.strip())
+            # the transcript shows what the runtime did, not what the model
+            # imagined it did: its own <|obs|> text is not evidence
+            transcript.append(step_text)
 
         solved = world.progress() >= 1.0
         return {

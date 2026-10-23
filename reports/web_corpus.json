@@ -2,13 +2,13 @@
   "streams": [
     {
       "name": "web_train",
-      "episodes": 24700,
-      "tokens": 26760110
+      "episodes": 22800,
+      "tokens": 30156161
     },
     {
       "name": "web_val",
-      "episodes": 1300,
-      "tokens": 1410580
+      "episodes": 1200,
+      "tokens": 1591426
     }
   ]
 }

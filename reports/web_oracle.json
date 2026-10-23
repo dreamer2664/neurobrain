@@ -1,6 +1,6 @@
 {
-  "n": 30,
-  "solved": 30,
+  "n": 25,
+  "solved": 25,
   "accuracy": 1.0,
   "rows": [
     {
@@ -177,41 +177,6 @@
       "answer": "pound sterling",
       "steps": 6,
       "last_scan": "<|scan|>elements on screen: chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail icon@980,1760; paste but"
-    },
-    {
-      "solved": true,
-      "doc": "Rome",
-      "answer": "Rome",
-      "steps": 6,
-      "last_scan": "<|scan|>elements on screen: Rome field@950,500; chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail icon"
-    },
-    {
-      "solved": true,
-      "doc": "Ottawa",
-      "answer": "Ottawa",
-      "steps": 6,
-      "last_scan": "<|scan|>elements on screen: Ottawa field@950,500; chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail ic"
-    },
-    {
-      "solved": true,
-      "doc": "Ottawa",
-      "answer": "Ottawa",
-      "steps": 6,
-      "last_scan": "<|scan|>elements on screen: Ottawa field@950,500; chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail ic"
-    },
-    {
-      "solved": true,
-      "doc": "O",
-      "answer": "O",
-      "steps": 6,
-      "last_scan": "<|scan|>elements on screen: O field@950,500; chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail icon@98"
-    },
-    {
-      "solved": true,
-      "doc": "Jupiter",
-      "answer": "Jupiter",
-      "steps": 6,
-      "last_scan": "<|scan|>elements on screen: Jupiter field@950,500; chrome icon@230,1760; docs icon@480,1760; files icon@730,1760; mail i"
     }
   ]
 }
