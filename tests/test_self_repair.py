@@ -29,7 +29,7 @@ class StubModel:
         self.scripted = list(scripted)
         self.calls = 0
 
-    def generate(self, idx, max_new_tokens=64, temperature=1.0, top_k=1, eos_id=None):
+    def generate(self, idx, max_new_tokens=64, temperature=1.0, top_k=1, eos_id=None, rep_penalty=1.0):
         text = self.scripted[min(self.calls, len(self.scripted) - 1)]
         self.calls += 1
         new = self.tok.encode(text)[:max_new_tokens]

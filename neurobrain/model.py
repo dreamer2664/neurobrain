@@ -29,6 +29,19 @@ class GPTConfig:
         return asdict(self)
 
 
+def rep_penalize(logits: torch.Tensor, prev_ids: torch.Tensor,
+                 penalty: float) -> torch.Tensor:
+    """CTRL-style repetition penalty on RAW logits (before temperature).
+    Tokens present in prev_ids get positive logits divided by penalty and
+    negative logits multiplied by it. penalty == 1.0 is an exact no-op.
+    Duplicate ids in prev_ids are harmless: they all map to the same value."""
+    if penalty == 1.0:
+        return logits
+    scores = torch.gather(logits, 1, prev_ids)
+    scores = torch.where(scores < 0, scores * penalty, scores / penalty)
+    return logits.scatter(1, prev_ids, scores)
+
+
 class RMSNorm(nn.Module):
     def __init__(self, d: int, eps: float = 1e-6):
         super().__init__()
@@ -218,17 +231,21 @@ class GPT(nn.Module):
 
     @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new_tokens: int, temperature: float = 0.8,
-                 top_k: int | None = 50, eos_id: int | None = None) -> torch.Tensor:
+                 top_k: int | None = 50, eos_id: int | None = None,
+                 rep_penalty: float = 1.0) -> torch.Tensor:
         if idx.shape[1] + max_new_tokens > self.cfg.ctx:
             # prompt + budget overflows the window: fall back to the sliding
             # (cacheless) path, which re-runs the full forward per token
-            return self._generate_slow(idx, max_new_tokens, temperature, top_k, eos_id)
+            return self._generate_slow(idx, max_new_tokens, temperature, top_k,
+                                       eos_id, rep_penalty)
         cache = None
         new = idx
         out = idx
         for _ in range(max_new_tokens):
             logits, cache = self.forward_cached(new, cache)
-            logits = logits[:, -1, :] / max(temperature, 1e-6)
+            logits = logits[:, -1, :]
+            logits = rep_penalize(logits, out, rep_penalty)
+            logits = logits / max(temperature, 1e-6)
             if top_k is not None:
                 k = min(top_k, logits.size(-1))
                 v, _ = torch.topk(logits, k)
@@ -244,11 +261,14 @@ class GPT(nn.Module):
     @torch.no_grad()
     def _generate_slow(self, idx: torch.Tensor, max_new_tokens: int,
                        temperature: float = 0.8, top_k: int | None = 50,
-                       eos_id: int | None = None) -> torch.Tensor:
+                       eos_id: int | None = None,
+                       rep_penalty: float = 1.0) -> torch.Tensor:
         for _ in range(max_new_tokens):
             ctx = idx[:, -self.cfg.ctx:]
             logits, _ = self(ctx)
-            logits = logits[:, -1, :] / max(temperature, 1e-6)
+            logits = logits[:, -1, :]
+            logits = rep_penalize(logits, idx, rep_penalty)
+            logits = logits / max(temperature, 1e-6)
             if top_k is not None:
                 k = min(top_k, logits.size(-1))
                 v, _ = torch.topk(logits, k)

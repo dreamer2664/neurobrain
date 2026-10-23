@@ -185,7 +185,7 @@ def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
           out: str = os.path.join(ROOT, "reports", "codebench.json"),
           max_tokens: int = 128, seed: int = 0, modes: tuple[str, ...] = ("greedy", "sampled"),
           task_dir: str = TASK_DIR, limit: int | None = None,
-          prompt_mode: str = "plain") -> dict:
+          prompt_mode: str = "plain", rep_penalty: float = 1.0) -> dict:
     import torch
     from .sample import load
     from .tokenizer import BPETokenizer  # noqa: F401  (loaded via sample.load)
@@ -209,7 +209,7 @@ def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
             ids = tok.encode(p_text)
             x = torch.tensor([ids], dtype=torch.long)
             out_ids = model.generate(x, max_new_tokens=max_tokens, temperature=temperature,
-                                     top_k=top_k, eos_id=eot)
+                                     top_k=top_k, eos_id=eot, rep_penalty=rep_penalty)
             full = tok.decode(out_ids[0].tolist())
             gen_tokens += out_ids.shape[1] - len(ids)
             comp = extract_completion(full, p_text)
@@ -236,7 +236,8 @@ def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
             by_diff[r["difficulty"]][0] += r["passed"]
             by_diff[r["difficulty"]][1] += 1
         per_mode[mode] = {
-            "decode": {"temperature": temperature, "top_k": top_k, "max_tokens": max_tokens},
+            "decode": {"temperature": temperature, "top_k": top_k, "max_tokens": max_tokens,
+                       "rep_penalty": rep_penalty, "prompt_mode": prompt_mode},
             "pass_at_1": round(passed / n, 4), "passed": passed, "n": n,
             "syntax_valid_rate": round(syntax_ok / n, 4),
             "body_rate": round(sum(bool(r["completion"]) for r in rows) / n, 4),
@@ -335,6 +336,8 @@ def main() -> None:
                     help="plain = continuation prompt (v1 protocol); instructed = "
                          "corpus-v2 task/summary/code-sep framing (deliverable 6: "
                          "eval instructed vs plain separately)")
+    ap.add_argument("--rep-penalty", type=float, default=1.0,
+                    help="CTRL-style repetition penalty at decode (1.0 = off)")
     args = ap.parse_args()
 
     if args.cmd == "build":
@@ -343,7 +346,7 @@ def main() -> None:
     elif args.cmd == "score":
         score(args.ckpt, data_dir=args.data, out=args.out,
               max_tokens=args.max_tokens, seed=args.seed, limit=args.limit,
-              prompt_mode=args.prompt_mode)
+              prompt_mode=args.prompt_mode, rep_penalty=args.rep_penalty)
     elif args.cmd == "holdout":
         rep = holdout_scan()
         os.makedirs(os.path.join(ROOT, "reports"), exist_ok=True)

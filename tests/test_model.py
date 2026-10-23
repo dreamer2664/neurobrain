@@ -54,6 +54,38 @@ def test_overflow_falls_back_to_slow_path():
     assert torch.equal(out, ref)
 
 
+def test_rep_penalize_mechanics():
+    from neurobrain.model import rep_penalize
+    logits = torch.tensor([[2.0, -1.0, 0.5, 4.0]])
+    prev = torch.tensor([[0, 1]])
+    out = rep_penalize(logits, prev, 2.0)
+    assert out[0, 0].item() == 1.0    # positive logit: divided
+    assert out[0, 1].item() == -2.0   # negative logit: multiplied
+    assert out[0, 2].item() == 0.5    # unseen token: untouched
+    assert out[0, 3].item() == 4.0
+    # duplicates in prev are harmless (same value written twice)
+    out2 = rep_penalize(logits, torch.tensor([[0, 0, 1]]), 2.0)
+    assert torch.allclose(out, out2)
+    # penalty 1.0 is an EXACT no-op (returns same tensor object)
+    ident = rep_penalize(logits, prev, 1.0)
+    assert ident is logits
+
+
+def test_generate_rep_penalty_default_noop():
+    m = tiny()
+    prompt = torch.tensor([[3, 7, 11]], dtype=torch.long)
+    torch.manual_seed(9)
+    a = m.generate(prompt, max_new_tokens=10, temperature=1.0, top_k=1)
+    torch.manual_seed(9)
+    b = m.generate(prompt, max_new_tokens=10, temperature=1.0, top_k=1,
+                   rep_penalty=1.0)
+    assert torch.equal(a, b)
+    torch.manual_seed(9)
+    c = m.generate(prompt, max_new_tokens=10, temperature=1.0, top_k=1,
+                   rep_penalty=1.5)
+    assert c.shape == a.shape  # runs; content may differ
+
+
 def test_eos_stop_and_sampling_shape():
     m = tiny()
     prompt = torch.tensor([[1, 2, 3]], dtype=torch.long)

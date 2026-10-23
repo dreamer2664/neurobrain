@@ -42,6 +42,12 @@ def main() -> None:
     ap.add_argument("--ctx", type=int, default=256)
     ap.add_argument("--lr", type=float, default=2e-3)
     ap.add_argument("--warmup", type=int, default=150)
+    ap.add_argument("--anneal-steps", type=int, default=0,
+                    help="if >0: override the cosine schedule with a linear "
+                         "anneal to 0 over this many steps from the resume "
+                         "point (deliverable-3 final low-LR anneal experiment)")
+    ap.add_argument("--anneal-lr", type=float, default=None,
+                    help="anneal start lr (default: lr * 0.1, the cosine floor)")
     ap.add_argument("--min_steps_between_evals", type=int, default=200)
     ap.add_argument("--time_budget", type=float, default=float("inf"), help="seconds; stop-training guard")
     ap.add_argument("--resume", action="store_true")
@@ -104,6 +110,9 @@ def main() -> None:
         best_val = ck.get("best_val", best_val)
         print(f"[lm] resumed from step {step}")
 
+    anneal_start = step
+    anneal_from = args.anneal_lr if args.anneal_lr is not None else args.lr * 0.1
+
     rng = random.Random(args.seed + step)
     t_start = time.time()
     t0 = time.time()
@@ -115,7 +124,10 @@ def main() -> None:
         if time.time() - t_start > args.time_budget:
             print("[lm] time budget reached, stopping")
             break
-        lr = cosine_lr(step, args.steps, args.lr, warmup=args.warmup)
+        if args.anneal_steps > 0:
+            lr = anneal_from * max(0.0, 1.0 - (step - anneal_start) / args.anneal_steps)
+        else:
+            lr = cosine_lr(step, args.steps, args.lr, warmup=args.warmup)
         for g in opt.param_groups:
             g["lr"] = lr
 

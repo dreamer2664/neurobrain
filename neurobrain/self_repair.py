@@ -100,7 +100,7 @@ def assemble(prompt: str, gen: str) -> str:
 
 
 def repair_task(model, tok, task: dict, temperature: float = 0.8, top_k: int = 40,
-                max_ctx: int | None = None) -> dict:
+                max_ctx: int | None = None, rep_penalty: float = 1.0) -> dict:
     eos = tok.special_id(tok.specials[0])
     max_ctx = max_ctx or model.cfg.ctx
     prompt, tests, fn = task["prompt"], task["tests"], task["fn"]
@@ -108,7 +108,7 @@ def repair_task(model, tok, task: dict, temperature: float = 0.8, top_k: int = 4
 
     ids = torch.tensor([tok.encode(prompt)], dtype=torch.long)
     out1 = model.generate(ids, max_new_tokens=GEN1_TOKENS, temperature=temperature,
-                          top_k=top_k, eos_id=eos)
+                          top_k=top_k, eos_id=eos, rep_penalty=rep_penalty)
     full1 = clean_gen(tok.decode(out1[0].tolist()))
     comp1 = extract_completion(full1, prompt)
     r1 = run_candidate(prompt, comp1, tests, fn, timeout_s)
@@ -122,7 +122,7 @@ def repair_task(model, tok, task: dict, temperature: float = 0.8, top_k: int = 4
     ctx_ids = build_repair_ctx(tok, prompt, comp1, err, fn)
     ctx = torch.tensor([ctx_ids], dtype=torch.long)[:, -max_ctx:]
     out2 = model.generate(ctx, max_new_tokens=GEN2_TOKENS, temperature=temperature,
-                          top_k=top_k, eos_id=eos)
+                          top_k=top_k, eos_id=eos, rep_penalty=rep_penalty)
     gen2 = tok.decode(out2[0].tolist()[ctx.shape[1]:])
     cand = assemble(prompt, gen2)
     r2 = run_candidate("", cand, tests, fn, timeout_s)
@@ -138,6 +138,8 @@ def main() -> None:
     ap.add_argument("--temperature", type=float, default=0.8)
     ap.add_argument("--top-k", type=int, default=40)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--rep-penalty", type=float, default=1.0,
+                    help="CTRL-style repetition penalty at decode (1.0 = off)")
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
 
@@ -149,7 +151,8 @@ def main() -> None:
         tasks = tasks[:args.limit]
 
     t0 = time.time()
-    rows = [repair_task(model, tok, t, args.temperature, args.top_k) for t in tasks]
+    rows = [repair_task(model, tok, t, args.temperature, args.top_k,
+                        rep_penalty=args.rep_penalty) for t in tasks]
     dt = time.time() - t0
 
     n = len(rows)
@@ -159,7 +162,8 @@ def main() -> None:
     result = {
         "utc": time.strftime("%FT%TZ", time.gmtime()),
         "ckpt": args.ckpt, "ckpt_sha256": sha256_file(args.ckpt), "step": step,
-        "decode": {"temperature": args.temperature, "top_k": args.top_k, "seed": args.seed},
+        "decode": {"temperature": args.temperature, "top_k": args.top_k, "seed": args.seed,
+                   "rep_penalty": args.rep_penalty},
         "n_tasks": n,
         "first_pass": first_pass,
         "failed_first": len(failed_first),
