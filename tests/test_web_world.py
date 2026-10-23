@@ -60,11 +60,14 @@ def test_recovery_paths_exist():
     """A wrong result must be recoverable, or the policy can dead-end."""
     task = W.WebTask(random.Random(3))
     world = W.WebWorld(task)
+    results = W.scan_labels(world)
     for label in ("chrome", [r for r in task.results if r != task.topic][0]):
         el = next(e for e in world.view().elements if e.label == label)
         world.act({"type": "click"}, (el.cx, el.cy))
-    assert world.state == "chrome" and world.page == "results"
-    for label in (task.topic, "copy", "docs", "paste", "save"):
+    assert world.page == "article" and world.article != task.topic
+    # the screen must differ from the results page, or the model cannot see it
+    assert W.scan_labels(world) != results, "a wrong result left the screen unchanged"
+    for label in ("back", task.topic, "copy", "docs", "paste", "save"):
         el = next((e for e in world.view().elements if e.label == label), None)
         assert el is not None, f"cannot get back to {label} after a wrong result"
         world.act({"type": "click"}, (el.cx, el.cy))

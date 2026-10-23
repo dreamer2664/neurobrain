@@ -121,6 +121,7 @@ class WebWorld:
         self.clipboard: str | None = None
         self.doc_text: str = ""
         self.saved = False
+        self.article: str | None = None   # whose article the chrome tab shows
         self.failed_clicks: list[str] = []
         self.log: list[dict] = []      # every action and what it did
 
@@ -146,7 +147,9 @@ class WebWorld:
     def _article(self) -> Win:
         els = [_el("button", "copy", 1450, 900, 260, 110),
                _el("button", "back", 260, 160, 200, 90)]
-        els += _grid([self.task.answer] + self.task.distractors[:2], "field", 200, 300, 1, 1500, 110, 24)
+        ans = self.article_answer()
+        below = [d for d in self.task.distractors if d != ans][:2]
+        els += _grid([ans] + below, "field", 200, 300, 1, 1500, 110, 24)
         return Win("article", 40, 40, 1840, 1600, els + self._dock())
 
     def _docs(self) -> Win:
@@ -184,11 +187,15 @@ class WebWorld:
         if self.state == "chrome" and self.page == "results":
             return "the right search result is not open"
         if self.state == "chrome" and self.page == "article":
+            if self.article and self.article != self.task.topic:
+                return "this is not the article the objective asks for"
             return ("the answer is not on the clipboard" if not self.clipboard
                     else "google docs is not open")
         if self.state == "docs":
             if not self.doc_text:
                 return "the document is still empty"
+            if self.doc_text != self.task.answer:
+                return "the document does not answer the objective"
             return "the document is not saved"
         return "not done yet"
 
@@ -204,6 +211,10 @@ class WebWorld:
             # this world already speaks in protocol coordinates (0..1920)
             "scale": 1,
         }
+
+    def article_answer(self) -> str:
+        """The answer printed in the article that is open right now."""
+        return ANSWERS.get(self.article or self.task.topic, self.task.answer)
 
     def _hit(self, point) -> Element | None:
         if point is None:
@@ -249,19 +260,23 @@ class WebWorld:
             return {"ok": True, "detail": f"{label} opened, not what the task needs"}
 
         if state == "chrome" and self.page == "results":
-            if label == self.task.topic:
+            if label in self.task.results:
+                # a wrong row opens a real article for the wrong topic: the
+                # screen has to change, or the model cannot see that it erred
                 self.page = "article"
-                return {"ok": True, "detail": f"opened the article on {label}"}
-            if label in self.task.results or label in self.task.distractors:
-                return {"ok": True, "detail": f"opened {label}, wrong result"}
+                self.article = label
+                if label == self.task.topic:
+                    return {"ok": True, "detail": f"opened the article on {label}"}
+                return {"ok": True, "detail": f"opened the article on {label}, wrong result"}
             return {"ok": True, "detail": f"clicked {label}, nothing opened"}
 
         if state == "chrome" and self.page == "article":
             if label == "copy":
-                self.clipboard = self.task.answer
-                return {"ok": True, "detail": f"copied {self.task.answer} to the clipboard"}
+                self.clipboard = self.article_answer()
+                return {"ok": True, "detail": f"copied {self.clipboard} to the clipboard"}
             if label == "back":
                 self.page = "results"
+                self.article = None
                 return {"ok": True, "detail": "went back to the results"}
             return {"ok": True, "detail": f"clicked the text {label}"}
 
@@ -326,6 +341,11 @@ def _scan(layout_els) -> str:
                         for e in items))
 
 
+def scan_labels(world: "WebWorld") -> list[str]:
+    """What is on the screen, as the policy sees it."""
+    return sorted(e.label for e in world.view().elements)
+
+
 def web_episode(rng: random.Random) -> str:
     """One complete research-and-report transcript, clicks and all.
 
@@ -359,8 +379,15 @@ def web_episode(rng: random.Random) -> str:
     wrong = [r for r in task.results if r != task.topic]
     if wrong and rng.random() < 0.35:
         bad = rng.choice(wrong)
-        click(bad, obs=f"opened {bad}, wrong result")
-        parts.append(f"<|retry|>that was {bad}, open the result that matches the objective")
+        click(bad)
+        parts.append(_scan(world.view().elements))
+        if rng.random() < 0.3:
+            # copying from the wrong article looks reasonable and is not
+            click("copy", obs=f"copied {ANSWERS[bad]} to the clipboard")
+            parts.append("<|retry|>that is not the answer to the objective, go back")
+        else:
+            parts.append(f"<|retry|>that was {bad}, open the result that matches the objective")
+        click("back")
         parts.append(_scan(world.view().elements))
 
     click(task.topic)
