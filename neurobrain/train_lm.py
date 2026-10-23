@@ -48,6 +48,10 @@ def main() -> None:
                          "point (deliverable-3 final low-LR anneal experiment)")
     ap.add_argument("--anneal-lr", type=float, default=None,
                     help="anneal start lr (default: lr * 0.1, the cosine floor)")
+    ap.add_argument("--n-layer", type=int, default=6,
+                    help="transformer depth (deliverable-3 7-vs-8-layer experiment)")
+    ap.add_argument("--n-head", type=int, default=7)
+    ap.add_argument("--d-model", type=int, default=224)
     ap.add_argument("--min_steps_between_evals", type=int, default=200)
     ap.add_argument("--time_budget", type=float, default=float("inf"), help="seconds; stop-training guard")
     ap.add_argument("--resume", action="store_true")
@@ -83,7 +87,8 @@ def main() -> None:
     for k, src in val_sources.items():
         val_batches[k] = [src.sample(4, vrng) for _ in range(8)]
 
-    cfg = GPTConfig(vocab_size=tok.vocab_size, n_layer=6, n_head=7, d_model=224, ctx=args.ctx)
+    cfg = GPTConfig(vocab_size=tok.vocab_size, n_layer=args.n_layer, n_head=args.n_head,
+                    d_model=args.d_model, ctx=args.ctx)
     model = GPT(cfg)
     if args.compile:
         print("[lm] compiling model with torch.compile (inductor)")
