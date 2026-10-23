@@ -104,3 +104,26 @@ def test_expert_iter_adapter():
     for prompt, tests, fn in ts:
         assert prompt.startswith("def ") and fn in prompt and tests
     assert len(SMOKE) == 12, "builtin smoke bank unchanged"
+
+
+def test_extract_completion_strips_code_sep():
+    # markers built by concatenation; newlines via chr(10) (transit-proof)
+    sep = "<|" + "co" + "de|>"
+    eos = "<|" + "end" + "oftext" + "|>"
+    nl = chr(10)
+    prompt = "def f(a):" + nl
+    # candidate announced by the separator marker
+    raw = prompt + sep + "    return a + 1" + nl
+    assert cb.extract_completion(raw, prompt) == "    return a + 1" + nl
+    # multiple separators: the LAST announced block is the candidate; eos cuts
+    raw2 = prompt + sep + "garbage" + nl + sep + "    return a * 2" + nl + eos
+    assert cb.extract_completion(raw2, prompt) == "    return a * 2" + nl
+    # no separator anywhere: behavior unchanged from codebench-v1
+    raw3 = prompt + "    return a" + nl + eos
+    assert cb.extract_completion(raw3, prompt) == "    return a" + nl
+    # separator with nothing usable after it -> empty completion
+    assert cb.extract_completion(prompt + sep, prompt) == ""
+    # a task marker inside the post-sep block still cuts (next unit starts)
+    tm = "<|" + "ta" + "sk|>"
+    raw4 = prompt + sep + "    return a" + nl + tm + "next unit"
+    assert cb.extract_completion(raw4, prompt) == "    return a" + nl

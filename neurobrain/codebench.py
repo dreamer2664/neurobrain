@@ -38,9 +38,13 @@ BENCH_DIR = os.path.join(ROOT, "data", "codebench")
 TASK_DIR = os.path.join(BENCH_DIR, "tasks")
 MANIFEST_PATH = os.path.join(BENCH_DIR, "manifest.json")
 
-BENCH_VERSION = "codebench-v1"
+BENCH_VERSION = "codebench-v1.1"
 FIELDS = ("id", "category", "difficulty", "prompt", "fn", "tests", "reference", "timeout_s")
 STOP_MARKERS = ("<|" + "end" + "oftext" + "|>", chr(10) + "def ", chr(10) + "class ", "<|" + "ta" + "sk|>", "<|" + "dri" + "ve|>", "<|" + "u" + "i|>")
+# corpus-v2 models are trained to emit the code-separator special right before
+# a function body (instruction format task...sep...code). The extractor must
+# treat that marker as "code starts here", not as part of the candidate.
+CODE_SEP = "<|" + "co" + "de|>"
 
 
 # ------------------------------------------------------------------ build/pin
@@ -106,13 +110,18 @@ def load_tasks(task_dir: str = TASK_DIR, manifest_path: str = MANIFEST_PATH,
 def extract_completion(text: str, prompt: str) -> str:
     """Cut a raw generation down to the candidate body."""
     comp = text[len(prompt):] if text.startswith(prompt) else text
+    # if the model announced code with the separator marker, the candidate is
+    # whatever follows the LAST such marker (final announced code block)
+    j = comp.rfind(CODE_SEP)
+    if j != -1:
+        comp = comp[j + len(CODE_SEP):]
     cut = len(comp)
     for m in STOP_MARKERS:
         i = comp.find(m)
         if i != -1:
             cut = min(cut, i)
     comp = comp[:cut].rstrip()
-    return comp + "\n" if comp else ""
+    return comp + chr(10) if comp else ""
 
 
 # ------------------------------------------------------------------ execution
