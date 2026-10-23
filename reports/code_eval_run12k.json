@@ -1,0 +1,83 @@
+{
+  "step": 12000,
+  "val_loss": 2.079,
+  "val_ppl": 8.0,
+  "syntax_valid": 0,
+  "syntax_total": 12,
+  "syntax_rate": 0.0,
+  "coherent_rate": 0.0,
+  "samples": [
+    {
+      "prompt": "def add(a, b):\n",
+      "generation": "def add_basic_pad(a, b):\n    \"\"\"\n    This is a additional padding, but the additional padding is a\n    padding.\n\n    The padding is a subset of the padding of the padding.\n    \"\"\"\n    # The padding is a padding of the padding.\n    # The padding is a padding of the padd",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def factorial(n):\n",
+      "generation": "def factorial(n):\n    \"\"\"\n    Return the factorial number of n-1 power of the factorial.\n\n    Examples\n    ========\n\n    >>> from sympy.polys.polynomial importpolys\n    >>> from sympy.polys.polynomial import Kirtistic\n    >>> from sympy import ZZ\n    >>> ZZ(2)\n    (2)\n\n    \"\"\"\n    if not isinstance(n, Number):\n        raise ValueError(\"N",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "class Point:\n    def __init__(self, x, y):\n",
+      "generation": "):\n    if x.ndim == 2:\n        return x.ndim == 3\n    else:\n        return _sympify(x.size())\n\n\ndef _is_normalized_for_nearest_normalized(x, y):\n    if y.ndim == 2:\n        return _sympify(x, y)\n    else:\n        return _sympify(x.size)\n\n\ndef _is_",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def read_file(path):\n",
+      "generation": "\n#-----------------------------------------------------------------------------\n# Imports\n#-----------------------------------------------------------------------------\n\n# Standard library imports\nfrom . import read_file\nfrom . import BaseModel, FileSource\n\nif TYPE_CHECKING:\n    from . import IO, StringIO, StringIO, StringIO\n\n#-----------------------------------------------------------------------------\n# G",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def is_even(n):\n",
+      "generation": "def is_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_even_e",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def main():\n",
+      "generation": "#   # Number of powers of the main\n#   # Some of them:\n#   # Some of the main bottom:\n#   # Some of the main, the main bottom:\n#   # Enter bottom:\n#   # Some of the main bottom:\n#   # Some",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "for i in range(10):\n",
+      "generation": "def _calculate_spectral_frequency(freq, grad, rgb):\n    \"\"\"\n    Calculate the spectral frequency of the Spectral frequency.\n\n    The spectral frequency of the Spectral frequency is solved by the\n    diagonal frequ",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "import json\n\ndef load_config(path):\n",
+      "generation": "\n# The Python ID from the environment to the file name, and the file is extended to the loader.\n#\n# The implementation is included to the file name\n\nimport os\nimport os\nimport sys\nimport sys\nimport signal\nimport os\nimport re\nimport tempfile\nimport re\nimport threading\nimport os\nimport re\nimport time\n",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def bubble_sort(items):\n",
+      "generation": "\n@_onnx_symbolic(\"_\")\ndef _symbolic_helper(expr, l, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r,",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def greet(name):\n",
+      "generation": "\n#-----------------------------------------------------------------------------\n# Imports\n#-----------------------------------------------------------------------------\n\n# Standard library imports\nfrom typing import Any\n\nimport torch\nfrom torch.utils._internal.utils import (\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    AttributeError,\n    AttributeError,\n)\nfrom",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "try:\n    value = int(text)\n",
+      "generation": "\ndef _get_safe_character():\n    return _get_safe_character()\n\ndef _get_safe_character():\n    return _get_safe_character()\n\n\ndef _safe_character():\n    return _get_safe_character()\n\n\ndef _safe_character",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def average(values):\n",
+      "generation": "def _find_sort_values(values):\n    \"\"\"\n    Find a set of values of values.\n\n    Parameters\n    ----------\n    values : array_like\n        The values of values.\n    values : array_like\n        Input array.\n    values : array_like\n        Input array.\n    values : array_like\n        Input array.\n    values : array_like\n        Input array.\n    values : array_like\n        Input array.\n   ",
+      "parses": false,
+      "parsing_fraction": 0.0
+    }
+  ]
+}

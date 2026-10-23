@@ -1,0 +1,17 @@
+{
+ "kind": "lm",
+ "name": "run12k",
+ "vocab_size": 2052,
+ "n_layer": 6,
+ "n_head": 7,
+ "d_model": 224,
+ "ctx": 256,
+ "tie_embeddings": true,
+ "step": 12000,
+ "params": 4247264,
+ "tokenizer_sha256": "198316dfad27b115e58868edc9b850e58ad23ebf596aed063aec023c8f30f8ab",
+ "weights_sha256": "d09cfd37f5bbaa7319787e76fe998ee0abee2f24b3325667fb04295abd4db6ff",
+ "source_ckpt_sha256": "7f0a17fc42182623190ab9b7c2897dfc2a931e341b04a8165764827fd28e7b7c",
+ "packed_utc": "2026-10-23T00:53:24Z"
+}
+[pack] wrote /home/user/neurobrain/checkpoints/run12k

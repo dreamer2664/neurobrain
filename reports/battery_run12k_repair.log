@@ -1,0 +1,20 @@
+{
+ "utc": "2026-10-23T00:53:23Z",
+ "ckpt": "checkpoints/run12k/lm_best.pt",
+ "ckpt_sha256": "7f0a17fc42182623190ab9b7c2897dfc2a931e341b04a8165764827fd28e7b7c",
+ "step": 12000,
+ "decode": {
+  "temperature": 0.8,
+  "top_k": 40,
+  "seed": 0
+ },
+ "n_tasks": 49,
+ "first_pass": 0,
+ "failed_first": 49,
+ "repaired": 2,
+ "repair_rate": 0.0408,
+ "final_pass": 0.0408,
+ "seconds": 22.5,
+ "peak_rss_mb": 267.1
+}
+[repair] wrote reports/self_repair_run12k.json

@@ -1,0 +1,40 @@
+{
+  "step": 12000,
+  "terminal_rate": 1.0,
+  "retry_after_failure": 1.0,
+  "honest_completion": 1.0,
+  "mean_steps": 2.7,
+  "n": 48,
+  "examples": [
+    {
+      "objective": "<|drive|>objective: drag the cart slider",
+      "terminal": true,
+      "text": "<|step|>1<|act|>click(945,480)<|obs|>icon play selected<|check|>objective not satisfied: wrong element<|retry|>that was play, not cart. target the slider labelled cart<|step|>2<|act|>drag(1440,1740)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, cart<|step|>3<|act|>drag(1425,1110)<|obs|>slider cart moved to 70%<|check|>obje"
+    },
+    {
+      "objective": "<|drive|>objective: check cart",
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(450,450)<|obs|>checkbox submit is now off<|check|>objective not satisfied: wrong element<|retry|>that was submit, not cart. target the checkbox labelled cart<|step|>2<|act|>toggle(1455,1455)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, cart<|step|>3<|act|>toggle(1455,1440)<|obs|>checkbox cart is n"
+    },
+    {
+      "objective": "<|drive|>objective: drag the settings slider",
+      "terminal": true,
+      "text": "<|step|>1<|act|>drag(930,540)<|obs|>slider filter moved to 0%<|check|>objective not satisfied: wrong element<|retry|>that was filter, not settings. target the slider labelled settings<|step|>2<|act|>drag(465,525)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, settings<|step|>3<|act|>drag(945,450)<|obs|>slider settings moved"
+    },
+    {
+      "objective": "<|drive|>objective: type into the upload field",
+      "terminal": true,
+      "text": "<|step|>1<|act|>type(1440,1455)<|obs|>caret blinking in download field<|check|>objective not satisfied: wrong element<|retry|>that was download, not upload. target the field labelled upload<|step|>2<|act|>type(495,840)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the field, upload<|step|>3<|act|>type(1470,465)<|obs|>caret blinking in"
+    },
+    {
+      "objective": "<|drive|>objective: turn on archive",
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(945,1440)<|obs|>checkbox archive is now off<|check|>objective not satisfied: wrong element<|retry|>that was archive, not archive. target the checkbox labelled archive<|step|>2<|act|>toggle(450,1140)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, archive<|step|>3<|act|>toggle(930,1485)<|obs|>checkbox"
+    },
+    {
+      "objective": "<|drive|>objective: open the print tab",
+      "terminal": true,
+      "text": "<|step|>1<|act|>click(405,780)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the tab, print<|step|>2<|act|>click(1500,1440)<|obs|>tab print is active<|check|>objective satisfied<|done|>success"
+    }
+  ]
+}
