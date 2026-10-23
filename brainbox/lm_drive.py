@@ -67,7 +67,7 @@ def parse_terminal(text: str) -> str | None:
 class LMDriver:
     """One task, step by step, with the runtime owning observation and verdict."""
 
-    TAIL_CHARS = 600   # ~150 tokens of recent history; the head is never dropped
+    TAIL_CHARS = 1400  # as much recent history as the budget allows; head kept
 
     def __init__(self, host, max_steps: int = 8, max_tokens: int = 40,
                  temperature: float = 0.0, top_k: int = 1, seed: int | None = 7):
@@ -91,10 +91,11 @@ class LMDriver:
         executed = 0
         last_point = None
         terminal: dict | None = None
+        pending_retry = ""   # the model's own <|retry|> line, kept as a hint
 
         def push_step(text: str) -> None:
             nonlocal tail
-            tail = text[-self.TAIL_CHARS:]
+            tail = (tail + text)[-self.TAIL_CHARS:]
 
         def prompt_now() -> str:
             # order matches the training data exactly: ... check ... scan -> step.
@@ -109,7 +110,9 @@ class LMDriver:
                 while parts and len(self.host.tok.encode("; ".join(parts))) > budget:
                     parts.pop()
                 return head + "; ".join(parts)
-            return head + tail + scan_now
+            # the corpus puts <|retry|> after the scan and before the next step,
+            # so the model's own retry sentence has to keep that exact position
+            return head + tail + scan_now + pending_retry
 
         for step in range(1, self.max_steps + 1):
             out = self.host.generate(prompt_now(), max_tokens=self.max_tokens,
@@ -137,12 +140,22 @@ class LMDriver:
                 break
 
             if act is None:
+                retry_at = comp.find("<|retry|>")
+                if retry_at >= 0 and not pending_retry:
+                    # the brain said what it wants to do differently. The corpus
+                    # always follows such a line with an action; let it stand
+                    # instead of overwriting it with "no action taken", which is
+                    # a sentence it has never been trained on.
+                    pending_retry = comp[retry_at:retry_at + 220].strip()
+                    pending_retry = pending_retry.split("<|step|>")[0].split("<|act|>")[0]
+                    transcript.append(pending_retry)
+                    continue
                 push_step("<|obs|>no action taken<|check|>objective not satisfied")
                 scan_now = scan_from_obs(world.observe())
                 transcript.append(comp.strip())
-                continue
 
             executed += 1
+            pending_retry = ""   # the hint is spent once an action is taken
             before = world.observe()
             same = act["protocol_point"] == last_point
             last_point = act["protocol_point"]
