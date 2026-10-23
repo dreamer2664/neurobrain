@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-theme="pulse">
+<html lang="en" data-theme="linen">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#080a0f">
-  <meta name="description" content="Neurobrain — a private, local brain for your computer. Three responsive UI concepts for desktop and mobile.">
-  <title>Neurobrain — Neural Command Center</title>
+  <meta name="theme-color" content="#f4f3f1">
+  <meta name="description" content="Neurobrain Atelier — a calm, local desktop companion for verified computer tasks.">
+  <title>Neurobrain Atelier — Overview</title>
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
@@ -16,246 +16,184 @@
 
   <svg class="svg-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-logo" viewBox="0 0 48 48">
-      <path d="M23.8 8.2c-2.7-3.3-8.5-2.4-9.4 1.5-4.6-.9-8.1 4.2-5.7 8.1-4.1 2.3-3.5 8.5.8 10.1-1 4.7 4.4 8 8.3 5.5 1.2 4 6.7 4.5 8.4 1.1V14.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M25.2 8.2c2.7-3.3 8.5-2.4 9.4 1.5 4.6-.9 8.1 4.2 5.7 8.1 4.1 2.3 3.5 8.5-.8 10.1 1 4.7-4.4 8-8.3 5.5-1.2 4-6.7 4.5-8.4 1.1V14.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M14.4 10.2v7.1l5.1 3.4M8.8 18l6.9 2.5-3.1 7.4m11.2-14v8.4l-4.3 5.5m15-17.6v7.1l-5.1 3.4m10.7-2.2-6.9 2.5 3.1 7.4m-11.2-14v8.4l4.3 5.5M18.5 33.4l3.6-4.2h5.8l3.6 4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="14.4" cy="17.3" r="1.5" fill="currentColor"/><circle cx="34.6" cy="17.3" r="1.5" fill="currentColor"/>
-      <circle cx="12.6" cy="27.9" r="1.5" fill="currentColor"/><circle cx="36.4" cy="27.9" r="1.5" fill="currentColor"/>
-      <circle cx="24" cy="29.2" r="1.8" fill="currentColor"/>
+      <path d="M23.8 8.2c-2.7-3.3-8.5-2.4-9.4 1.5-4.6-.9-8.1 4.2-5.7 8.1-4.1 2.3-3.5 8.5.8 10.1-1 4.7 4.4 8 8.3 5.5 1.2 4 6.7 4.5 8.4 1.1V14.2M25.2 8.2c2.7-3.3 8.5-2.4 9.4 1.5 4.6-.9 8.1 4.2 5.7 8.1 4.1 2.3 3.5 8.5-.8 10.1 1 4.7-4.4 8-8.3 5.5-1.2 4-6.7 4.5-8.4 1.1V14.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+      <path d="M14.4 10.2v7.1l5.1 3.4M8.8 18l6.9 2.5-3.1 7.4m11.2-14v8.4l-4.3 5.5m15-17.6v7.1l-5.1 3.4m10.7-2.2-6.9 2.5 3.1 7.4m-11.2-14v8.4l4.3 5.5M18.5 33.4l3.6-4.2h5.8l3.6 4.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="14.4" cy="17.3" r="1.5" fill="currentColor"/><circle cx="34.6" cy="17.3" r="1.5" fill="currentColor"/><circle cx="12.6" cy="27.9" r="1.5" fill="currentColor"/><circle cx="36.4" cy="27.9" r="1.5" fill="currentColor"/><circle cx="24" cy="29.2" r="1.8" fill="currentColor"/>
     </symbol>
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 9.5 12 3l8 6.5v10a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 9.5 12 3l8 6.5v10a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5zM9 21v-7h6v7"/></symbol>
     <symbol id="i-tasks" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="m8 9 1.5 1.5L12 7m-4 7 1.5 1.5L12 13m3-4h2m-2 6h2"/></symbol>
     <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l2.3-7 4.2 14 2.3-7H21"/></symbol>
-    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5.2A4 4 0 0 0 4.6 6.8 3.6 3.6 0 0 0 3 13a4 4 0 0 0 3.2 6.1A3.5 3.5 0 0 0 12 18zm0 0a4 4 0 0 1 7.4 1.6A3.6 3.6 0 0 1 21 13a4 4 0 0 1-3.2 6.1A3.5 3.5 0 0 1 12 18z"/><path d="M7 9.5h2.5V13m7.5-3.5h-2.5V13M8 17l2-2m6 2-2-2M12 5v13"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5.2A4 4 0 0 0 4.6 6.8 3.6 3.6 0 0 0 3 13a4 4 0 0 0 3.2 6.1A3.5 3.5 0 0 0 12 18zm0 0a4 4 0 0 1 7.4 1.6A3.6 3.6 0 0 1 21 13a4 4 0 0 1-3.2 6.1A3.5 3.5 0 0 1 12 18zM7 9.5h2.5V13m7.5-3.5h-2.5V13M8 17l2-2m6 2-2-2M12 5v13"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
-    <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
-    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7m-4 10h-2"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 8 7.5 9.5 4.3-1.5 7.5-4.7 7.5-9.5V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></symbol>
-    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="m20 11-8 8a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/></symbol>
-    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0m-7 7v3m-4 0h8"/></symbol>
-    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
     <symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5m-5-5h9a6 6 0 0 1 6 6v1"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
-    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H10l2 2h7.5A1.5 1.5 0 0 1 21 8.5v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></symbol>
-    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></symbol>
-    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6m-6 4h6"/></symbol>
-    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
-    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v3m6-3v3M9 20v3m6-3v3M20 9h3m-3 6h3M1 9h3m-3 6h3M10 10h4v4h-4z"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><path d="m10 14 4-4m-6.5 6.5-1 1a3.5 3.5 0 0 1-5-5l4-4a3.5 3.5 0 0 1 5 0m3-3 1-1a3.5 3.5 0 0 1 5 5l-4 4a3.5 3.5 0 0 1-5 0" transform="translate(1 0)"/></symbol>
-    <symbol id="i-command" viewBox="0 0 24 24"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z"/></symbol>
   </svg>
 
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Primary navigation">
-      <button class="brand" data-nav="overview" aria-label="Neurobrain overview">
-        <span class="brand-mark"><svg><use href="#i-logo"></use></svg></span>
-        <span class="brand-type">NEURO<span>BRAIN</span><small>LOCAL INTELLIGENCE</small></span>
+    <aside class="rail" aria-label="Primary navigation">
+      <button class="rail-brand" data-nav="overview" aria-label="Neurobrain Atelier overview" data-tooltip="Neurobrain Atelier">
+        <svg><use href="#i-logo"></use></svg>
       </button>
-
-      <button class="workspace-switch" data-action="workspace">
-        <span class="workspace-icon">NB</span>
-        <span><small>WORKSPACE</small><strong>My computer</strong></span>
-        <svg class="icon"><use href="#i-down"></use></svg>
-      </button>
-
-      <div class="nav-label">CONTROL ROOM</div>
-      <nav class="side-nav">
-        <button class="nav-item active" data-nav="overview"><svg class="icon"><use href="#i-home"></use></svg><span>Overview</span><kbd>1</kbd></button>
-        <button class="nav-item" data-nav="tasks"><svg class="icon"><use href="#i-tasks"></use></svg><span>Tasks</span><span class="nav-count" id="nav-task-count">3</span></button>
-        <button class="nav-item" data-nav="activity"><svg class="icon"><use href="#i-activity"></use></svg><span>Activity</span></button>
-        <button class="nav-item" data-nav="brain"><svg class="icon"><use href="#i-brain"></use></svg><span>The brain</span><span class="tiny-dot"></span></button>
+      <nav class="rail-nav">
+        <button class="rail-item active" data-nav="overview" aria-label="Overview" data-tooltip="Overview"><svg class="icon"><use href="#i-home"></use></svg></button>
+        <button class="rail-item" data-nav="tasks" aria-label="Objectives" data-tooltip="Objectives"><svg class="icon"><use href="#i-tasks"></use></svg><span class="rail-count" id="rail-task-count">1</span></button>
+        <button class="rail-item" data-nav="activity" aria-label="Activity" data-tooltip="Activity"><svg class="icon"><use href="#i-activity"></use></svg></button>
+        <button class="rail-item" data-nav="brain" aria-label="The brain" data-tooltip="The brain"><svg class="icon"><use href="#i-brain"></use></svg></button>
       </nav>
-
-      <div class="sidebar-spacer"></div>
-      <div class="privacy-card">
-        <div class="privacy-orbit"><svg class="icon"><use href="#i-shield"></use></svg></div>
-        <strong>Private by architecture</strong>
-        <p>Your screen and data stay here.<br>No cloud. No pretrained models.</p>
-        <span><i></i> 0 external calls</span>
-      </div>
-      <button class="nav-item settings-link" data-action="open-settings"><svg class="icon"><use href="#i-settings"></use></svg><span>Runtime settings</span></button>
-      <div class="profile">
-        <div class="avatar">A</div><div><strong>Alex</strong><span>Local operator</span></div><svg class="icon"><use href="#i-more"></use></svg>
-      </div>
+      <div class="rail-spacer"></div>
+      <button class="rail-item" data-nav="settings" aria-label="Settings" data-tooltip="Settings"><svg class="icon"><use href="#i-settings"></use></svg></button>
+      <div class="rail-avatar" title="Alex · Local operator" aria-label="Alex, local operator">A</div>
     </aside>
 
     <div class="workspace">
       <header class="topbar">
-        <button class="mobile-brand" data-nav="overview" aria-label="Neurobrain overview">
-          <span class="brand-mark"><svg><use href="#i-logo"></use></svg></span>
-          <span>NEUROBRAIN</span>
-        </button>
-        <div class="topbar-context">
-          <span id="context-label">COMMAND CENTER</span>
-          <span class="context-divider">/</span>
-          <span id="date-label">FRIDAY, 23 OCTOBER</span>
-        </div>
-        <div class="top-actions">
-          <div class="concept-switch" role="group" aria-label="Design concept">
-            <button class="active" data-theme-choice="pulse" aria-pressed="true"><i></i><span>Pulse</span></button>
-            <button data-theme-choice="atelier" aria-pressed="false"><i></i><span>Atelier</span></button>
-            <button data-theme-choice="terminal" aria-pressed="false"><i></i><span>Terminal</span></button>
-          </div>
-          <button class="runtime-pill" data-action="open-settings"><span class="status-dot"></span><span id="runtime-label">Demo workspace</span><svg class="icon"><use href="#i-chevron"></use></svg></button>
-          <button class="icon-button notification-button" data-action="notifications" aria-label="Notifications"><svg class="icon"><use href="#i-bell"></use></svg><i></i></button>
-        </div>
+        <button class="mobile-brand" data-nav="overview" aria-label="Neurobrain Atelier overview"><svg><use href="#i-logo"></use></svg><strong>Neurobrain Atelier</strong></button>
+        <div class="product-scope"><strong>Neurobrain Atelier</strong><span>/</span><button data-action="workspace">My computer<svg class="icon"><use href="#i-down"></use></svg></button></div>
+        <div class="top-actions"><button class="runtime-link" data-nav="settings"><span class="status-dot"></span><span id="runtime-label">Demo runtime</span></button></div>
       </header>
 
       <main id="main-content" tabindex="-1">
-        <section class="view-panel active" data-panel="overview" aria-labelledby="hero-title">
-          <div class="welcome-row">
-            <div>
-              <p class="eyebrow" id="hero-eyebrow"><span></span> NEURAL COMMAND CENTER</p>
-              <h1 id="hero-title">Give your ideas a pair of hands.</h1>
-              <p class="hero-copy" id="hero-copy">A private, local brain that sees your screen, takes action, and checks its work.</p>
-            </div>
-            <button class="button button-secondary new-task-button" data-action="new-task"><svg class="icon"><use href="#i-plus"></use></svg>New objective</button>
+        <section class="view-panel active" data-panel="overview" aria-labelledby="overview-title">
+          <div class="page-title-row">
+            <div><h1 id="overview-title">Overview</h1><p id="overview-finding">Research is comparing source 2 of 3. Everything runs on this machine.</p></div>
+            <span class="quiet-note">Sample workspace</span>
           </div>
 
-          <div class="dashboard-grid">
-            <div class="primary-column">
-              <section class="composer-card" aria-label="Create a new objective">
-                <div class="composer-glow"></div>
-                <div class="composer-heading">
-                  <span><svg class="icon"><use href="#i-command"></use></svg> NEW OBJECTIVE</span>
-                  <span class="local-only"><svg class="icon"><use href="#i-shield"></use></svg> LOCAL ONLY</span>
-                </div>
+          <div class="overview-grid">
+            <div class="overview-main">
+              <section class="composer" aria-labelledby="composer-title">
+                <div class="section-head"><h2 id="composer-title">New objective</h2><span>Local only</span></div>
                 <label class="sr-only" for="objective-input">What should Neurobrain do?</label>
                 <textarea id="objective-input" rows="2" maxlength="500" spellcheck="true">Research the boiling point of water and save a short note in Docs</textarea>
-                <div class="suggestion-row" aria-label="Suggested objectives">
-                  <button data-suggestion="Organise my Downloads folder and move old installers to trash">Clean up Downloads</button>
-                  <button data-suggestion="Scaffold a Flask app, run the tests, and show me the results">Scaffold an app</button>
-                  <button data-suggestion="Summarise my meeting notes into clear action items">Summarise notes</button>
-                </div>
-                <div class="composer-footer">
-                  <div class="composer-tools">
-                    <button class="icon-button" data-action="attach" aria-label="Attach context"><svg class="icon"><use href="#i-paperclip"></use></svg></button>
-                    <button class="icon-button" data-action="voice" aria-label="Dictate objective"><svg class="icon"><use href="#i-mic"></use></svg></button>
-                    <span class="budget-label"><i></i> 40 steps <b>·</b> 5 min</span>
-                  </div>
-                  <button class="button run-button" id="run-objective"><span>Run objective</span><svg class="icon"><use href="#i-arrow-up"></use></svg></button>
-                </div>
+                <div class="suggestions"><span>Try</span><button data-suggestion="Organise my Downloads folder and move old installers to trash">Clean up Downloads</button><button data-suggestion="Scaffold a Flask app, run the tests, and show me the results">Scaffold an app</button><button data-suggestion="Summarise my meeting notes into clear action items">Summarise notes</button></div>
+                <div class="composer-footer"><span id="budget-label">40 steps · 5 minutes</span><button class="button button-primary" id="run-objective">Start objective<svg class="icon"><use href="#i-arrow"></use></svg></button></div>
               </section>
 
-              <section class="tasks-section" aria-labelledby="active-tasks-title">
-                <div class="section-heading">
-                  <div><h2 id="active-tasks-title">In motion</h2><span class="count-badge" id="active-count">3</span></div>
-                  <button class="text-button" data-nav="tasks">View all tasks<svg class="icon"><use href="#i-arrow"></use></svg></button>
-                </div>
+              <section class="objectives-section" aria-labelledby="current-objectives-title">
+                <div class="section-head"><div><h2 id="current-objectives-title">Current objectives</h2><span id="active-summary">1 active</span></div><button class="text-button" data-nav="tasks">View all<svg class="icon"><use href="#i-arrow"></use></svg></button></div>
                 <div class="task-list" id="overview-task-list"></div>
               </section>
             </div>
 
-            <div class="right-column">
-              <section class="neural-card" aria-labelledby="neural-field-title">
-                <div class="neural-header">
-                  <div><span class="section-kicker">LIVE TOPOLOGY</span><h2 id="neural-field-title">Neural field</h2></div>
-                  <span class="live-badge"><i></i> ACTIVE</span>
-                </div>
-                <div class="neural-visual" id="neural-visual">
-                  <canvas id="neural-canvas" aria-hidden="true"></canvas>
-                  <div class="neural-rings" aria-hidden="true"><i></i><i></i><i></i></div>
-                  <div class="neural-core">
-                    <svg><use href="#i-logo"></use></svg>
-                    <span>READY</span>
+            <aside class="overview-side" aria-label="Current runtime details">
+              <section class="observation-card" aria-labelledby="observation-title">
+                <div class="section-head"><h2 id="observation-title">Latest observation</h2><span class="task-id" id="observation-task-id">t-0248 · step 8</span></div>
+                <div class="grounding-shot" id="grounding-shot">
+                  <div class="mock-browser-bar"><span></span><div>reference.local/water</div></div>
+                  <div class="mock-page">
+                    <h3>Boiling point of water</h3>
+                    <p>100 °C at standard atmospheric pressure.</p>
+                    <div class="grounded-row"><span>Read the summary</span><svg class="icon"><use href="#i-chevron"></use></svg></div>
                   </div>
-                  <span class="field-note note-lm"><i></i>LM <b>4.25M</b></span>
-                  <span class="field-note note-grip"><i></i>GRIP <b>0.44M</b></span>
-                  <span class="field-note note-cpu"><i></i>CPU <b>2 THREADS</b></span>
                 </div>
-                <div class="neural-stats">
-                  <div><span>CHECKPOINT</span><strong>18.6k<small>step</small></strong></div>
-                  <div><span>MEMORY</span><strong>312<small>MB</small></strong></div>
-                  <div><span>EXTERNAL</span><strong>0<small>calls</small></strong></div>
+                <div class="observation-details" id="observation-details">
+                  <div><span>Verified</span><strong>Source 2 opened · click(812, 405)</strong></div>
                 </div>
               </section>
 
-              <section class="system-card" aria-labelledby="system-title">
-                <div class="system-heading"><div><span class="section-kicker">THIS MACHINE</span><h2 id="system-title">Quietly capable.</h2></div><svg class="icon"><use href="#i-cpu"></use></svg></div>
-                <div class="meter-row"><span>Memory envelope</span><strong>312 MB <small>/ 3.8 GB</small></strong></div>
-                <div class="memory-track"><i></i></div>
-                <div class="system-footer"><span><i class="ok-dot"></i> All systems local</span><button class="text-button" data-nav="brain">Inspect<svg class="icon"><use href="#i-chevron"></use></svg></button></div>
+              <section class="runtime-card" aria-labelledby="runtime-card-title">
+                <div class="section-head"><h2 id="runtime-card-title">Brainbox</h2><button class="text-button" data-nav="brain">Details<svg class="icon"><use href="#i-chevron"></use></svg></button></div>
+                <dl class="runtime-facts"><div><dt>Checkpoint</dt><dd>18,600</dd></div><div><dt>Language model</dt><dd>4.25M</dd></div><div><dt>Vision grounder</dt><dd>0.44M</dd></div><div><dt>Vocabulary</dt><dd>2,048 tokens</dd></div><div><dt>CPU threads</dt><dd>2</dd></div><div><dt>External calls</dt><dd>0</dd></div></dl>
+                <div class="memory-label"><span>Memory envelope</span><strong>8%</strong></div>
+                <div class="memory-track" role="meter" aria-label="Memory used" aria-valuemin="0" aria-valuemax="3800" aria-valuenow="312"><i></i></div>
+                <div class="memory-endpoints"><span>312 MB used</span><span>3.8 GB cap</span></div>
               </section>
-            </div>
+            </aside>
           </div>
         </section>
 
         <section class="view-panel" data-panel="tasks" aria-labelledby="tasks-title" hidden>
-          <div class="page-heading">
-            <div><p class="eyebrow"><span></span> OBJECTIVE QUEUE</p><h1 id="tasks-title">Every task. Every step.</h1><p>Watch the plan unfold, pause at any moment, or roll back recoverable changes.</p></div>
-            <button class="button" data-action="new-task"><svg class="icon"><use href="#i-plus"></use></svg>New objective</button>
-          </div>
-          <div class="filter-bar" role="group" aria-label="Filter tasks">
-            <button class="active" data-filter="all">All <span id="filter-all-count">3</span></button>
-            <button data-filter="working">Active</button><button data-filter="queued">Queued</button><button data-filter="done">Completed</button>
-            <div class="filter-spacer"></div><span class="undo-note"><svg class="icon"><use href="#i-undo"></use></svg> Recoverable actions keep an undo trail</span>
-          </div>
+          <div class="page-title-row"><div><h1 id="tasks-title">Objectives</h1><p id="objectives-summary">1 active · 1 queued · 1 complete</p></div><button class="button button-primary" data-action="new-task"><svg class="icon"><use href="#i-plus"></use></svg>New objective</button></div>
+          <div class="filter-bar" role="group" aria-label="Filter objectives"><button class="active" data-filter="all">All</button><button data-filter="working">Active</button><button data-filter="queued">Queued</button><button data-filter="done">Completed</button><span class="filter-note"><svg class="icon"><use href="#i-undo"></use></svg>Recoverable actions keep an undo trail</span></div>
           <div class="task-list task-list-full" id="full-task-list"></div>
         </section>
 
         <section class="view-panel" data-panel="activity" aria-labelledby="activity-title" hidden>
-          <div class="page-heading"><div><p class="eyebrow"><span></span> VERIFIED EVENT LOG</p><h1 id="activity-title">Nothing happens in the dark.</h1><p>A legible trail of observations, actions, checks, and recoveries.</p></div><span class="local-only big"><svg class="icon"><use href="#i-shield"></use></svg> APPEND-ONLY HISTORY</span></div>
+          <div class="page-title-row"><div><h1 id="activity-title">Activity</h1><p>A readable record of observations, actions, checks, and recoveries.</p></div><span class="quiet-note">Append-only history</span></div>
           <div class="activity-layout">
-            <section class="activity-feed-card"><div class="section-heading"><h2>Today</h2><span class="live-badge"><i></i> LIVE</span></div><div class="activity-feed" id="activity-feed"></div></section>
-            <aside class="principles-card"><span class="section-kicker">THE DRIVE LOOP</span><h2>Observe before acting.<br>Verify before claiming.</h2><div class="loop-diagram"><div><b>01</b><span>Observe<small>Read the screen</small></span></div><i></i><div><b>02</b><span>Act<small>One clear step</small></span></div><i></i><div><b>03</b><span>Verify<small>Check the result</small></span></div><i></i><div><b>04</b><span>Recover<small>Retry with context</small></span></div></div></aside>
+            <section class="activity-card"><div class="section-head"><h2>Today</h2><span id="activity-count">5 events</span></div><div class="activity-feed" id="activity-feed"></div></section>
+            <aside class="policy-card"><h2>Run policy</h2><p>Every action has evidence before it and a check after it.</p><dl><div><dt>Observe</dt><dd>Before every action</dd></div><div><dt>Verify</dt><dd>After every action</dd></div><div><dt>Retry ladder</dt><dd>2 failed rungs</dd></div><div><dt>Default budget</dt><dd id="policy-budget">40 steps · 5 minutes</dd></div><div><dt>Destructive steps</dt><dd>Snapshot first</dd></div></dl></aside>
           </div>
         </section>
 
         <section class="view-panel" data-panel="brain" aria-labelledby="brain-title" hidden>
-          <div class="page-heading"><div><p class="eyebrow"><span></span> BUILT FROM SCRATCH</p><h1 id="brain-title">Small brain. Honest numbers.</h1><p>No pretrained weights, external models, or hidden cloud calls. Just two networks learning in public.</p></div><span class="checkpoint-chip">CHECKPOINT · STEP 18,600</span></div>
-          <div class="metric-grid">
-            <article class="metric-card"><span>QUESTION ANSWERING</span><strong>98<small>%</small></strong><p>49 / 50 on the trained curriculum</p><div class="metric-bar"><i style="width:98%"></i></div></article>
-            <article class="metric-card"><span>VISUAL GROUNDING</span><strong>88<small>%</small></strong><p>Widget hit rate · GripNet evaluation</p><div class="metric-bar"><i style="width:88%"></i></div></article>
-            <article class="metric-card warning"><span>RESEARCH + REPORT</span><strong>30<small>%</small></strong><p>6 / 20 runtime-verified episodes</p><div class="metric-bar"><i style="width:30%"></i></div></article>
-            <article class="metric-card"><span>MEMORY CEILING</span><strong>3.8<small>GB</small></strong><p>Hard governor · CPU-only deployment</p><div class="metric-bar"><i style="width:12%"></i></div></article>
-          </div>
-          <div class="architecture-card">
-            <div class="section-heading"><div><span class="section-kicker">TWO NETWORKS · ONE RUNTIME</span><h2>Architecture at a glance</h2></div><span class="local-only"><svg class="icon"><use href="#i-shield"></use></svg> FULLY LOCAL</span></div>
-            <div class="architecture-flow">
-              <article><div class="architecture-icon"><svg class="icon"><use href="#i-doc"></use></svg></div><span>LANGUAGE BRAIN</span><h3>4.25M parameters</h3><p>6-layer decoder-only transformer<br>2048-token byte-level BPE</p><code>prompt → next token</code></article>
-              <div class="flow-link"><i></i><svg class="icon"><use href="#i-arrow"></use></svg><small>brainbox</small></div>
-              <article><div class="architecture-icon"><svg class="icon"><use href="#i-eye"></use></svg></div><span>VISUAL BRAIN</span><h3>0.44M parameters</h3><p>Instruction-conditioned CNN<br>128 × 128 visual grounding</p><code>screen + intent → x, y</code></article>
-              <div class="flow-link"><i></i><svg class="icon"><use href="#i-arrow"></use></svg><small>verify</small></div>
-              <article><div class="architecture-icon"><svg class="icon"><use href="#i-command"></use></svg></div><span>ACTION LOOP</span><h3>Observe → act → check</h3><p>Budgeted steps and retries<br>Append-only, undoable history</p><code>objective → terminal record</code></article>
+          <div class="page-title-row"><div><h1 id="brain-title">The brain</h1><p>Two small models, trained from scratch, with their measured limits left visible.</p></div><span class="quiet-note">Snapshot · 23 Oct 2026</span></div>
+          <section class="metric-strip" aria-label="Evaluation snapshot">
+            <article><span>Trained-curriculum QA</span><strong>98<small>%</small></strong><p>49 of 50 questions</p></article>
+            <article><span>Widget hit rate</span><strong>88<small>%</small></strong><p>GripNet evaluation</p></article>
+            <article><span>Research + report</span><strong>30<small>%</small></strong><p>6 of 20 verified runs</p></article>
+            <article><span>Memory ceiling</span><strong>3.8<small>GB</small></strong><p>Hard RAM governor</p></article>
+          </section>
+          <section class="components-card" aria-labelledby="components-title"><div class="section-head"><h2 id="components-title">Components</h2><span>CPU only</span></div>
+            <div class="component-table" role="table" aria-label="Neurobrain components">
+              <div class="component-row component-header" role="row"><span role="columnheader">Component</span><span role="columnheader">Size</span><span role="columnheader">Role</span></div>
+              <div class="component-row" role="row"><strong role="cell">Language model</strong><span role="cell" class="num">4.25M</span><span role="cell">6-layer transformer · 2048-token BPE</span></div>
+              <div class="component-row" role="row"><strong role="cell">Vision grounder</strong><span role="cell" class="num">0.44M</span><span role="cell">Instruction-conditioned CNN · 128 × 128</span></div>
+              <div class="component-row" role="row"><strong role="cell">Brainbox runtime</strong><span role="cell" class="num">2 threads</span><span role="cell">Observe, act, verify, recover, undo</span></div>
             </div>
+          </section>
+          <p class="metrics-note">These are specific evaluation results, not a general capability claim. Research + report remains the weakest measured skill in this snapshot.</p>
+        </section>
+
+        <section class="view-panel" data-panel="settings" aria-labelledby="settings-title" hidden>
+          <div class="page-title-row"><div><h1 id="settings-title">Settings</h1><p>Appearance, objective defaults, and the runtime on this device.</p></div><span class="saved-stamp" id="settings-saved" aria-live="polite"></span></div>
+          <div class="settings-sections">
+            <section class="settings-section" aria-labelledby="appearance-title">
+              <div class="settings-copy"><h2 id="appearance-title">Colour theme</h2><p>Choose an Atelier palette. The layout stays the same; colour remains on your data.</p><span id="theme-summary">Linen · stone and forest</span></div>
+              <div class="settings-panel">
+                <div class="theme-grid" role="group" aria-label="Atelier colour theme">
+                  <button class="theme-option active" data-theme-choice="linen" aria-pressed="true"><span class="theme-swatches"><i style="background:#f4f3f1"></i><i style="background:#20211f"></i><i style="background:#2f6f59"></i></span><span class="theme-option-copy"><strong>Linen</strong><small>Stone and forest</small></span><svg class="icon"><use href="#i-check"></use></svg></button>
+                  <button class="theme-option" data-theme-choice="mist" aria-pressed="false"><span class="theme-swatches"><i style="background:#f2f4f7"></i><i style="background:#182028"></i><i style="background:#1d5fbf"></i></span><span class="theme-option-copy"><strong>Mist</strong><small>Blue-grey and cobalt</small></span><svg class="icon"><use href="#i-check"></use></svg></button>
+                  <button class="theme-option" data-theme-choice="rose" aria-pressed="false"><span class="theme-swatches"><i style="background:#f6f3f4"></i><i style="background:#282126"></i><i style="background:#9c3f62"></i></span><span class="theme-option-copy"><strong>Rose</strong><small>Neutral rose and raspberry</small></span><svg class="icon"><use href="#i-check"></use></svg></button>
+                  <button class="theme-option" data-theme-choice="ink" aria-pressed="false"><span class="theme-swatches"><i style="background:#101111"></i><i style="background:#f5f5f2"></i><i style="background:#8fb8a2"></i></span><span class="theme-option-copy"><strong>Ink</strong><small>Neutral dark and sage</small></span><svg class="icon"><use href="#i-check"></use></svg></button>
+                </div>
+                <div class="appearance-preview"><span>Preview</span><div class="preview-objective"><div><strong>Research summary</strong><span class="num">68%</span></div><div class="preview-track"><i></i></div><p>Source 2 of 3 · saved locally</p></div></div>
+              </div>
+            </section>
+
+            <section class="settings-section" aria-labelledby="defaults-title">
+              <div class="settings-copy"><h2 id="defaults-title">Objective defaults</h2><p>Applied to new objectives. Existing runs keep their original budget.</p><span>Changes save automatically</span></div>
+              <div class="settings-panel preference-panel">
+                <div class="field-row"><label for="default-steps">Step budget<select id="default-steps"><option value="20">20 steps</option><option value="40" selected>40 steps</option><option value="60">60 steps</option></select></label><label for="default-minutes">Time limit<select id="default-minutes"><option value="2">2 minutes</option><option value="5" selected>5 minutes</option><option value="10">10 minutes</option></select></label></div>
+                <label class="switch-row" for="reduce-motion"><span><strong>Reduce motion</strong><small>Use immediate transitions throughout Atelier.</small></span><input id="reduce-motion" type="checkbox" role="switch"><i aria-hidden="true"></i></label>
+              </div>
+            </section>
+
+            <section class="settings-section" aria-labelledby="connection-title">
+              <div class="settings-copy"><h2 id="connection-title">Local runtime</h2><p>Connect through the included same-origin proxy. Brainbox stays bound to loopback.</p><span id="settings-runtime-summary">No runtime connected</span></div>
+              <div class="settings-panel">
+                <label class="field-label" for="api-base">Proxy endpoint</label>
+                <div class="connection-field"><input id="api-base" value="/api" autocomplete="off"><button class="button button-primary" id="test-connection">Test connection</button></div>
+                <div class="connection-result" id="connection-result"><span class="status-dot"></span><span>Demo data is shown. No runtime requests have been made.</span></div>
+                <div class="runtime-boundary"><strong>Prototype boundary</strong><p>Objective execution is simulated in this design release. The adapter exposes real health, generate, score, and ground requests when connected.</p></div>
+                <button class="text-button" id="use-demo">Use demo mode</button>
+              </div>
+            </section>
           </div>
-          <p class="metrics-note">Snapshot from the repository status dated 23 October 2026. Evaluation labels are intentionally specific; no general-intelligence claim is implied.</p>
         </section>
       </main>
 
       <nav class="mobile-nav" aria-label="Mobile navigation">
         <button class="active" data-nav="overview"><svg class="icon"><use href="#i-home"></use></svg><span>Home</span></button>
-        <button data-nav="tasks"><svg class="icon"><use href="#i-tasks"></use></svg><span>Tasks</span><i id="mobile-task-count">3</i></button>
-        <button class="mobile-run" data-action="new-task" aria-label="New objective"><span><svg class="icon"><use href="#i-plus"></use></svg></span></button>
+        <button data-nav="tasks"><svg class="icon"><use href="#i-tasks"></use></svg><span>Objectives</span></button>
         <button data-nav="activity"><svg class="icon"><use href="#i-activity"></use></svg><span>Activity</span></button>
         <button data-nav="brain"><svg class="icon"><use href="#i-brain"></use></svg><span>Brain</span></button>
+        <button data-nav="settings"><svg class="icon"><use href="#i-settings"></use></svg><span>Settings</span></button>
       </nav>
     </div>
   </div>
 
   <dialog class="task-dialog" id="task-dialog" aria-labelledby="task-dialog-title">
-    <div class="dialog-top"><span class="section-kicker" id="task-dialog-id">TASK</span><button class="icon-button" data-close-dialog="task-dialog" aria-label="Close task details"><svg class="icon"><use href="#i-close"></use></svg></button></div>
+    <div class="dialog-top"><span class="task-id" id="task-dialog-id">Objective</span><button class="icon-button" data-close-dialog="task-dialog" aria-label="Close objective details"><svg class="icon"><use href="#i-close"></use></svg></button></div>
     <div id="task-dialog-content"></div>
-  </dialog>
-
-  <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
-    <div class="dialog-top"><span class="section-kicker">LOCAL RUNTIME</span><button class="icon-button" data-close-dialog="settings-dialog" aria-label="Close settings"><svg class="icon"><use href="#i-close"></use></svg></button></div>
-    <h2 id="settings-title">Connect to brainbox.</h2>
-    <p class="dialog-intro">Point the UI at the included same-origin proxy. Brainbox itself stays bound to loopback.</p>
-    <label class="field-label" for="api-base">Proxy endpoint</label>
-    <div class="connection-field"><input id="api-base" value="/api" autocomplete="off"><button class="button" id="test-connection">Test</button></div>
-    <div class="connection-result" id="connection-result"><span class="status-dot"></span><span>No runtime connected. Interactive demo data is shown.</span></div>
-    <div class="settings-info"><svg class="icon"><use href="#i-shield"></use></svg><p><strong>Honest prototype boundary</strong>The dashboard’s task execution is simulated. The adapter can check health and exposes generate, score, and ground methods; desktop task controls await runtime task endpoints.</p></div>
-    <div class="settings-actions"><button class="button button-secondary" id="use-demo">Use demo mode</button><button class="button button-secondary" data-close-dialog="settings-dialog">Done</button></div>
   </dialog>
 
   <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>

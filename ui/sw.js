@@ -1,8 +1,8 @@
-const CACHE = 'neurobrain-ui-v1.0.0';
+const CACHE = 'neurobrain-atelier-v2.0.0';
 const ASSETS = [
   './', './index.html', './styles.css', './app.js', './manifest.webmanifest',
-  './assets/fonts/InterVariable.woff2', './assets/fonts/SpaceGrotesk-Variable.ttf',
-  './assets/fonts/IBMPlexMono-Regular.ttf', './assets/icons/icon-192.png', './assets/icons/icon-512.png'
+  './assets/fonts/Geist-Variable.ttf', './assets/fonts/GeistMono-Variable.ttf',
+  './assets/icons/icon-192.png', './assets/icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {

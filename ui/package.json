@@ -1,13 +1,14 @@
 {
-  "name": "neurobrain-ui-concepts",
-  "version": "1.0.0",
+  "name": "neurobrain-atelier",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Three responsive, installable Neurobrain UI concepts with a local brainbox adapter.",
+  "description": "A responsive Neurobrain Atelier PWA with four Settings palettes and a local Brainbox adapter.",
   "scripts": {
     "dev": "python3 serve.py --host 0.0.0.0 --port 4173",
     "test": "node scripts/test.mjs",
-    "capture": "node scripts/capture.mjs"
+    "capture": "node scripts/capture.mjs",
+    "contact-sheet": "python3 scripts/make_contact_sheet.py"
   },
   "devDependencies": {
     "playwright": "^1.56.1"

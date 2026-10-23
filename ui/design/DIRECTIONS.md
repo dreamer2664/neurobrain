@@ -1,72 +1,112 @@
-# Neurobrain UI directions
+# Neurobrain Atelier — design direction
 
 ## Product idea
 
-Neurobrain should not look like another cloud chat client. Its differentiator is a small, local, inspectable loop: **observe → act → verify → recover**. The interface makes that loop visible and treats restraint as a feature.
+Neurobrain should not look like another cloud chat client. Its differentiator is a small, local, inspectable loop: **observe → act → verify → recover**. Atelier makes that loop visible through ordinary product UI rather than science-fiction decoration.
 
-Five principles guided all three directions:
+Five principles guide the release:
 
-1. **Local is visible.** Runtime state, memory envelope, checkpoint, and zero-external-call language are part of the main composition rather than buried in settings.
-2. **Work, not chat.** The primary input is an objective. Tasks, observations, and outcomes dominate the information architecture.
-3. **Honesty is a visual material.** Demo state and evaluation labels are explicit. The 30% verified research result is shown beside the 98% trained-curriculum result.
-4. **Control stays close.** Pause, step budgets, history, and undo are accessible at the point of action.
-5. **One brain, multiple expressions.** The information architecture remains consistent while tone, density, typography, geometry, and motion change.
+1. **Local is visible.** Checkpoint, component sizes, CPU threads, memory envelope, and external-call count belong in the main composition.
+2. **Work, not chat.** The primary input is an objective. Current work, observations, and outcomes dominate the information architecture.
+3. **Honesty is a visual material.** Demo execution is labelled, evaluation results retain their specific scopes, and the weakest measured result remains visible.
+4. **Control stays close.** Budgets, pause/resume, history, and undo explanations sit at the point of action.
+5. **One workspace, several palettes.** Appearance changes do not rearrange the product or alter the meaning of its controls.
 
-## 01 — Pulse / recommended flagship
+## Selected direction
 
-**Mood:** alive, precise, private, quietly powerful.
+**Atelier / `achromatic-ledger`**
 
-Pulse uses near-black blue surfaces, soft radial light, thin borders, acidic lime for action, and glacial cyan for ongoing work. Space Grotesk gives the product a distinctive voice without sacrificing readability. The neural field is the emotional center: a living topology rather than a stock robot or brain photograph.
+Taste-skill direction seed: `1806656935`
 
-Best for the main brand because it makes the from-scratch networks tangible while still presenting a friendly objective composer. Its motion language should remain subtle: traveling pulses, small state changes, and no perpetual large movement.
+Atelier uses low-chroma, desk-inspired grounds; opaque white or near-black surfaces; thin structural borders; and a single restrained data hue. Geist provides a neutral, highly legible interface voice. Geist Mono appears only in literal code.
 
-## 02 — Atelier / calm companion
+The composition takes cues from a well-kept workspace: a clear objective at the top, current work below it, and a narrow evidence column beside it. It does not imitate paper, leather, or a physical desk.
 
-**Mood:** warm, editorial, humane, focused.
+## What was deliberately removed
 
-Atelier shifts the product from mission control to a calm desk. Parchment and warm white replace black; iris marks intent and coral marks active work. Larger radii, softer shadows, and plain-language hero copy reduce the perceived technical burden. The dark neural card is deliberately retained as a window into the machine beneath the calm surface.
+The earlier multi-concept release was useful for exploration, but this revision removes the elements that made it feel generated rather than designed:
 
-Best for a consumer-facing mode or a future “Focus” experience. It demonstrates that local AI does not need a neon/science-fiction aesthetic.
+- Pulse and Terminal concepts and the concept switcher
+- Animated neural topology and ambient canvas rendering
+- Gradients, radial glows, glass surfaces, decorative shadows, and scanlines
+- Marketing-style hero copy and oversized promotional typography
+- Repeated badges, decorative index numbers, and inflated capability language
+- Monospace as a general interface aesthetic
+- Redundant “interactive demo” chrome; the runtime state and Settings boundary carry that information instead
 
-## 03 — Terminal / operator console
+The result is intentionally quieter. The signature element is not an illustration of AI; it is a concrete observation from the current objective.
 
-**Mood:** explicit, technical, deterministic.
+## The observation fragment
 
-Terminal uses IBM Plex Mono throughout, square geometry, dashed boundaries, scanlines, phosphor green, and amber. The neural core rotates into a technical diamond and the language becomes command-oriented. It is not a retro terminal imitation; it retains modern touch targets, layout, and accessible controls.
+The latest-observation card is an interface fragment inside the product interface. It shows:
 
-Best for developers, evaluations, debugging, and an advanced-operator mode.
+- the source or surface being observed;
+- the relevant content, kept brief;
+- the grounded target with a visible accent outline;
+- the verified action and its coordinates.
+
+This makes the observe/act/verify loop tangible without pretending that a simulated action really ran. Empty and completed states use the same component rather than substituting decorative artwork.
+
+## Palette system
+
+| Palette | Ground | Text | Data accent | Use |
+|---|---|---|---|---|
+| Linen | `#f4f3f1` | `#20211f` | `#2f6f59` | Default stone/forest workspace |
+| Mist | `#f2f4f7` | `#182028` | `#1d5fbf` | Cooler blue-grey workspace |
+| Rose | `#f6f3f4` | `#282126` | `#9c3f62` | Neutral rose with raspberry data |
+| Ink | `#101111` | `#f5f5f2` | `#8fb8a2` | Neutral dark with sage data |
+
+The palettes change surfaces, text, borders, controls, and data accents together. They do not introduce different layouts or theme-specific features. Primary buttons remain near-black in light palettes and near-white in Ink. Status is always accompanied by text, never colour alone.
+
+Palette selection lives in **Settings → Colour theme**, not in the global header. The selection, motion preference, budgets, and API endpoint use guarded local storage so restricted storage does not prevent the app from loading.
 
 ## Responsive composition
 
 ### Desktop
 
-A persistent sidebar contains workspace, primary navigation, privacy posture, runtime settings, and operator identity. The overview uses a two-column composition: objective + current work on the left; neural state + machine budget on the right. This gives the composer priority without hiding the brain.
+A 56 px icon rail keeps navigation available without turning the sidebar into a second content column. The overview uses a 2:1 main/evidence grid. The objective composer and current objectives balance the latest observation and Brainbox facts. Paired cards resolve on shared rows, and both columns finish at approximately the same level through substantive content rather than empty stretching.
 
-### Compact desktop / tablet
+### Compact desktop and tablet
 
-The sidebar collapses to icons. The neural and system panels move below the main workflow; architecture becomes vertical. No horizontal scrolling is introduced.
+The main workflow takes priority while evidence panels move into a secondary row. The icon rail remains until the phone breakpoint. No horizontal scrolling is introduced.
 
 ### Phone
 
-The sidebar becomes a five-item bottom bar with a central create action. The top bar retains brand, concept switching, and runtime status. Content becomes a single flow with the objective first, neural state second, and current tasks after it. Dialogs become bottom sheets and fixed navigation respects safe-area insets.
+The rail becomes a five-item bottom bar: Home, Objectives, Activity, Brain, and Settings. Content becomes one flow with the objective first and current work next. Observation and runtime evidence follow. Dialogs stay within the viewport, navigation respects safe-area insets, and layouts are tested down to 320 px.
+
+## Settings
+
+Settings is a full product view rather than a modal. It contains three groups:
+
+1. **Colour theme:** four palettes and a small data-progress preview.
+2. **Objective defaults:** step budget, time limit, and reduced motion.
+3. **Local runtime:** proxy endpoint, real connection test, and the explicit simulation boundary.
+
+Changes save automatically on the current device. Existing objectives retain their original budget; new objectives inherit the configured values.
 
 ## Accessibility and trust
 
-- Semantic buttons, navigation, sections, labels, dialogs, and live toast region
-- Visible focus outlines using the secondary color
-- Reduced-motion media query plus static deterministic capture mode
-- Primary mobile navigation targets are at least 44 CSS px
-- Status is never communicated by color alone; text labels accompany dots and bars
-- The connection dialog states the exact prototype boundary
-- No remote font, tracking, or image dependency
+- Semantic buttons, navigation, sections, labels, tables, dialogs, and live toast region
+- Visible focus outlines and keyboard navigation shortcuts
+- Reduced-motion media query, local preference, and static capture mode
+- Mobile navigation targets remain at least 44 CSS px
+- Supporting text is generally 13–14 px; 12 px is reserved for sublines and compact metadata
+- Runtime state, demo state, and evaluation limits are written in plain language
+- No remote font, tracking, image, or analytics dependency
 
-Before production, run a formal WCAG contrast audit and assistive-technology pass on every final component state. Micro-labels are intentionally secondary; core task titles and actions should not be reduced further.
+Before production, still run a formal WCAG contrast audit and assistive-technology pass across every interactive state. Automated layout and source checks are not a substitute for that review.
+
+## Validation in this release
+
+- 99 Playwright browser checks covering themes, workflows, persistence, runtime contracts, offline reload, and responsive overflow
+- Taste-skill source lint: **0 failures / 0 warnings**
+- Taste-skill real-browser inspection at 1440, 768, and 390 px: **0 failures / 0 warnings**
+- Manual review of desktop, tablet, mobile, all four palettes, Settings, and objective-detail captures
 
 ## Recommended next increments
 
-1. Choose **Pulse** as the flagship and retain Atelier/Terminal as alternate appearance modes.
-2. Add a real task-lifecycle API contract; bind the existing task store and append-only event stream rather than synthesizing events in the browser.
-3. Add a screenshot/observation viewer with a privacy redaction step and explicit retention controls.
-4. Design approval sheets for destructive or externally visible actions; pair every recoverable action with its actual undo record.
-5. Add empty, offline, model-missing, RAM-governor-refused, retry-exhausted, and partial-success states.
-6. Package the same responsive front end in native shells only if platform distribution requires it; the current release is a PWA and does not claim APK/IPA/desktop-native binaries.
+1. Add a real task-lifecycle API contract and bind the objective store to actual runtime events.
+2. Replace the simulated observation fragment with real screenshots, privacy redaction, and retention controls.
+3. Add approval sheets for destructive or externally visible actions, paired with actual undo records.
+4. Add empty, offline-runtime, model-missing, RAM-refused, retry-exhausted, and partial-success states.
+5. Package the same responsive front end in native shells only if distribution requires it; this release remains a PWA.

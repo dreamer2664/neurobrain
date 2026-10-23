@@ -18,3 +18,7 @@ data/forge*/
 dist/
 *.pyz
 build/
+
+# Local design-audit diagnostics
+.taste-skill/inspect/
+ui/.taste-skill/

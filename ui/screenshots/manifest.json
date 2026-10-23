@@ -1,71 +1,116 @@
 {
-  "product": "Neurobrain",
-  "version": "1.0.0",
-  "capturedAt": "2026-10-23T11:17:33.257Z",
+  "product": "Neurobrain Atelier",
+  "version": "2.0.0",
+  "captureMode": "static demo data; reduced motion",
+  "capturedAt": "2026-10-23T11:45:40.044Z",
   "screenshots": [
     {
-      "file": "01-pulse-desktop.png",
-      "name": "Pulse — Desktop command center",
-      "concept": "pulse",
+      "file": "01-linen-desktop.png",
+      "name": "Linen — Desktop overview",
+      "palette": "linen",
       "viewport": "1440x900",
       "device": "desktop",
-      "view": "overview"
+      "view": "overview",
+      "scale": 1.5
     },
     {
-      "file": "02-pulse-mobile.png",
-      "name": "Pulse — Mobile command center",
-      "concept": "pulse",
+      "file": "02-linen-mobile.png",
+      "name": "Linen — Mobile overview",
+      "palette": "linen",
       "viewport": "390x844",
       "device": "mobile",
-      "view": "overview"
+      "view": "overview",
+      "scale": 2
     },
     {
-      "file": "03-atelier-desktop.png",
-      "name": "Atelier — Desktop calm workspace",
-      "concept": "atelier",
+      "file": "03-mist-desktop.png",
+      "name": "Mist — Desktop overview",
+      "palette": "mist",
       "viewport": "1440x900",
       "device": "desktop",
-      "view": "overview"
+      "view": "overview",
+      "scale": 1.5
     },
     {
-      "file": "04-atelier-mobile.png",
-      "name": "Atelier — Mobile calm workspace",
-      "concept": "atelier",
+      "file": "04-mist-mobile.png",
+      "name": "Mist — Mobile overview",
+      "palette": "mist",
       "viewport": "390x844",
       "device": "mobile",
-      "view": "overview"
+      "view": "overview",
+      "scale": 2
     },
     {
-      "file": "05-terminal-desktop.png",
-      "name": "Terminal — Desktop operator console",
-      "concept": "terminal",
+      "file": "05-rose-desktop.png",
+      "name": "Rose — Desktop overview",
+      "palette": "rose",
       "viewport": "1440x900",
       "device": "desktop",
-      "view": "overview"
+      "view": "overview",
+      "scale": 1.5
     },
     {
-      "file": "06-terminal-mobile.png",
-      "name": "Terminal — Mobile operator console",
-      "concept": "terminal",
+      "file": "06-rose-mobile.png",
+      "name": "Rose — Mobile overview",
+      "palette": "rose",
       "viewport": "390x844",
       "device": "mobile",
-      "view": "overview"
+      "view": "overview",
+      "scale": 2
     },
     {
-      "file": "07-pulse-task-detail.png",
-      "name": "Pulse — Task observation timeline",
-      "concept": "pulse",
+      "file": "07-ink-desktop.png",
+      "name": "Ink — Desktop overview",
+      "palette": "ink",
       "viewport": "1440x900",
       "device": "desktop",
-      "view": "task detail"
+      "view": "overview",
+      "scale": 1.5
     },
     {
-      "file": "08-atelier-mobile-brain.png",
-      "name": "Atelier — Mobile model metrics",
-      "concept": "atelier",
+      "file": "08-ink-mobile.png",
+      "name": "Ink — Mobile overview",
+      "palette": "ink",
       "viewport": "390x844",
       "device": "mobile",
-      "view": "brain"
+      "view": "overview",
+      "scale": 2
+    },
+    {
+      "file": "09-settings-desktop.png",
+      "name": "Atelier — Settings and palette choices",
+      "palette": "linen",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "settings",
+      "scale": 1.5
+    },
+    {
+      "file": "10-task-detail-desktop.png",
+      "name": "Atelier — Objective plan and observations",
+      "palette": "linen",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "objective detail",
+      "scale": 1.5
+    },
+    {
+      "file": "11-objectives-mobile.png",
+      "name": "Atelier — Mobile objective queue",
+      "palette": "linen",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "tasks",
+      "scale": 2
+    },
+    {
+      "file": "12-brain-mobile.png",
+      "name": "Ink — Mobile model metrics",
+      "palette": "ink",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "brain",
+      "scale": 2
     }
   ]
 }
