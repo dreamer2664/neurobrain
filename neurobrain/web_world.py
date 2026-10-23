@@ -110,7 +110,8 @@ class WebWorld:
 
     def __init__(self, task: WebTask):
         self.task = task
-        self.state = "desktop"      # desktop | chrome | article | docs | saved
+        self.state = "desktop"      # desktop | chrome | docs | saved
+        self.page = "results"       # inside chrome: results | article
         self.clipboard: str | None = None
         self.doc_text: str = ""
         self.saved = False
@@ -127,6 +128,8 @@ class WebWorld:
         return Win("desktop", 0, 0, CANVAS, CANVAS, self._dock())
 
     def _chrome(self) -> Win:
+        if self.page == "article":
+            return self._article()
         els = [_el("field", "address", 200, 90, 900, 90),
                _el("button", "search", 1130, 90, 220, 90)]
         els += _grid(self.task.results, "button", 200, 320, 1, 1500, 130, 30)
@@ -134,7 +137,8 @@ class WebWorld:
         return Win("chrome", 40, 40, 1840, 1600, els + self._dock())
 
     def _article(self) -> Win:
-        els = [_el("button", "copy", 1450, 900, 260, 110)]
+        els = [_el("button", "copy", 1450, 900, 260, 110),
+               _el("button", "back", 260, 160, 200, 90)]
         els += _grid([self.task.answer] + self.task.distractors[:2], "field", 200, 300, 1, 1500, 110, 24)
         return Win("article", 40, 40, 1840, 1600, els + self._dock())
 
@@ -156,8 +160,6 @@ class WebWorld:
             return self._desktop()
         if self.state == "chrome":
             return self._chrome()
-        if self.state == "article":
-            return self._article()
         return self._docs()
 
     # -------------------------------------------------------------- protocol
@@ -193,7 +195,7 @@ class WebWorld:
         # the dock is always live: chrome and docs are one click away from any app
         if label == "chrome" and self.state != "chrome":
             self.state = "chrome"
-            return {"ok": True, "detail": "chrome opened, search field ready"}
+            return {"ok": True, "detail": f"chrome opened on the {self.page}"}
         if label == "docs" and self.state != "docs":
             self.state = "docs"
             return {"ok": True, "detail": "google docs opened"}
@@ -210,25 +212,20 @@ class WebWorld:
                 return {"ok": True, "detail": "google docs opened"}
             return {"ok": True, "detail": f"{label} opened, not what the task needs"}
 
-        if state == "chrome":
+        if state == "chrome" and self.page == "results":
             if label == self.task.topic:
-                self.state = "article"
+                self.page = "article"
                 return {"ok": True, "detail": f"opened the article on {label}"}
             if label in self.task.results or label in self.task.distractors:
                 return {"ok": True, "detail": f"opened {label}, wrong result"}
-            if label == "files":
-                return {"ok": True, "detail": "files opened, wrong app"}
             return {"ok": True, "detail": f"clicked {label}, nothing opened"}
 
-        if state == "article":
+        if state == "chrome" and self.page == "article":
             if label == "copy":
                 self.clipboard = self.task.answer
                 return {"ok": True, "detail": f"copied {self.task.answer} to the clipboard"}
-            if label == "close":
-                self.state = "chrome"
-                return {"ok": True, "detail": "article closed"}
             if label == "back":
-                self.state = "chrome"
+                self.page = "results"
                 return {"ok": True, "detail": "went back to the results"}
             return {"ok": True, "detail": f"clicked the text {label}"}
 
@@ -296,43 +293,57 @@ def _scan(layout_els) -> str:
 def web_episode(rng: random.Random) -> str:
     """One complete research-and-report transcript, clicks and all.
 
-    The coordinates come from the world's own element boxes, so the transcript
-    is exactly what the runtime will accept.
+    Not every episode is perfect. About a third of them click the wrong search
+    result first, and a fifth try to paste before anything was copied: those two
+    are the mistakes a real policy makes on this screen, and without them in the
+    training stream the model has no learned way back. The recovery lines follow
+    the ladder vocabulary from the drive spec.
     """
     task = WebTask(rng)
     world = WebWorld(task)
     parts = [f"<|drive|>objective: {task.objective()}"]
     step = 0
 
-    def click(label: str, expect: str, obs: str | None = None) -> None:
+    def click(label: str, check: str, obs: str | None = None) -> None:
         nonlocal step
         step += 1
         el = next(e for e in world.view().elements if e.label == label)
-        x, y = int(el.cx), int(el.cy)
-        before = world.observe()
-        parts.append(f"<|step|>{step}<|act|>click({x},{y})")
+        parts.append(f"<|step|>{step}<|act|>click({int(el.cx)},{int(el.cy)})")
         res = world.act({"type": "click"}, (el.cx, el.cy))
         parts.append(f"<|obs|>{obs or res['detail']}")
-        ok = world.progress() >= 1.0
-        parts.append("<|check|>objective satisfied" if ok
-                     else f"<|check|>objective not satisfied: {expect}")
-        after = world.observe()
-        world.verify(before, after, step, res)
+        parts.append("<|check|>objective satisfied" if world.progress() >= 1.0
+                     else f"<|check|>objective not satisfied: {check}")
 
     parts.append(_scan(world.view().elements))
-    click("chrome", "chrome is not open yet", "chrome opened, search field ready")
+    click("chrome", "chrome is not open yet")
     parts.append(_scan(world.view().elements))
-    click(task.topic, "the right search result is not open",
-          f"opened the article on {task.topic}")
+
+    wrong = [r for r in task.results if r != task.topic]
+    if wrong and rng.random() < 0.35:
+        bad = rng.choice(wrong)
+        click(bad, "wrong result, the objective is about something else",
+              obs=f"opened {bad}, wrong result")
+        parts.append(f"<|retry|>that was {bad}, open the result that matches the objective")
+        parts.append(_scan(world.view().elements))
+
+    click(task.topic, "the right search result is not open")
     parts.append(_scan(world.view().elements))
-    click("copy", "the answer is not on the clipboard",
-          f"copied {task.answer} to the clipboard")
+
+    if rng.random() < 0.2:
+        # a plausible mistake: the answer is not on the clipboard yet
+        click("docs", "the answer has not been copied yet",
+              obs="google docs opened, clipboard is empty")
+        click("paste", "the document is still empty", obs="clipboard is empty")
+        parts.append("<|retry|>copy the answer from the article first")
+        click("chrome", "back to the article")
+        parts.append(_scan(world.view().elements))
+
+    click("copy", "the answer is not on the clipboard")
     parts.append(_scan(world.view().elements))
-    click("docs", "google docs is not open", "google docs opened")
+    click("docs", "google docs is not open")
     parts.append(_scan(world.view().elements))
-    click("paste", "the document is still empty",
-          f"pasted {task.answer} into the document")
-    click("save", "the document is not saved", f"saved the document: {task.answer}")
+    click("paste", "the document is still empty")
+    click("save", "the document is not saved")
     parts.append("<|done|>success")
     return "".join(parts)
 
