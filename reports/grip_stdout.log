@@ -370,3 +370,11 @@ ModuleNotFoundError: No module named 'torch'
 [grip] step 1725/24000 loss 2.2334 ce 2.0951 off 0.051 act 0.0000 elapsed 184s
 [grip] time budget reached, stopping
 [grip] done: {"hit_widget": 0.8825, "hit_point": 0.8825, "action_acc": 0.9975, "click_iou": 0.12417942192487638}
+[grip] resumed from step 1748
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 1750/24000 loss 2.0782 ce 2.0562 off 0.052 act 0.0000 elapsed 2s
+[grip] eval @ 1750: hit_widget 0.875  hit_point 0.875  action_acc 1.000  click_iou 0.124
+[grip] step 1775/24000 loss 2.1238 ce 2.4099 off 0.050 act 0.0003 elapsed 22s
+[grip] step 1800/24000 loss 2.1776 ce 2.2022 off 0.039 act 0.0007 elapsed 38s
+[grip] time budget reached, stopping
+[grip] done: {"hit_widget": 0.89, "hit_point": 0.89, "action_acc": 1.0, "click_iou": 0.12511859722768803}

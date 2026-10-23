@@ -1,5 +1,5 @@
 {
-  "step": 16000,
+  "step": 18600,
   "n": 50,
   "accuracy": 0.98,
   "seen_n": 50,
@@ -13,14 +13,14 @@
       "fact": "cont:New Zealand",
       "q": "Which continent does New Zealand belong to?",
       "expected": "Oceania",
-      "got": "europe",
+      "got": "North America.",
       "ok": false
     },
     {
       "fact": "cap:Switzerland",
       "q": "Can you tell me the capital of Switzerland?",
       "expected": "Bern",
-      "got": "stockholm",
+      "got": "swiss franc",
       "ok": false
     },
     {
@@ -48,7 +48,7 @@
       "fact": "cap:Paraguay",
       "q": "Can you tell me the capital of Paraguay?",
       "expected": "Asuncion",
-      "got": "Paris",
+      "got": "Condon",
       "ok": false
     },
     {
@@ -69,7 +69,7 @@
       "fact": "lang:Egypt",
       "q": "Which language is spoken by people in Egypt?",
       "expected": "Arabic",
-      "got": "Arabic",
+      "got": "arabic",
       "ok": true
     },
     {
@@ -83,14 +83,14 @@
       "fact": "lang:Finland",
       "q": "Which language is spoken by people in Finland?",
       "expected": "Finnish",
-      "got": "Fe",
+      "got": "four.",
       "ok": false
     },
     {
       "fact": "cap:Germany",
       "q": "Can you tell me the capital of Germany?",
       "expected": "Berlin",
-      "got": "erman",
+      "got": "Athens",
       "ok": false
     }
   ],
@@ -112,7 +112,7 @@
     {
       "q": "Which continent does Argentina belong to?",
       "expected": "South America",
-      "got": "South America",
+      "got": "south America",
       "ok": true,
       "held_out_fact": false
     },
@@ -126,14 +126,14 @@
     {
       "q": "Chemical symbol of argon?",
       "expected": "Ar",
-      "got": "ar",
+      "got": "Ar.",
       "ok": true,
       "held_out_fact": false
     },
     {
       "q": "Atomic number of uranium?",
       "expected": "92",
-      "got": "92.",
+      "got": "92",
       "ok": true,
       "held_out_fact": false
     },
