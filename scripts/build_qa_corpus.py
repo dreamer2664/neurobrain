@@ -109,8 +109,9 @@ def facts() -> list[tuple[str, str, str]]:
         for q in ELEM_NUM:
             out.append((q.format(s=name), str(number), f"enum:{name}"))
     for name, desc in t["planets"]:
-        for q in PLANET_TPL:
-            out.append((q.format(s=name), desc, f"planet:{name}"))
+        # one short factual question per planet instead of a "describe X" prompt
+        out.append((f"Which planet is {name}?", desc, f"planet:{name}"))
+        out.append((f"What do we know about {name}?", desc, f"planet:{name}"))
     for q, a in t["misc"]:
         out.append((q, a, f"misc:{abs(hash(q)) % 10**8}"))
     for q, a in t["code"]:
