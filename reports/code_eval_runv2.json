@@ -1,0 +1,83 @@
+{
+  "step": 12000,
+  "val_loss": 2.2149,
+  "val_ppl": 9.16,
+  "syntax_valid": 1,
+  "syntax_total": 12,
+  "syntax_rate": 0.083,
+  "coherent_rate": 0.0,
+  "samples": [
+    {
+      "prompt": "def add(a, b):\n",
+      "generation": "):\n    \"\"\"\n    Convert a sequence of two particular values into a sequence of values.\n\n    Parameters\n    ----------\n    a : array_like\n        The array to be sorted.\n    b : array_like\n        The number of particular values.\n    b : array_like\n        The first element of the input is returned.\n    b : array_like\n        The input is the result of the input.\n    b : array_like\n       ",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def factorial(n):\n",
+      "generation": "\n                    if n.is_zero:\n                        return True\n    return (n.is_zero or n.is_zero or n.is_zero or n.is_zero and n.is_zero or n.is_zero and n.is_zero):\n        return False\n    return n.is_zero and n.is_zero:\n        return n.is_zero:\n        if n.is_zero:\n            return True\n        if n.",
+      "parses": true,
+      "parsing_fraction": 0.3
+    },
+    {
+      "prompt": "class Point:\n    def __init__(self, x, y):\n",
+      "generation": "<|code|>class ShadowValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"shadow\", parent_name=\"scattergl.legendgrouptitle\", **kwargs\n    ):\n        super(ShadowValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n            edit_type=kwargs.pop(\"edit_type\", \"sty",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def read_file(path):\n",
+      "generation": "<|code|>def _get_sorted_for_root(root):\n    \"\"\"Returns the sorted root of the root of the roots,\n    return the root of the roots (including the roots).\n\n    The roots are not preserved.\n    \"\"\"\n    sorted_roots = list(root)\n    for root in root:\n        sorted_roots.append(root)\n    return sort",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def is_even(n):\n",
+      "generation": "<|code|>def _set_binary_binary_binary_binary_binary(binary_binary_binary_binary, binary_binary_binary_binary, binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_binary_b",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def main():\n",
+      "generation": "<|code|>def _(expr, assumptions):\n    \"\"\"\n    Evaluate the inverse of a function.\n\n    Examples\n    ========\n\n    >>> from sympy.abc import x\n    >>> from sympy.abc import x\n    >>> ask(x)\n    True\n    >>> ask(x)\n    True\n    >>> ask(x)\n    True\n    >>> ask(x)\n    False\n    >>> ask(Q.extended",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "for i in range(10):\n",
+      "generation": "\"\"\"\n\n\ndef _maybe_use_regression_regression_regression(\n    tag: \"Shutdown\",\n    blaot: \"Shutdown\",\n    blaot: \"Shutdown\",\n    blaot: \"Shutdown\",\n    blaot: \"Shutdown\",\n    forest: \"Shutdown\",",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "import json\n\ndef load_config(path):\n",
+      "generation": "  # pyrefly: ignore [bad-overload]\n    \"\"\"\n    load a loader from the Python object.\n\n    This is a subclass that is actually actually actually actually actually actually actually actually actually actually an optimized Python object\n    (e.g. `nn.L",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def bubble_sort(items):\n",
+      "generation": "):\n    \"\"\"\n    Sort the number of iterations of the sorteds.\n    \"\"\"\n    # Assume the end of the end of the sorted list\n    # and the end of the end of the end of the sorted\n    # formulas.\n    if sorted.ndim == 0:\n        return [sorted(sorted(sorted(sorted(sorted(sort",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def greet(name):\n",
+      "generation": "\n                    if name == '_' and name == '_' and name == '_' and name == '_' and name == '_' and name == '_' and name == '_' and name == '_' and name == '__' and name == '_' and name == '_' and name == '_' and name == '_' and name == '_' and name[0] in '_' and name",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "try:\n    value = int(text)\n",
+      "generation": "<|code|>def _get_global_globals(globals: str) -> str:\n    # FIXME: Overflows to make it the globals\n    globals: list[str] = []\n    globals: list[str] = []\n    globals: list[str] = []\n    for globals in globals:\n        globals = globals.get_",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def average(values):\n",
+      "generation": "# Average, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, observer, o",
+      "parses": false,
+      "parsing_fraction": 0.0
+    }
+  ]
+}

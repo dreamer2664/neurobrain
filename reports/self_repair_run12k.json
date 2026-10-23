@@ -1,5 +1,5 @@
 {
- "utc": "2026-10-23T00:53:23Z",
+ "utc": "2026-10-23T04:59:33Z",
  "ckpt": "checkpoints/run12k/lm_best.pt",
  "ckpt_sha256": "7f0a17fc42182623190ab9b7c2897dfc2a931e341b04a8165764827fd28e7b7c",
  "step": 12000,
@@ -14,8 +14,8 @@
  "repaired": 2,
  "repair_rate": 0.0408,
  "final_pass": 0.0408,
- "seconds": 22.5,
- "peak_rss_mb": 267.1,
+ "seconds": 22.6,
+ "peak_rss_mb": 266.9,
  "transcripts": [
   {
    "id": "cb-arith-01",
@@ -312,9 +312,9 @@
    "attempt1": "except ImportError:\n    pass\n",
    "passed1": false,
    "error": "syntax: invalid syntax",
-   "attempt2": "def is_prime(n):\n    \"\"\"true if n is a prime number\"\"\"\ndef1<|code|>def count_unique(items):\n    unique = set(items)\n    return len(items)\n",
+   "attempt2": "def count_unique(items):\n    unique = set(items)\n    return len(items)\n",
    "passed2": false,
-   "why2": "syntax: invalid syntax"
+   "why2": "NameError: name 'is_prime' is not defined"
   },
   {
    "id": "cb-misc-05",
@@ -483,7 +483,7 @@
    "attempt1": "\n# padding: possibly possible\n#\n# -----------------------------------------------------------------------\n# Cache directive\n# -----------------------------------------------------------------------------\n# Private API\n# -----------------------------------------------------------------------------\n\n#",
    "passed1": false,
    "error": "SyntaxError: from __future__ imports must occur at the beginning of the file",
-   "attempt2": "def repeat(s, n):\n    \"\"\"return s repeated n times\"\"\"\ndeferr|>1<|code|>deferr|>r|>\ufffd, under thethe-bar distance, etc. Too,\n                hotpink, hotpink, archive<|step|>2<|act|>click(1005,480)<|obs|>menu closed after share\n",
+   "attempt2": "def repeat(s, n):\n    \"\"\"return s repeated n times\"\"\"\ndeferr|>r|>\ufffd, under thethe-bar distance, etc. Too,\n                hotpink, hotpink, archive<|step|>2<|act|>click(1005,480)<|obs|>menu closed after share\n",
    "passed2": false,
    "why2": "syntax: invalid character '\ufffd' (U+FFFD)"
   }

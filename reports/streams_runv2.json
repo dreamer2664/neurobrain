@@ -1,0 +1,11 @@
+{
+ "ckpt": "checkpoints/runv2/lm_best.pt",
+ "step": 12000,
+ "val_loss_by_stream": {
+  "code_val": 2.2246,
+  "code_val_v2_instr": 1.8582,
+  "code_val_v2_plain": 2.0671,
+  "drive_val": 0.1127,
+  "ui_val": 0.6736
+ }
+}

@@ -1,0 +1,6 @@
+[streams] code_val                 2.2246
+[streams] code_val_v2_instr        1.8582
+[streams] code_val_v2_plain        2.0671
+[streams] drive_val                0.1127
+[streams] ui_val                   0.6736
+[streams] wrote reports/streams_runv2.json

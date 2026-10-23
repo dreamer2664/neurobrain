@@ -1,0 +1,3 @@
+[codebench] greedy: pass@1 0/49  syntax+defines 0/49  410.4 tok/s  15s
+[codebench] sampled: pass@1 0/49  syntax+defines 10/49  401.9 tok/s  12s
+[codebench] wrote reports/codebench_runv2.json

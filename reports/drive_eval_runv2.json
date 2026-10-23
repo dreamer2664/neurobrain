@@ -1,0 +1,40 @@
+{
+  "step": 12000,
+  "terminal_rate": 1.0,
+  "retry_after_failure": 1.0,
+  "honest_completion": 1.0,
+  "mean_steps": 2.5,
+  "n": 48,
+  "examples": [
+    {
+      "objective": "<|drive|>objective: drag the cart slider",
+      "terminal": true,
+      "text": "<|step|>1<|act|>drag(930,495)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, cart<|step|>2<|act|>drag(465,1455)<|obs|>slider cart moved to 78%<|check|>objective satisfied<|done|>success"
+    },
+    {
+      "objective": "<|drive|>objective: check cart",
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(870,1455)<|obs|>checkbox help is now off<|check|>objective not satisfied: wrong element<|retry|>that was help, not cart. target the checkbox labelled cart<|step|>2<|act|>toggle(1755,1455)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, cart<|step|>3<|act|>toggle(960,525)<|obs|>checkbox cart is now on"
+    },
+    {
+      "objective": "<|drive|>objective: drag the settings slider",
+      "terminal": true,
+      "text": "<|step|>1<|act|>drag(465,1485)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the slider, settings<|step|>2<|act|>drag(450,1410)<|obs|>slider settings moved to 76%<|check|>objective satisfied<|done|>success"
+    },
+    {
+      "objective": "<|drive|>objective: type into the upload field",
+      "terminal": true,
+      "text": "<|step|>1<|act|>type(465,480)<|obs|>caret blinking in export field<|check|>objective not satisfied: wrong element<|retry|>that was export, not upload. target the field labelled upload<|step|>2<|act|>type(465,1155)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the field, upload<|step|>3<|act|>type(960,795)<|obs|>caret blinking in uploa"
+    },
+    {
+      "objective": "<|drive|>objective: turn on archive",
+      "terminal": true,
+      "text": "<|step|>1<|act|>toggle(885,510)<|obs|>checkbox export is now off<|check|>objective not satisfied: wrong element<|retry|>that was export, not archive. target the checkbox labelled archive<|step|>2<|act|>toggle(1770,495)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the checkbox, archive<|step|>3<|act|>toggle(1440,1470)<|obs|>checkbox a"
+    },
+    {
+      "objective": "<|drive|>objective: open the print tab",
+      "terminal": true,
+      "text": "<|step|>1<|act|>click(1410,1125)<|obs|>no visible change<|check|>objective not satisfied: click landed off target<|retry|>aim at the centre of the tab, print<|step|>2<|act|>click(945,1455)<|obs|>tab print is active<|check|>objective satisfied<|done|>success"
+    }
+  ]
+}

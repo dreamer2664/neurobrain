@@ -1,0 +1,17 @@
+{
+ "kind": "lm",
+ "name": "runv2",
+ "vocab_size": 2052,
+ "n_layer": 6,
+ "n_head": 7,
+ "d_model": 224,
+ "ctx": 256,
+ "tie_embeddings": true,
+ "step": 12000,
+ "params": 4247264,
+ "tokenizer_sha256": "198316dfad27b115e58868edc9b850e58ad23ebf596aed063aec023c8f30f8ab",
+ "weights_sha256": "7b3315faa2307fd1f4c7c70211526010f0fa527ad247c37303afd516a74dfa0c",
+ "source_ckpt_sha256": "9de77ff6f1d22838a07447475f56580321b3b4a0f4a903c7e7d745a7458ba2be",
+ "packed_utc": "2026-10-23T04:52:44Z"
+}
+[pack] wrote /home/user/neurobrain/checkpoints/runv2

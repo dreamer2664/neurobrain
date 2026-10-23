@@ -1,6 +1,6 @@
 {
- "bench": "codebench-v1",
- "utc": "2026-10-23T00:52:25Z",
+ "bench": "codebench-v1.1",
+ "utc": "2026-10-23T04:57:46Z",
  "ckpt": "checkpoints/run12k/lm_best.pt",
  "ckpt_sha256": "7f0a17fc42182623190ab9b7c2897dfc2a931e341b04a8165764827fd28e7b7c",
  "step": 12000,
@@ -44,8 +44,8 @@
     "hard": 0.0,
     "medium": 0.0
    },
-   "gen_tok_s": 428.0,
-   "seconds": 14.7,
+   "gen_tok_s": 389.2,
+   "seconds": 16.1,
    "tasks": [
     {
      "id": "cb-arith-01",
@@ -615,8 +615,8 @@
     "hard": 0.0,
     "medium": 0.0
    },
-   "gen_tok_s": 400.3,
-   "seconds": 14.2,
+   "gen_tok_s": 382.7,
+   "seconds": 14.9,
    "tasks": [
     {
      "id": "cb-arith-01",

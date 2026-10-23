@@ -1,0 +1,9 @@
+{
+  "step": 12000,
+  "val_loss": 2.2149,
+  "val_ppl": 9.16,
+  "syntax_valid": 1,
+  "syntax_total": 12,
+  "syntax_rate": 0.083,
+  "coherent_rate": 0.0
+}

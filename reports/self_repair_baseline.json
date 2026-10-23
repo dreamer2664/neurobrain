@@ -1,5 +1,5 @@
 {
- "utc": "2026-10-22T22:51:46Z",
+ "utc": "2026-10-23T04:59:09Z",
  "ckpt": "checkpoints/lm_baseline_step4600.pt",
  "ckpt_sha256": "0df9f2f6b1ad75de05b25f29c05284522e6a514f9674ea31912d2b0e64f54b7d",
  "step": 4600,
@@ -14,8 +14,8 @@
  "repaired": 0,
  "repair_rate": 0.0,
  "final_pass": 0.0,
- "seconds": 1544.9,
- "peak_rss_mb": 266.9,
+ "seconds": 23.1,
+ "peak_rss_mb": 266.8,
  "transcripts": [
   {
    "id": "cb-arith-01",

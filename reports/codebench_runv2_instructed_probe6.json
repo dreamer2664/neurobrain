@@ -1,0 +1,202 @@
+{
+ "bench": "codebench-v1.1",
+ "prompt_mode": "instructed",
+ "utc": "2026-10-23T05:02:28Z",
+ "ckpt": "checkpoints/runv2/lm_best.pt",
+ "ckpt_sha256": "9de77ff6f1d22838a07447475f56580321b3b4a0f4a903c7e7d745a7458ba2be",
+ "step": 12000,
+ "cfg": {
+  "vocab_size": 2052,
+  "n_layer": 6,
+  "n_head": 7,
+  "d_model": 224,
+  "ctx": 256,
+  "dropout": 0.0,
+  "tie_embeddings": true
+ },
+ "params": 4247264,
+ "seed": 0,
+ "peak_rss_mb": 264.4,
+ "modes": {
+  "greedy": {
+   "decode": {
+    "temperature": 1.0,
+    "top_k": 1,
+    "max_tokens": 220
+   },
+   "pass_at_1": 0.0,
+   "passed": 0,
+   "n": 6,
+   "syntax_valid_rate": 0.0,
+   "body_rate": 1.0,
+   "parses_rate": 0.0,
+   "by_category": {
+    "arithmetic": 0.0
+   },
+   "by_difficulty": {
+    "easy": 0.0,
+    "medium": 0.0
+   },
+   "gen_tok_s": 366.5,
+   "seconds": 3.6,
+   "tasks": [
+    {
+     "id": "cb-arith-01",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _is_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_\n",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: expected '('"
+    },
+    {
+     "id": "cb-arith-02",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double_double\n",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: expected '('"
+    },
+    {
+     "id": "cb-arith-03",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _is_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_in_\n",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: expected '('"
+    },
+    {
+     "id": "cb-arith-04",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _fah_to_fahrenheit(fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, fah, f\n",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: '(' was never closed"
+    },
+    {
+     "id": "cb-arith-05",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _is_real_imaginary_real_imaginary(imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imaginary_imaginary, imagi",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: '(' was never closed"
+    },
+    {
+     "id": "cb-arith-06",
+     "category": "arithmetic",
+     "difficulty": "medium",
+     "completion": "def gcd(\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd,\n    gcd: Gcd\n",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: '(' was never closed"
+    }
+   ]
+  },
+  "sampled": {
+   "decode": {
+    "temperature": 0.8,
+    "top_k": 40,
+    "max_tokens": 220
+   },
+   "pass_at_1": 0.0,
+   "passed": 0,
+   "n": 6,
+   "syntax_valid_rate": 0.0,
+   "body_rate": 1.0,
+   "parses_rate": 0.0,
+   "by_category": {
+    "arithmetic": 0.0
+   },
+   "by_difficulty": {
+    "easy": 0.0,
+    "medium": 0.0
+   },
+   "gen_tok_s": 424.9,
+   "seconds": 3.1,
+   "tasks": [
+    {
+     "id": "cb-arith-01",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _get_bundle_bundle(\n    inputs: list[Union[str, ...], bool]], bundle: bool\n) -> Dict[str, Any]:\n    \"\"\"\n    behaviour-bundle-bundle-bundle bundle quotes exactly and constraint as partially\n    measures even with adding bundle. All actual signature bundle are\n    guaranteed to the first item is reached to the bundle of adding\n    bundle.\n    \"\"\"\n    bundle = inputs.bundle(a)\n    b = inputs.bund",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: closing parenthesis ']' does not match opening parenthesis '(' on line 1"
+    },
+    {
+     "id": "cb-arith-02",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def double(double):\n    \"\"\"\n    behaviour for double to double exactly like double\n    \"\"\"\n    if double.is_Integer or double.is_Integer and double.is_Integer and double.is_Integer and double.is_Integer and double.is_Integer and double.is_Integer and double.is_Integer and\n        double.is_Integer and double.is_Integer and double.is_Integer and double.is_Integer\n        # real float for double.is_",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: invalid syntax"
+    },
+    {
+     "id": "cb-arith-03",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _check_mean_binomial(m, m, double=False, **kwds):\n    \"\"\"\n    behaves exactly like scalar / m, *kwds*''''\n\n    # is a width of m and there are no width of the string\n    if m * m * m > M or m <= m:\n        return m * m**m * m * m * m * m * m * m**m * m * m / m\n\n    # is the number of m > m and m < m <= m <= m > m and m > m > m <= m\n    m = m*m-m-m: m % m > m\n    m, m, m = m, m\n    m / m = m - ",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: unterminated triple-quoted string literal (detected at line 20)"
+    },
+    {
+     "id": "cb-arith-04",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def _in_complex_real_imag(complex: ComplexEncodedT, symbol: str) -> Integer:\n    r\"\"\"\n    behaviour ``areahforge`` and\n       complex.\n\n    Explanation\n    ===========\n\n    The general meaning complex numbers are:\n\n    .. math:: u\n        \\beta(0) := \\frac{1}{A_{M_{M_{M_{M_{M_{M_}}}}}} - u**m_{M_{M_1}}\n    The returned numbers of the complex imaginary part\n\n    Examples\n    ========\n\n    >>> from ",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: unterminated triple-quoted string literal (detected at line 21)"
+    },
+    {
+     "id": "cb-arith-05",
+     "category": "arithmetic",
+     "difficulty": "easy",
+     "completion": "def may_none(none, x, force=True):\n    \"\"\"\n   behaviuse clamp can(none) for none in none and\n       Jacobian complete and has to be exactly those\n    :class:`~none.inference.Line`\n\n    \"\"\"\n\n    @property\n    def m(self):\n        return self.m\n\n    @property\n    def wormed(self):\n        return self.m  # noqa: C901\n    def dump(self, prec):\n        \"\"\"\n        If ``prec is not None then the wormed ",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: unterminated triple-quoted string literal (detected at line 23)"
+    },
+    {
+     "id": "cb-arith-06",
+     "category": "arithmetic",
+     "difficulty": "medium",
+     "completion": "def _exact_sync_exact_exact(exact_exact_exact_exact_exact):\n    \"\"\":exactives exactly like gcd should\n    exactly exactly those exactly one exactly, so infact to\n    fitting ``exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_exact_ex",
+     "raw_head": "",
+     "passed": false,
+     "parses": false,
+     "defines": false,
+     "why": "syntax: unterminated triple-quoted string literal (detected at line 4)"
+    }
+   ]
+  }
+ }
+}
