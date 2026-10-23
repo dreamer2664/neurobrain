@@ -83,6 +83,12 @@ def _grid(items: list[str], role: str, x0: int, y0: int, cols: int,
     return out
 
 
+def _useful(detail: str) -> bool:
+    """Did the action move the task forward? Decided from the world's own words."""
+    bad = ("wrong", "empty", "nothing", "not what", "does not", "missed")
+    return not any(b in detail for b in bad)
+
+
 class WebTask:
     """One instance: a topic, its answer, and the distractor labels to beat."""
 
@@ -116,6 +122,7 @@ class WebWorld:
         self.doc_text: str = ""
         self.saved = False
         self.failed_clicks: list[str] = []
+        self.log: list[dict] = []      # every action and what it did
 
     # ------------------------------------------------------------------ views
     def _dock(self) -> list[Element]:
@@ -185,6 +192,12 @@ class WebWorld:
         return None
 
     def act(self, action: dict, point) -> dict:
+        res = self._act(action, point)
+        self.log.append({"state": self.state, "point": point, "detail": res.get("detail", ""),
+                         "useful": _useful(res.get("detail", ""))})
+        return res
+
+    def _act(self, action: dict, point) -> dict:
         if (action or {}).get("type") != "click":
             return {"ok": False, "detail": f"web world only clicks, got {action!r}"}
         el = self._hit(point)

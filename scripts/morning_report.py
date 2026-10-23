@@ -79,6 +79,7 @@ def main() -> None:
         ok = web.get("solved", 0)
         lines.append(f"{ok}/{web.get('tasks')} tasks finished with the right answer in a "
                      f"saved document, mean {web.get('mean_steps')} actions, "
+                     f"action precision {pct(web.get('action_precision'))}, "
                      f"overclaim {pct(web.get('overclaim'))}.\n")
         rows = web.get("rows", [])[:12]
         if rows:

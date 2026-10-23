@@ -46,9 +46,11 @@ def main() -> None:
         world = WebWorld(task)
         row = driver.run(world, task.objective(), feasible=True)
         ok = world.saved and world.doc_text == task.answer
+        useful = sum(1 for e in world.log if e["useful"])
         rows.append({"topic": task.topic, "answer": task.answer, "solved": ok,
                      "doc": world.doc_text, "saved": world.saved,
-                     "steps": row["executed_steps"], "overclaim": row["overclaim"]})
+                     "steps": row["executed_steps"], "overclaim": row["overclaim"],
+                     "actions": len(world.log), "useful_actions": useful})
         transcripts.append(row)
         print(f"[web] {i+1:>2}/{args.n}: {'OK  ' if ok else 'MISS'} "
               f"topic={task.topic[:28]:<28} doc={world.doc_text[:24]!r} "
@@ -61,6 +63,8 @@ def main() -> None:
         "solved": solved,
         "accuracy": round(solved / max(1, args.n), 3),
         "mean_steps": round(sum(r["steps"] for r in rows) / max(1, args.n), 2),
+        "action_precision": round(sum(r["useful_actions"] for r in rows)
+                                  / max(1, sum(r["actions"] for r in rows)), 3),
         "overclaim": round(sum(r["overclaim"] for r in rows) / max(1, args.n), 3),
         "rows": rows,
     }
