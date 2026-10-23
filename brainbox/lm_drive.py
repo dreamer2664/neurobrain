@@ -154,8 +154,13 @@ class LMDriver:
             verdict, detail = world.verify(before, after, step, res)
             satisfied = world.progress() >= 1.0
             px, py = act["protocol_point"]
-            check = ("<|check|>objective satisfied" if satisfied
-                     else f"<|check|>objective not satisfied: {detail}")
+            # worlds own the task-level verdict; falling back to the action
+            # detail is what made the policy loop on its last click
+            reason = (world.check_text() if hasattr(world, "check_text") else None)
+            if reason is None:
+                reason = "objective satisfied" if satisfied else detail
+            check = ("<|check|>" + reason if reason == "objective satisfied"
+                     else f"<|check|>objective not satisfied: {reason}")
             if same:
                 # the same click twice and nothing moved: say so, so the next
                 # prompt cannot be byte-identical to this one

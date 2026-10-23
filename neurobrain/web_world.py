@@ -169,6 +169,29 @@ class WebWorld:
             return self._chrome()
         return self._docs()
 
+    def check_text(self) -> str:
+        """The task-level reason, in the same words the training corpus uses.
+
+        This is what the <|check|> line says. It is a statement about the
+        objective ("the document is not saved"), never a copy of the last action
+        result -- when the driver echoed the action instead, the policy saw text
+        it had never been trained on and looped on the same click.
+        """
+        if self.saved and self.doc_text == self.task.answer:
+            return "objective satisfied"
+        if self.state == "desktop":
+            return "chrome is not open yet"
+        if self.state == "chrome" and self.page == "results":
+            return "the right search result is not open"
+        if self.state == "chrome" and self.page == "article":
+            return ("the answer is not on the clipboard" if not self.clipboard
+                    else "google docs is not open")
+        if self.state == "docs":
+            if not self.doc_text:
+                return "the document is still empty"
+            return "the document is not saved"
+        return "not done yet"
+
     # -------------------------------------------------------------- protocol
     def observe(self) -> dict:
         win = self.view()
@@ -317,46 +340,46 @@ def web_episode(rng: random.Random) -> str:
     parts = [f"<|drive|>objective: {task.objective()}"]
     step = 0
 
-    def click(label: str, check: str, obs: str | None = None) -> None:
+    def click(label: str, obs: str | None = None) -> str:
         nonlocal step
         step += 1
         el = next(e for e in world.view().elements if e.label == label)
         parts.append(f"<|step|>{step}<|act|>click({int(el.cx)},{int(el.cy)})")
         res = world.act({"type": "click"}, (el.cx, el.cy))
         parts.append(f"<|obs|>{obs or res['detail']}")
-        parts.append("<|check|>objective satisfied" if world.progress() >= 1.0
+        check = world.check_text()
+        parts.append("<|check|>" + check if check == "objective satisfied"
                      else f"<|check|>objective not satisfied: {check}")
+        return check
 
     parts.append(_scan(world.view().elements))
-    click("chrome", "chrome is not open yet")
+    click("chrome")
     parts.append(_scan(world.view().elements))
 
     wrong = [r for r in task.results if r != task.topic]
     if wrong and rng.random() < 0.35:
         bad = rng.choice(wrong)
-        click(bad, "wrong result, the objective is about something else",
-              obs=f"opened {bad}, wrong result")
+        click(bad, obs=f"opened {bad}, wrong result")
         parts.append(f"<|retry|>that was {bad}, open the result that matches the objective")
         parts.append(_scan(world.view().elements))
 
-    click(task.topic, "the right search result is not open")
+    click(task.topic)
     parts.append(_scan(world.view().elements))
 
     if rng.random() < 0.2:
         # a plausible mistake: the answer is not on the clipboard yet
-        click("docs", "the answer has not been copied yet",
-              obs="google docs opened, clipboard is empty")
-        click("paste", "the document is still empty", obs="clipboard is empty")
+        click("docs", obs="google docs opened, clipboard is empty")
+        click("paste", obs="clipboard is empty")
         parts.append("<|retry|>copy the answer from the article first")
-        click("chrome", "back to the article")
+        click("chrome")
         parts.append(_scan(world.view().elements))
 
-    click("copy", "the answer is not on the clipboard")
+    click("copy")
     parts.append(_scan(world.view().elements))
-    click("docs", "google docs is not open")
+    click("docs")
     parts.append(_scan(world.view().elements))
-    click("paste", "the document is still empty")
-    click("save", "the document is not saved")
+    click("paste")
+    click("save")
     parts.append("<|done|>success")
     return "".join(parts)
 
