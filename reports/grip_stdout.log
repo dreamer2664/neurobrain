@@ -353,3 +353,20 @@ ModuleNotFoundError: No module named 'torch'
 [grip] step 1425/24000 loss 2.4163 ce 2.2675 off 0.077 act 0.0000 elapsed 286s
 [grip] time budget reached, stopping
 [grip] done: {"hit_widget": 0.805, "hit_point": 0.805, "action_acc": 1.0, "click_iou": 0.11319192793738247}
+[grip] resumed from step 1448
+[grip] params: 0.44M, batch 16, steps 24000
+[grip] step 1450/24000 loss 2.4258 ce 2.3139 off 0.088 act 0.0000 elapsed 2s
+[grip] step 1475/24000 loss 2.3399 ce 2.1307 off 0.058 act 0.0003 elapsed 19s
+[grip] step 1500/24000 loss 2.2909 ce 2.1253 off 0.039 act 0.0002 elapsed 34s
+[grip] eval @ 1500: hit_widget 0.867  hit_point 0.867  action_acc 1.000  click_iou 0.123
+[grip] step 1525/24000 loss 2.3346 ce 2.2742 off 0.039 act 0.0000 elapsed 54s
+[grip] step 1550/24000 loss 2.2928 ce 2.5864 off 0.034 act 0.0002 elapsed 71s
+[grip] step 1575/24000 loss 2.2571 ce 2.2154 off 0.035 act 0.0000 elapsed 87s
+[grip] step 1600/24000 loss 2.2304 ce 2.5125 off 0.047 act 0.0000 elapsed 103s
+[grip] step 1625/24000 loss 2.1962 ce 2.1214 off 0.056 act 0.0004 elapsed 119s
+[grip] step 1650/24000 loss 2.2466 ce 2.1803 off 0.028 act 0.0000 elapsed 135s
+[grip] step 1675/24000 loss 2.2284 ce 2.1352 off 0.068 act 0.0002 elapsed 152s
+[grip] step 1700/24000 loss 2.2079 ce 2.0874 off 0.039 act 0.0000 elapsed 168s
+[grip] step 1725/24000 loss 2.2334 ce 2.0951 off 0.051 act 0.0000 elapsed 184s
+[grip] time budget reached, stopping
+[grip] done: {"hit_widget": 0.8825, "hit_point": 0.8825, "action_acc": 0.9975, "click_iou": 0.12417942192487638}

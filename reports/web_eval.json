@@ -1,0 +1,231 @@
+{
+  "step": 16000,
+  "tasks": 20,
+  "solved": 6,
+  "accuracy": 0.3,
+  "mean_steps": 5.8,
+  "action_precision": 0.888,
+  "overclaim": 0.05,
+  "rows": [
+    {
+      "topic": "the capital of Japan",
+      "answer": "Tokyo",
+      "solved": true,
+      "doc": "Tokyo",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the boiling point of water",
+      "answer": "100 degrees Celsius",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    },
+    {
+      "topic": "the largest planet",
+      "answer": "Jupiter",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    },
+    {
+      "topic": "the currency of Japan",
+      "answer": "the yen",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    },
+    {
+      "topic": "the symbol for oxygen",
+      "answer": "O",
+      "solved": false,
+      "doc": "Brasilia",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Japan",
+      "answer": "Tokyo",
+      "solved": true,
+      "doc": "Tokyo",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the currency of Japan",
+      "answer": "the yen",
+      "solved": true,
+      "doc": "the yen",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the currency of the United Kingdom",
+      "answer": "pound sterling",
+      "solved": false,
+      "doc": "about 300,000 kilometres per second",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the boiling point of water",
+      "answer": "100 degrees Celsius",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    },
+    {
+      "topic": "the capital of Italy",
+      "answer": "Rome",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 1,
+      "overclaim": false,
+      "actions": 1,
+      "useful_actions": 1
+    },
+    {
+      "topic": "the capital of Brazil",
+      "answer": "Brasilia",
+      "solved": false,
+      "doc": "Rome",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the currency of Japan",
+      "answer": "the yen",
+      "solved": false,
+      "doc": "Paris",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the boiling point of water",
+      "answer": "100 degrees Celsius",
+      "solved": true,
+      "doc": "100 degrees Celsius",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Canada",
+      "answer": "Ottawa",
+      "solved": false,
+      "doc": "Paris",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Japan",
+      "answer": "Tokyo",
+      "solved": true,
+      "doc": "Tokyo",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Brazil",
+      "answer": "Brasilia",
+      "solved": false,
+      "doc": "O",
+      "saved": true,
+      "steps": 7,
+      "overclaim": true,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the speed of light",
+      "answer": "about 300,000 kilometres per second",
+      "solved": true,
+      "doc": "about 300,000 kilometres per second",
+      "saved": true,
+      "steps": 6,
+      "overclaim": false,
+      "actions": 6,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Brazil",
+      "answer": "Brasilia",
+      "solved": false,
+      "doc": "100 degrees Celsius",
+      "saved": true,
+      "steps": 7,
+      "overclaim": false,
+      "actions": 7,
+      "useful_actions": 6
+    },
+    {
+      "topic": "the capital of Italy",
+      "answer": "Rome",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    },
+    {
+      "topic": "the currency of Japan",
+      "answer": "the yen",
+      "solved": false,
+      "doc": "",
+      "saved": false,
+      "steps": 5,
+      "overclaim": false,
+      "actions": 5,
+      "useful_actions": 4
+    }
+  ]
+}
