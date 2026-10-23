@@ -52,6 +52,10 @@ def main() -> None:
                     help="transformer depth (deliverable-3 7-vs-8-layer experiment)")
     ap.add_argument("--n-head", type=int, default=7)
     ap.add_argument("--d-model", type=int, default=224)
+    ap.add_argument("--ema-decay", type=float, default=0.0,
+                    help="if >0: maintain an EMA shadow of the weights "
+                         "(deliverable-3 EMA experiment); ema eval is logged "
+                         "alongside the raw eval and stored in checkpoints")
     ap.add_argument("--min_steps_between_evals", type=int, default=200)
     ap.add_argument("--time_budget", type=float, default=float("inf"), help="seconds; stop-training guard")
     ap.add_argument("--resume", action="store_true")
@@ -118,6 +122,20 @@ def main() -> None:
     anneal_start = step
     anneal_from = args.anneal_lr if args.anneal_lr is not None else args.lr * 0.1
 
+    ema = None
+    if args.ema_decay > 0:
+        ema = {k: v.detach().clone().float() for k, v in model.state_dict().items()}
+        if args.resume:
+            try:
+                ck_ema = torch.load(os.path.join(args.out, "lm_latest.pt"),
+                                    map_location="cpu", weights_only=False)
+                if isinstance(ck_ema.get("ema"), dict):
+                    ema = {k: v.float() for k, v in ck_ema["ema"].items()}
+                    print("[lm] resumed EMA shadow")
+                del ck_ema
+            except FileNotFoundError:
+                pass
+
     rng = random.Random(args.seed + step)
     t_start = time.time()
     t0 = time.time()
@@ -146,6 +164,11 @@ def main() -> None:
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         step += 1
+        if ema is not None:
+            with torch.no_grad():
+                d = args.ema_decay
+                for k, v in model.state_dict().items():
+                    ema[k].mul_(d).add_(v.detach().float(), alpha=1.0 - d)
         loss_val = sum(step_losses.values()) / len(step_losses)
         running += loss_val
         n_run += 1
@@ -169,23 +192,49 @@ def main() -> None:
                     tot = sum(model(x, y)[1].item() for x, y in batches) / len(batches)
                     evals[k] = tot
                 mean_val = sum(evals.values()) / len(evals)
+            ema_evals, ema_mean = None, None
+            if ema is not None:
+                raw = {k: v.detach().clone() for k, v in model.state_dict().items()}
+                model.load_state_dict({k: v.to(raw[k].dtype) for k, v in ema.items()})
+                with torch.no_grad():
+                    ema_evals = {k: sum(model(x, y)[1].item() for x, y in batches) / len(batches)
+                                 for k, batches in val_batches.items()}
+                ema_mean = sum(ema_evals.values()) / len(ema_evals)
+                model.load_state_dict(raw)
             model.train()
             print(f"[lm] eval @ {step}: " + "  ".join(f"{k} {v:.4f}" for k, v in evals.items()), flush=True)
+            if ema_evals is not None:
+                print(f"[lm] ema  @ {step}: " + "  ".join(f"{k} {v:.4f}" for k, v in ema_evals.items())
+                      + f"  (mean {ema_mean:.4f})", flush=True)
             rec = {"step": step, "eval": evals, "eval_mean": mean_val}
+            if ema_evals is not None:
+                rec["eval_ema"] = ema_evals
+                rec["eval_mean_ema"] = ema_mean
             with open(log_path, "a") as f:
                 f.write(json.dumps(rec) + "\n")
-            if mean_val < best_val:
+            improved = mean_val < best_val
+            if improved:
                 best_val = mean_val
-            torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
-                        "best_val": best_val, "cfg": cfg.to_dict()},
-                       os.path.join(args.out, "lm_latest.pt"))
-            torch.save({"model": model.state_dict(), "step": step, "best_val": best_val,
-                        "cfg": cfg.to_dict()}, os.path.join(args.out, "lm_best.pt"))
+            ck_latest = {"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+                         "best_val": best_val, "cfg": cfg.to_dict()}
+            if ema is not None:
+                ck_latest["ema"] = ema
+            torch.save(ck_latest, os.path.join(args.out, "lm_latest.pt"))
+            if improved:
+                # BUGFIX: lm_best used to be saved at EVERY eval (= last-eval
+                # weights). Now it is the argmin of eval_mean, as the name says.
+                ck_best = {"model": model.state_dict(), "step": step, "best_val": best_val,
+                           "cfg": cfg.to_dict()}
+                if ema is not None:
+                    ck_best["ema"] = ema
+                torch.save(ck_best, os.path.join(args.out, "lm_best.pt"))
 
     # final save
-    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
-                "best_val": best_val, "cfg": cfg.to_dict()},
-               os.path.join(args.out, "lm_latest.pt"))
+    ck_final = {"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+                "best_val": best_val, "cfg": cfg.to_dict()}
+    if ema is not None:
+        ck_final["ema"] = ema
+    torch.save(ck_final, os.path.join(args.out, "lm_latest.pt"))
     model.eval()
     with torch.no_grad():
         evals = {}
