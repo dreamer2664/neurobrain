@@ -60,8 +60,9 @@ def main() -> None:
         lines.append("### Question answering\n")
         lines.append(f"* seen facts, unseen question templates: "
                      f"**{pct(qa.get('seen_accuracy'))}** (n={qa.get('seen_n')})")
-        lines.append(f"* facts never trained on: **{pct(qa.get('heldout_accuracy'))}** "
-                     f"(n={qa.get('heldout_n')}) - this is generalisation, not recall\n")
+        lines.append(f"* facts never trained on: **{pct(qa.get('unseen_probe_accuracy'))}** "
+                     f"(n={qa.get('unseen_probe_n')}) - this is generalisation, not recall, "
+                     f"and it is deliberately not part of the bar above\n")
         lines.append("| question | expected | model | |")
         lines.append("|---|---|---|---|")
         for s in qa.get("samples", [])[:10]:
