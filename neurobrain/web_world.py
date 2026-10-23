@@ -141,8 +141,14 @@ class WebWorld:
     def _docs(self) -> Win:
         els = [_el("button", "paste", 200, 820, 240, 110),
                _el("button", "save", 1650, 820, 240, 110)]
-        # the editor shows the clipboard once pasted; before that it is blank
-        els += [_el("field", "document", 200, 260, 1500, 480)]
+        # The editor's contents are part of the screen. Without them the scan
+        # after a paste is identical to the scan before it, and the policy has
+        # no way to know it should move on to save (it looped on paste for the
+        # rest of the budget).
+        body = self.doc_text or "empty document"
+        status = "saved" if self.saved else "unsaved"
+        els += [_el("field", body, 200, 260, 1500, 480),
+                _el("label", status, 1650, 960, 200, 90)]
         return Win("docs", 120, 80, 1700, 1600, els + self._dock())
 
     def view(self) -> Win:

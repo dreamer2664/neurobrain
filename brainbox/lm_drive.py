@@ -89,6 +89,7 @@ class LMDriver:
         transcript = [head + scan]
         claims: list[dict] = []
         executed = 0
+        last_point = None
         terminal: dict | None = None
 
         def push_step(text: str) -> None:
@@ -143,6 +144,8 @@ class LMDriver:
 
             executed += 1
             before = world.observe()
+            same = act["protocol_point"] == last_point
+            last_point = act["protocol_point"]
             # the simulated desktop only clicks; every primitive that names a
             # point is delivered as a click there (type/drag/press all land on
             # the same widget centre in the text protocol)
@@ -151,9 +154,13 @@ class LMDriver:
             verdict, detail = world.verify(before, after, step, res)
             satisfied = world.progress() >= 1.0
             px, py = act["protocol_point"]
-            push_step(f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}"
-                      + ("<|check|>objective satisfied" if satisfied
-                         else f"<|check|>objective not satisfied: {detail}"))
+            check = ("<|check|>objective satisfied" if satisfied
+                     else f"<|check|>objective not satisfied: {detail}")
+            if same:
+                # the same click twice and nothing moved: say so, so the next
+                # prompt cannot be byte-identical to this one
+                check += "<|retry|>that click changed nothing, pick another element"
+            push_step(f"<|step|>{step}<|act|>click({px},{py})<|obs|>{detail}" + check)
             scan_now = scan_from_obs(after)
             transcript.append(comp.strip())
 
