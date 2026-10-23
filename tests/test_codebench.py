@@ -127,3 +127,19 @@ def test_extract_completion_strips_code_sep():
     tm = "<|" + "ta" + "sk|>"
     raw4 = prompt + sep + "    return a" + nl + tm + "next unit"
     assert cb.extract_completion(raw4, prompt) == "    return a" + nl
+
+
+def test_instructed_prompt_template():
+    # exact corpus-v2 template: task marker + phrase + summary + code sep + LF
+    t = TASKS[0]
+    p = cb.instructed_prompt(t)
+    assert p.startswith(cb.STOP_MARKERS[3])            # task marker (concat-built)
+    assert p.endswith(cb.CODE_SEP + chr(10))           # code sep then newline
+    mid = p[len(cb.STOP_MARKERS[3]):-len(cb.CODE_SEP + chr(10))]
+    assert mid.startswith("write a function that ")
+    summary = mid[len("write a function that "):]
+    assert summary and chr(10) not in summary          # single-line summary
+    # docstring-free tasks still get a usable summary
+    bare = {"id": "x", "prompt": "def g(z):" + chr(10) + "    pass" + chr(10), "fn": "g"}
+    p2 = cb.instructed_prompt(bare)
+    assert p2.endswith(cb.CODE_SEP + chr(10)) and "g" in p2

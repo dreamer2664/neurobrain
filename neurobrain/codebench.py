@@ -107,6 +107,21 @@ def load_tasks(task_dir: str = TASK_DIR, manifest_path: str = MANIFEST_PATH,
 
 
 # --------------------------------------------------------------- extraction
+def instructed_prompt(task: dict) -> str:
+    """Replicate the corpus-v2 instruction template for a task:
+    task-marker + 'write a function that ' + docstring summary + code-sep + LF.
+    Markers come from the concatenation-built constants; never typed literals."""
+    doc = ""
+    try:
+        doc = (ast.get_docstring(ast.parse(task["prompt"])) or "").strip()
+    except SyntaxError:
+        doc = ""
+    summary = doc.split(". ")[0].rstrip(".").replace(chr(10), " ").strip()
+    if not summary:
+        summary = "behaves exactly like " + task["fn"] + " should"
+    return STOP_MARKERS[3] + "write a function that " + summary + CODE_SEP + chr(10)
+
+
 def extract_completion(text: str, prompt: str) -> str:
     """Cut a raw generation down to the candidate body."""
     comp = text[len(prompt):] if text.startswith(prompt) else text
@@ -169,7 +184,8 @@ def peak_rss_mb() -> float:
 def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
           out: str = os.path.join(ROOT, "reports", "codebench.json"),
           max_tokens: int = 128, seed: int = 0, modes: tuple[str, ...] = ("greedy", "sampled"),
-          task_dir: str = TASK_DIR, limit: int | None = None) -> dict:
+          task_dir: str = TASK_DIR, limit: int | None = None,
+          prompt_mode: str = "plain") -> dict:
     import torch
     from .sample import load
     from .tokenizer import BPETokenizer  # noqa: F401  (loaded via sample.load)
@@ -189,15 +205,21 @@ def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
         t0 = time.time()
         gen_tokens = 0
         for t in tasks:
-            ids = tok.encode(t["prompt"])
+            p_text = instructed_prompt(t) if prompt_mode == "instructed" else t["prompt"]
+            ids = tok.encode(p_text)
             x = torch.tensor([ids], dtype=torch.long)
             out_ids = model.generate(x, max_new_tokens=max_tokens, temperature=temperature,
                                      top_k=top_k, eos_id=eot)
             full = tok.decode(out_ids[0].tolist())
             gen_tokens += out_ids.shape[1] - len(ids)
-            comp = extract_completion(full, t["prompt"])
-            raw_head = full[len(t["prompt"]):][:160] if not comp else ""
-            r = run_candidate(t["prompt"], comp, t["tests"], t["fn"], t.get("timeout_s", 5))
+            comp = extract_completion(full, p_text)
+            raw_head = full[len(p_text):][:160] if not comp else ""
+            if prompt_mode == "instructed" and comp.lstrip().startswith("def "):
+                # instructed training emits WHOLE units: the candidate is the
+                # full def on its own (marker text is not valid python)
+                r = run_candidate("", comp, t["tests"], t["fn"], t.get("timeout_s", 5))
+            else:
+                r = run_candidate(t["prompt"], comp, t["tests"], t["fn"], t.get("timeout_s", 5))
             rows.append({"id": t["id"], "category": t["category"], "difficulty": t["difficulty"],
                          "completion": comp[:400], "raw_head": raw_head, **r})
         dt = time.time() - t0
@@ -230,6 +252,7 @@ def score(ckpt: str, data_dir: str = os.path.join(ROOT, "data"),
 
     result = {
         "bench": BENCH_VERSION,
+        "prompt_mode": prompt_mode,
         "utc": time.strftime("%FT%TZ", time.gmtime()),
         "ckpt": os.path.relpath(ckpt, ROOT),
         "ckpt_sha256": sha256_file(ckpt),
@@ -308,6 +331,10 @@ def main() -> None:
     ap.add_argument("--max-tokens", type=int, default=128)
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--prompt-mode", default="plain", choices=["plain", "instructed"],
+                    help="plain = continuation prompt (v1 protocol); instructed = "
+                         "corpus-v2 task/summary/code-sep framing (deliverable 6: "
+                         "eval instructed vs plain separately)")
     args = ap.parse_args()
 
     if args.cmd == "build":
@@ -315,7 +342,8 @@ def main() -> None:
         print(f"[codebench] built {man['n']} tasks -> {TASK_DIR} (+ manifest)")
     elif args.cmd == "score":
         score(args.ckpt, data_dir=args.data, out=args.out,
-              max_tokens=args.max_tokens, seed=args.seed, limit=args.limit)
+              max_tokens=args.max_tokens, seed=args.seed, limit=args.limit,
+              prompt_mode=args.prompt_mode)
     elif args.cmd == "holdout":
         rep = holdout_scan()
         os.makedirs(os.path.join(ROOT, "reports"), exist_ok=True)
