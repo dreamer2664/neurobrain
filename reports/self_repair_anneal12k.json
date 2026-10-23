@@ -1,0 +1,492 @@
+{
+ "utc": "2026-10-23T05:41:13Z",
+ "ckpt": "checkpoints/run12k-anneal/lm_best.pt",
+ "ckpt_sha256": "e412fa9d08b08664e1e0526ab43f3cf44fdf6580617cad5d3ca4d2f7a4c9a89f",
+ "step": 13200,
+ "decode": {
+  "temperature": 0.8,
+  "top_k": 40,
+  "seed": 0,
+  "rep_penalty": 1.0
+ },
+ "n_tasks": 49,
+ "first_pass": 0,
+ "failed_first": 49,
+ "repaired": 1,
+ "repair_rate": 0.0204,
+ "final_pass": 0.0204,
+ "seconds": 20.5,
+ "peak_rss_mb": 266.9,
+ "transcripts": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "\n# FULL codes on unknown keyword arguments\n\nfrom . import _unknown_keywords\n\n# FAIL\n# ============================ ========================== ========================== ========================== ==========================\n# Loading large in papers\n",
+   "passed1": false,
+   "error": "ImportError: attempted relative import with no known parent package",
+   "attempt2": "def double(n):\n    return n - 2\n",
+   "passed2": false,
+   "why2": "NameError: name 'add' is not defined"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = _timedelta = None\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def double(n):\n    \"\"\"return n times two\"\"\"\ndef\n----------------wn directory instead<|step|>2b<|act|>retry_with_the_reprs_with_the_by_the_run_log()<|obs|>step completed<|step|>3<|act|>list_the_matching_files()<|obs|>step completed<|step|>4<|act|>\n",
+   "passed2": false,
+   "why2": "syntax: invalid decimal literal"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def is_bad(xs):\n    \"\"\"\n    return an in-dict, yielding the annotated list and returned the\n    list. For negative values, a list of the corresponding lists\n    in their coordinates the list.  Note that the results\n    are not possible, it is a list or the corresponding list.\n\n    Examples\n    =====",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 13)",
+   "attempt2": "def mean(xs):\n    \"\"\"return the arithmetic mean of a non-empty list\"\"\"\ndefgate(values):\n    return text.split()[0]\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  }
+ ],
+ "all_rows": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "\n# FULL codes on unknown keyword arguments\n\nfrom . import _unknown_keywords\n\n# FAIL\n# ============================ ========================== ========================== ========================== ==========================\n# Loading large in papers\n",
+   "passed1": false,
+   "error": "ImportError: attempted relative import with no known parent package",
+   "attempt2": "def double(n):\n    return n - 2\n",
+   "passed2": false,
+   "why2": "NameError: name 'add' is not defined"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = None\n_timedelta = _timedelta = None\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def double(n):\n    \"\"\"return n times two\"\"\"\ndef\n----------------wn directory instead<|step|>2b<|act|>retry_with_the_reprs_with_the_by_the_run_log()<|obs|>step completed<|step|>3<|act|>list_the_matching_files()<|obs|>step completed<|step|>4<|act|>\n",
+   "passed2": false,
+   "why2": "syntax: invalid decimal literal"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def is_bad(xs):\n    \"\"\"\n    return an in-dict, yielding the annotated list and returned the\n    list. For negative values, a list of the corresponding lists\n    in their coordinates the list.  Note that the results\n    are not possible, it is a list or the corresponding list.\n\n    Examples\n    =====",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 13)",
+   "attempt2": "def mean(xs):\n    \"\"\"return the arithmetic mean of a non-empty list\"\"\"\ndefgate(values):\n    return text.split()[0]\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-arith-04",
+   "attempt1": "\n# The following by specific for terminal for the terminal.\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def turn(values):\n    return not min(items)\n",
+   "passed2": false,
+   "why2": "NameError: name 'celsius_to_fahrenheit' is not defined"
+  },
+  {
+   "id": "cb-arith-05",
+   "attempt1": "\n_sympy_dispatcher = _sympy_sympy_dispatcher(sympy_dispatcher)\n_sympy_dispatcher_add(sympy_sympy_dispatcher, sympy_dispatcher)\n",
+   "passed1": false,
+   "error": "NameError: name '_sympy_sympy_dispatcher' is not defined",
+   "attempt2": "def clamp(x, lo, hi):\n    \"\"\"return x limited to the range lo..hi\"\"\"\ndefdefined by there.''''')\n\n#-----------------------------------------------------------------------------\n# Globals and constants\n#-----------------------------------------------------------------------------\n\n\"\"\"\nClasses for the indirect operation in the form of the ``sympy_eq``\nthis of ``sympy_dispatcher`` is a power of ``symp",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 11)"
+  },
+  {
+   "id": "cb-arith-06",
+   "attempt1": "\n# TODO: Delete the gcd function of a function of a circular\n# method on Python, but the function of a function of the function of a function.\n#\n# The function of the function function describes the function of the form of a function of a function\n# and defined functions. The function is integrated ",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count_unique(items):\n    unique = set(items)\n    return not len(items)\n",
+   "passed2": false,
+   "why2": "NameError: name 'gcd' is not defined"
+  },
+  {
+   "id": "cb-dict-01",
+   "attempt1": "\n# TODO: https://www.w3.org/Techanism/Techanism.html\n#-----------------------------------------------------------------------------\n\n\"\"\"\nFunction\n\nComposite\n\n==========================================================================\n\nInput:\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 14)",
+   "attempt2": "def word_count(s):\n    \"\"\"return a dict mapping each word to how often it appears\"\"\"\ndefnthe triples.h):\n\n\"\"\"\n\n==========================\n--------------------\n.. autosummary::\n   :toctree: generated/\n\n   brackets[s]\n\"\"\"\n\ntry: +\n   |  hyperbolic_rules   --  hyperbolic_rules\n",
+   "passed2": false,
+   "why2": "syntax: unmatched ')'"
+  },
+  {
+   "id": "cb-dict-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def keys_positive(d):\n    return [k for k in d if d[k] > 0]\n",
+   "passed2": true,
+   "why2": ""
+  },
+  {
+   "id": "cb-dict-03",
+   "attempt1": "\nimport re\n\nimport functools\nimport re\nimport re\nimport re\nfrom collections.abc import Callable\nfrom collections.abc import Sequence\nfrom typing import Any, A typing, TypeVar, Unpack, TypeVar, Optional, Union, Union\n\nimport torch\nfrom torch._higher_orderable_tensor import (\n    _get_device_index\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def biggested:\n    https://github.com/pytorch/pytorch/issues/0374.\n    \"\"\"\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-dict-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def biggest(items):\n    return not min(items)\n",
+   "passed2": false,
+   "why2": "NameError: name 'merge' is not defined"
+  },
+  {
+   "id": "cb-dict-05",
+   "attempt1": "\n# Affine function for derivative and distributions of decorators.\n#\n# This module is the latter and functions that is made of the\n# function.\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def summarize(input, **kwargs):\n    \"\"\"\n    Whether to test the function that goes are duplicate. The input\n    function that is not consistent, see the function to return it\n    (used in x - y).\n\n    See Also\n    ========\n\n    numpy.matrices.py\n    numpy.matrices.MatrixMatrix\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 11)"
+  },
+  {
+   "id": "cb-dict-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return not text.split()[-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'count_by_first_letter' is not defined"
+  },
+  {
+   "id": "cb-list-01",
+   "attempt1": "\n# Compile Placement\n# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n# Combination for biginary consolutions:\n# - - - - - 1\n# - - - - - - - - - -\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count\n",
+   "passed2": false,
+   "why2": "syntax: expected '('"
+  },
+  {
+   "id": "cb-list-02",
+   "attempt1": "\n# -------------------------------------------------------------------------------\n# -------------------------------------------------------------------------------\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def download(s):\n    return s[::-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'even_only' is not defined"
+  },
+  {
+   "id": "cb-list-03",
+   "attempt1": "\nDOUT = Integer\n",
+   "passed1": false,
+   "error": "NameError: name 'Integer' is not defined",
+   "attempt2": "def first_word(text):\n    return text.split()[0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'positives' is not defined"
+  },
+  {
+   "id": "cb-list-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def positives(xs):\n    return [x for x in xs if x > 0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'flatten1' is not defined"
+  },
+  {
+   "id": "cb-list-05",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def flip(s):\n    return not s[::2]\n",
+   "passed2": false,
+   "why2": "NameError: name 'max_of' is not defined"
+  },
+  {
+   "id": "cb-list-06",
+   "attempt1": "\n__all__ = ['squares', 'squares', 'squares', 'squares', 'squares', 'squares',\n    'squares', 'squares', 'coeff', 'squares', 'rho', 'rho', 'rho',\n    'rho'].\n\n# Equivalent to recursive different\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def sum_squares(xs):\n    \"\"\"return the sum of the squares\"\"\"\ndef.split()[-1]\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-list-07",
+   "attempt1": "\n# Based on Based on Windows READA.\n# DOM_MYPHIT = \"#a00d8\"\n# DEBUG_MYPHIT = \"#fa97\"\n# DEBUG_SCHEADATE = \"#a8b84\"\n# DEBUG_SCHEAD\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def chunk(xs, n):\n    \"\"\"split xs into consecutive chunks of length n (last may be shorter)\"\"\"\ndef}\" blinking in \"<|step|>1<|act|>click(975,1155)<|obs|>no visible change\n",
+   "passed2": false,
+   "why2": "syntax: unmatched '}'"
+  },
+  {
+   "id": "cb-list-08",
+   "attempt1": "\n# First, Empty list of lists only accepted as a list of lists.\n\n# Given a list of tuples, remove them updates\n# section.  These are their stored lists of lists and the\n# values are in the forms of the lists.  There are part of the last element for\n# values are a lists of the\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return text.split()[0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'last' is not defined. Did you mean: 'list'?"
+  },
+  {
+   "id": "cb-list-09",
+   "attempt1": "\nfrom types import ArrayLike, Callable\nfrom types import Categorical, NoReturn\n\nfrom . import my_many_ops\n\nfrom .benchmary import BuildMatrixError\nfrom .cuda import BuildMatrixError\nfrom . import _begin, _begin, _begin\nfrom .multiclass import M\n",
+   "passed1": false,
+   "error": "ImportError: cannot import name 'ArrayLike' from 'types' (/usr/local/lib/python3.13/types.py)",
+   "attempt2": "def cumsum(xs):\n    \"\"\"return the cumulative sums: [1, 2, 3] becomes [1, 3, 6]\"\"\"\narly returns a largest mypyi.cuGraphLength.done()\n\n__all__ = [\n    \"Accessing the VariableExpr\"\n    \"PrintedCVariableExpr  # pragma: no cover\n\n    def __init__(self, image_size):\n        self.blocks = []\n        self.cuda\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 7)"
+  },
+  {
+   "id": "cb-list-10",
+   "attempt1": "\n# TODO(V): GREEK V is the same as in the following three\n# TODO: we'll get the tree in the first replacement.\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text,15):\n    return not text.split() > 0x005:  # only one element in the tree to\n    if not text.startswith((\"@\")):\n        return False\n\n    rv = tree.offsets if rv < 0 else rv\n\n    # Add the tree.\n    rv = tree.subs(rv, v\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-logic-01",
+   "attempt1": "\n_DEFAULT_PREVERSION = \"\"\"\nAbstract class to maintain the functions.\n_DEFAULT_PREVERSION = \"\"\"\ntry:\n    Abstract class for MacOS/MacOS/MacOS/INFIX.py.\n\n    PRECATED_EVENT = '\n",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def is_even(n):\n    \"\"\"true if n is even\"\"\"\ndefgewo bluex\ntechnique blanults blanh:mu.blan,vcccd5\ntry:\n    # The first case is a completely because it would be added in the\n    # compiled request, see https://github.com/mu_46be\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-logic-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def flip(s):\n    return s[::-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'all_positive' is not defined"
+  },
+  {
+   "id": "cb-logic-03",
+   "attempt1": "\n# The exported function, that is defined to the intecode, that is not an\n#  function, which will be created in the BNAMO, and trimmed that\n# here is not a function.\n#  For the full helper function, we'll have included the following functions\n# -------------------------------------------------------",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def xor(a, b):\n    \"\"\"true when exactly one of a and b is truthy\"\"\"\ndef\n#\n# This file is in the file Lookups. It is added to the link of the file\n# which is live as long as long as longer than the link.\nexcept ImportError:\n    pass\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-logic-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def keys_positive(d):\n    return [k for k in d if d[k] > 0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'is_sorted' is not defined. Did you mean: 'sorted'?"
+  },
+  {
+   "id": "cb-misc-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def flip(s):\n    return not s[::2]\n",
+   "passed2": false,
+   "why2": "NameError: name 'fizz' is not defined"
+  },
+  {
+   "id": "cb-misc-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def positives(xs):\n    return [x for x in xs if x > 0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'multiples' is not defined"
+  },
+  {
+   "id": "cb-misc-03",
+   "attempt1": "\n_SAW_ITERS = \"_SAX_ITERS\"\n# `SAW_ITERS`\n# `TRT Load`\n\n_SAX = _SAX_ITERS[1]\n# `AX = _SAX_ITERS[3]\n# `SAX_ITERS`\n# `RTL_THRE\n",
+   "passed1": false,
+   "error": "NameError: name '_SAX_ITERS' is not defined. Did you mean: '_SAW_ITERS'?",
+   "attempt2": "def squares_upto(n):\n    \"\"\"return the squares of the integers from 1 to n\"\"\"\ndef().\n#\n# The Python extension will be imported by the MIT risk further of\n# the AX sorted by the RTL_ONLY.py.\n#\n# The SAX license is in the terms of the BSD license.\n#\n# The MIT sIGNORE_\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-misc-04",
+   "attempt1": "true_prime = \"\"\"\ntrue_prime = {\n    \"public_prime_prime\": [0, (0, 1, 1), (0, 1)],\n    \"log\": [0, (1, 0, 0)],\n    \"gamma\": [0, 0, 0],\n    \"gamma\": [0, 0, 0, 0],\n    \"gamma\": [0,\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 9)",
+   "attempt2": "def is_prime(n):\n    \"\"\"true if n is a prime number\"\"\"\ndef.color(1140) == 9  ->  AssertionError\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-misc-05",
+   "attempt1": "\n# Numbers\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def keys_positive(d):\n    return [k for k in d if d[k] > 0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'evens_upto' is not defined"
+  },
+  {
+   "id": "cb-misc-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def summarize(items):\n    return not {'ok': False, 'n': len(items)}\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-rec-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def positives(xs):\n    return [x for x in xs if x <= 0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'factorial' is not defined"
+  },
+  {
+   "id": "cb-rec-02",
+   "attempt1": "\nif hasattr(n, \"_fast_in_bounds_in\"):\n    from scipy.stats import _set_trigst_bounds\n    from scipy.stats.stats import __repr__(self)\n    from scipy.stats import __repr__(self)\n    r = _get_repr(n)\n    if r is S.Zero:\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def fib(n):\n    \"\"\"return the nth fibonacci number, fib(0) == 0 and fib(1) == 1\"\"\"\ndefproperty\n    integer terms: [1]_.\n\n    The following module is a recursive function:\n\n    >>> from nltk.util import _predict_of_gcb\n    >>> n = exp('1.2')\n    >>> n < n\n    3\n    >>> n = n\n    >>> n - 2 - 1\n    >>> n\n    Matrix([\n    [1\n",
+   "passed2": false,
+   "why2": "syntax: unexpected indent"
+  },
+  {
+   "id": "cb-rec-03",
+   "attempt1": "\n# TODO - do not slow if we are not terms\n#\n# TODO: this check is for small.\n# -----------------------------------------------------------------------------\n# PEP 430.0\n# Open from the machine portion of the integers, and replace the\n# sum of ops from a sum of the projects.\n#\n# This\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def sum_to(n):\n    \"\"\"return the sum of the integers from 1 to n\"\"\"\ndef\n# Then smaller than simpleize and then the cache's own distributions, then\n# there is no other portion of this module, and the following way:\n# - *p* -- forping determining det a new portion, so that we have to have\n# failed to do them\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-rec-04",
+   "attempt1": "\n# First functions for full functions\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def flip(s):\n    return s[::-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'power' is not defined"
+  },
+  {
+   "id": "cb-sort-01",
+   "attempt1": "\n# COPYTH-INCLULTATION_KEY.get\n#----------------------------------------------------------------------------\n\n# Goods\n#-----------------------------------------------------------------------------\n\n# Goods\n#-----------------------------------------------------------------------------\n\n#-------------",
+   "passed1": false,
+   "error": "AttributeError: module 'logging' has no attribute 'getLogg'. Did you mean: 'getLogger'?",
+   "attempt2": "def sort_desc(xs):\n    \"\"\"return the numbers sorted from largest to smallest\"\"\"\ndef'\n\n#-----------------------------------------------------------------------------\n# Dev API\n#-----------------------------------------------------------------------------\n\n#-----------------------------------------------------------------------------\n# Boilerplate\n#---------------------------------------------------",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-sort-02",
+   "attempt1": "\n# --------------------------------------------------------------------\n# DEFAUSE\n# --------------------------------------------------------------------\n\nfrom pydantic import FileSystem\nfrom pydantic import BaseLiteral, Literal, Literal, NamedTuple\nfrom pydantic.binding import Literal, Any\nfrom pyda",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def sort_by_len(words):\n    \"\"\"return the words sorted by length, shortest first\"\"\"\ndef.\n\n``\n    LikeSinglectionProcessors' (the Like) of a long Lar Graph or Boundary Match Processor\n    Newton-Dictionary Processing MatchPrunity <tar_weighted_weighted_weightedge>.\n\n:func: TypeAlias = tuple[\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 6)"
+  },
+  {
+   "id": "cb-sort-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return text.split()[0]\n",
+   "passed2": false,
+   "why2": "NameError: name 'second_largest' is not defined"
+  },
+  {
+   "id": "cb-sort-04",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def biggest(items):\n    return not min(items)\n",
+   "passed2": false,
+   "why2": "NameError: name 'bubble_sort' is not defined"
+  },
+  {
+   "id": "cb-str-01",
+   "attempt1": "\n#-----------------------------------------------------------------------------\n# General API\n#-----------------------------------------------------------------------------\n\nfrom __future__ import annotations\n\nimport textwrap\n\nimport numpy as np\n\n__all__ = (\n    'bin',\n    'bin_event',\n    'bin_even",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def reverse(s):\n    \"\"\"return the string backwards\"\"\"\ndefdefinition(s):\n    return s[::-1]\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-02",
+   "attempt1": "\n# Additions from LASK for their original sequence\n# that here are first registered to prior to these.\n# This is not allowed in terms with the ''-defined in the risk lineno\n# and ''???+'.\n#\n# Decondary here can be possible to define analys\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    \"\"\"return the first word of a non-empty string\"\"\"\ndef\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-03",
+   "attempt1": "\n# Distributions for decideance to change tokens.\n#\n# Shift: since weird. The implementation is either the\n# task of the chance (and there are two decisions).\n# If we're a different code were many operators.\n#\n# The \"discores\"\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def count_char(s, ch):\n    \"\"\"count occurrences of ch in s\"\"\"\ndef.\n# Only very own directory with the user's own directory instead<|step|>3b<|act|> open the screen 2 or the completed<|step|>2<|act|>sort_by_the_rule_in_the_objective()<|obs|>step completed<|step|>3<|act\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-04",
+   "attempt1": "\n# def __init__(methods, sigma=False, registry=True):\n# a registry functions are not registered within their\n# method and registry (globally).\n#\n#   -------------------------------------------------------------\n# Dev APIs\n#\n# SPDX DeVectors\n#\n# SPDX DE\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def all(s):\n    \"\"\"Log a nice between logic and logic.\n\n    The full links (exact) developulate into another process was\n\n    A spacething that happens, depending on the profiling hop,\n    etc.\n\n    The first argument must be analogous at the choice of the\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-str-05",
+   "attempt1": "\n# BOOL_REGION sigma of the eigenvectors\n# Compose the BOOL_REGION sigma of the lowercase variance.\n# Compose varyless of the variance-point passes macOS.\n\nimport contextlib\nimport shutil\nimport logging\nimport torch\nimport torch._inductor.\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def completed -- patch the input bob<|step|>1<|act|>click(540,1440)<|obs|>no visible change\n",
+   "passed2": false,
+   "why2": "syntax: expected '('"
+  },
+  {
+   "id": "cb-str-06",
+   "attempt1": "\nEq = _expand_function_wrapper(\n    func, func_wrapper, func_wrapper, args, kwargs, sig, args, kwargs\n)\nEq = _expand_function_wrapper(func_wrapper, func_wrapper, args, kwargs)\n\n\n# TODO: the function function does not support decorators\n@contextlib.contextmanager\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def shout(s):\n    \"\"\"return s in upper case followed by an exclamation mark\"\"\"\ndef()<|plan|>1 passed<|plan|>1 passed\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-07",
+   "attempt1": "\n# Directive words for the sequences for their counters signature\n# (sep) how many signature signature should be many signature tend\n# (sep) things like the number of words.\n# Each word is defined by the list of words being the list of words in\n# separators and\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text, rtc=r, total /total / 2)\n\nelement_string_ = ''\n\n# To redraw a word from this tokens, with the '@' translate transitions.  However, these are the following\nchine redr might change this word\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-08",
+   "attempt1": "\n# This module will be very word since the field is not too long later\n# in a http://www.wb.rfc92.com/en-us/tmp/tmp/html' for more information\n# of the mangler.  It can be long, mangling.\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def mean(values):\n    total = sum(values)\n    return round(total / len(values), 2)\n",
+   "passed2": false,
+   "why2": "NameError: name 'title_case' is not defined"
+  },
+  {
+   "id": "cb-str-09",
+   "attempt1": "\n# String extensions\n\n@c_continue\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def biggest(items):\n    return max(items)\n",
+   "passed2": false,
+   "why2": "NameError: name 'repeat' is not defined"
+  }
+ ]
+}

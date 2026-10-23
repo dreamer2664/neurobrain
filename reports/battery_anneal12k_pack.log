@@ -1,0 +1,17 @@
+{
+ "kind": "lm",
+ "name": "anneal12k",
+ "vocab_size": 2052,
+ "n_layer": 6,
+ "n_head": 7,
+ "d_model": 224,
+ "ctx": 256,
+ "tie_embeddings": true,
+ "step": 13200,
+ "params": 4247264,
+ "tokenizer_sha256": "198316dfad27b115e58868edc9b850e58ad23ebf596aed063aec023c8f30f8ab",
+ "weights_sha256": "e0ebe819d47f996cdde154f5d17197d6d84c452694c305557a77733e264804bc",
+ "source_ckpt_sha256": "e412fa9d08b08664e1e0526ab43f3cf44fdf6580617cad5d3ca4d2f7a4c9a89f",
+ "packed_utc": "2026-10-23T05:41:15Z"
+}
+[pack] wrote /home/user/neurobrain/checkpoints/anneal12k

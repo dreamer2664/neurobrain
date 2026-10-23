@@ -1,0 +1,8 @@
+{
+  "step": 13200,
+  "terminal_rate": 1.0,
+  "retry_after_failure": 1.0,
+  "honest_completion": 1.0,
+  "mean_steps": 2.6,
+  "n": 48
+}

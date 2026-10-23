@@ -1,0 +1,83 @@
+{
+  "step": 13200,
+  "val_loss": 2.0486,
+  "val_ppl": 7.76,
+  "syntax_valid": 0,
+  "syntax_total": 12,
+  "syntax_rate": 0.0,
+  "coherent_rate": 0.0,
+  "samples": [
+    {
+      "prompt": "def add(a, b):\n",
+      "generation": "def add_sub(a, b):\n    \"\"\"\n    Find a sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub-basic sub",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def factorial(n):\n",
+      "generation": "def factorial(n):\n    return n.function(n)\n\n\ndef factorial(n):\n    return n.func.as_integer(n)\n\n\ndef factorial(n):\n    return n.function(n)\n\n\ndef factorial(n):\n    return n.function(n)\n\n\ndef factorial(n):\n    return n.function(n)\n\n\ndef factorial(n):\n    return n.",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "class Point:\n    def __init__(self, x, y):\n",
+      "generation": "\nclass Cheba(object):\n    \"\"\"\n    A heba class for this class for this class.\n\n    A terminal class for this class for the class that is used to define the\n    class that defines a dictionary that is used to define the class for\n    the class class.\n\n    The class for this class should be used to define the class for which class\n    define the class for the class class.\n\n    If",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def read_file(path):\n",
+      "generation": "\n# --------------------------------------------------------------------\n# Imports\n# -----------------------------------------------------------------------------\nfrom __future__ import annotations\n\nimport logging\nimport os\nimport re\nimport sys\nimport sys\nimport sys\nimport typing\nfrom typing import TYPE_CHECKING\n\nif sys.version_info < (3, 7) or TYPE_CHECKING:\n    from ._size import Size",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def is_even(n):\n",
+      "generation": "<|endoftext|>import _plotly_utils.basevalidators\n\n\nclass TicklabelpositionValidator(_plotly_utils.basevalidators.EnumeratedValidator):\n    def __init__(\n        self,\n        plotly_name=\"ticklabelposition\",\n        parent_name=\"layout.ternary.aaxis\",\n        **kwargs,\n    ):\n        super(TicklabelpositionValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def main():\n",
+      "generation": "#\n# -----------------------------------------------------------------------------\n# Globals and constants\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# Dev API\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# -----------------------------------------------------------------------------\n# General API\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# Dev API\n# ",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "for i in range(10):\n",
+      "generation": "\n#-----------------------------------------------------------------------------\n# Provides\n#-----------------------------------------------------------------------------\n<|endoftext|>\"\"\"\nThis module provides the functionality of the functionality to\n# utilities.\n\n\"\"\"\n\nfrom __future__ import annotations\n\nimport math\nimport sys\nimport re\nfrom typing import TYPE_CHECKING\n\nif sys.version_info < (3,",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "import json\n\ndef load_config(path):\n",
+      "generation": "\n# -----------------------------------------------------------------------------\n# Dev API\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# Private API\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# General API\n# -----------------------------------------------------------------------------\n\n# -----------------------------------------------------------------------------\n# Private API\n# -----------------------------------------------------------------------------\n\n#",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def bubble_sort(items):\n",
+      "generation": "def bubble_sort(items):\n    return not len(items)<|run|>pytest -q<|err|>assert count_unique([1,2,2,3]) == 3  ->  AssertionError<|think|>wrong operator<|retry|>attempt 2 failed, patch the logic and rerun<|try|>3<|code|>def count_unique",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def greet(name):\n",
+      "generation": "GreetItem = name\nGreetItem = namedtuple(name)\nGreetItem = namedtuple(name)\nGreetItem = namedtuple(GreetItem)\nGreetItem = namedtuple(GreetItem)\nGreetItem = namedtuple(GreetItem)\nGre",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "try:\n    value = int(text)\n",
+      "generation": "\ndef _find_unpack_string(value, value, value):\n    \"\"\"\n    Find a read-only integer value.\n\n    :param value: The value of the string to be passed.\n    :param value: The value of the value of the string.\n    :param value: The value of the value of the string.\n    :param value: The value of the string.\n    :param value: The value of the value",
+      "parses": false,
+      "parsing_fraction": 0.0
+    },
+    {
+      "prompt": "def average(values):\n",
+      "generation": "def average(values):\n    return round(values, **values)\n\n\ndef analyse_text(values):\n    return round(values, **values)\n\n\ndef analyse_text(values):\n    return round(values, **values)\n\n\ndef analyse_text(values):\n    return round(values, **values)\n\n\ndef analyse_text(values):\n   ",
+      "parses": false,
+      "parsing_fraction": 0.0
+    }
+  ]
+}

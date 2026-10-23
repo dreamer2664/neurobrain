@@ -1,0 +1,492 @@
+{
+ "utc": "2026-10-23T05:39:33Z",
+ "ckpt": "checkpoints/runv2/lm_best.pt",
+ "ckpt_sha256": "9de77ff6f1d22838a07447475f56580321b3b4a0f4a903c7e7d745a7458ba2be",
+ "step": 12000,
+ "decode": {
+  "temperature": 0.8,
+  "top_k": 40,
+  "seed": 0,
+  "rep_penalty": 1.15
+ },
+ "n_tasks": 49,
+ "first_pass": 0,
+ "failed_first": 49,
+ "repaired": 0,
+ "repair_rate": 0.0,
+ "final_pass": 0.0,
+ "seconds": 622.3,
+ "peak_rss_mb": 267.3,
+ "transcripts": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "class TextcaseValidator(_plotly_utils.basevalidators.EnumeratedValidator):\n    def __init__(\n        self, plotly_name=\"textcase\", parent_name=\"icicle.marker.colorbar\", **kwargs\n    ):\n        super(TextcaseValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=paren",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def active(self, integer, tol, eps):\n    \"\"\"Validcase and deltical `invalid` literal (detection) of theta furces in regex2\n        returned value of ``tol`` which represents basis functions\n        of this input string.\n\n    Raises\n    ------\n    NetworkXPointless\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 8)"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "class TableMarker(enum.BlockCallback, enum.Enum):\n    \"\"\"A single quotied graph from a file-like object.\n\n    Args:\n        enum (str): The table name to enum?\n        nlp: The string that will be used in the string.\n        nlp: The string that applies to being movie.\n    \"\"\"\n\n    version_\n",
+   "passed1": false,
+   "error": "NameError: name 'enum' is not defined. Did you forget to import 'enum'?",
+   "attempt2": "def PythonUNCTIONStore.\n    \"\"\"Is_NOTIC_TONULY, patch thelogical_deps = 0, \"__main__\"\n\n    every number of details are required by carx_per_channel = 0, \"__main__\"\n\n    tokens = {\n        \"value\": [\n            _\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 8)"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def _betermine_to_multiple(\n    *shape,\n    mask: Mapping[np.uint8, np.zeros_like],\n    dropped: bool = True,\n    dtype: DType | None = None,\n) -> np.ndarray:\n    \"\"\"Allocate the imals as inf/array_images to tunable into a 2D or 3D\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 9)",
+   "attempt2": "def map_not_none(self: Any):\n    '''\n    All keyword arguments': {'value': 1}', 'value': 1}\n\n    @staticmethod\n    def _get_not_none(self, other):\n        if not isinstance(other, Boolean):\n            return f\"store_{self.__class__}({self})\"\n        elif isinstance\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  }
+ ],
+ "all_rows": [
+  {
+   "id": "cb-arith-01",
+   "attempt1": "class TextcaseValidator(_plotly_utils.basevalidators.EnumeratedValidator):\n    def __init__(\n        self, plotly_name=\"textcase\", parent_name=\"icicle.marker.colorbar\", **kwargs\n    ):\n        super(TextcaseValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=paren",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def active(self, integer, tol, eps):\n    \"\"\"Validcase and deltical `invalid` literal (detection) of theta furces in regex2\n        returned value of ``tol`` which represents basis functions\n        of this input string.\n\n    Raises\n    ------\n    NetworkXPointless\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 8)"
+  },
+  {
+   "id": "cb-arith-02",
+   "attempt1": "class TableMarker(enum.BlockCallback, enum.Enum):\n    \"\"\"A single quotied graph from a file-like object.\n\n    Args:\n        enum (str): The table name to enum?\n        nlp: The string that will be used in the string.\n        nlp: The string that applies to being movie.\n    \"\"\"\n\n    version_\n",
+   "passed1": false,
+   "error": "NameError: name 'enum' is not defined. Did you forget to import 'enum'?",
+   "attempt2": "def PythonUNCTIONStore.\n    \"\"\"Is_NOTIC_TONULY, patch thelogical_deps = 0, \"__main__\"\n\n    every number of details are required by carx_per_channel = 0, \"__main__\"\n\n    tokens = {\n        \"value\": [\n            _\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 8)"
+  },
+  {
+   "id": "cb-arith-03",
+   "attempt1": "def _betermine_to_multiple(\n    *shape,\n    mask: Mapping[np.uint8, np.zeros_like],\n    dropped: bool = True,\n    dtype: DType | None = None,\n) -> np.ndarray:\n    \"\"\"Allocate the imals as inf/array_images to tunable into a 2D or 3D\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 9)",
+   "attempt2": "def map_not_none(self: Any):\n    '''\n    All keyword arguments': {'value': 1}', 'value': 1}\n\n    @staticmethod\n    def _get_not_none(self, other):\n        if not isinstance(other, Boolean):\n            return f\"store_{self.__class__}({self})\"\n        elif isinstance\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-arith-04",
+   "attempt1": "class ScoreSchemaValidator(_plotly_utils.basevalidators.NumberValidator):\n    def __init__(\n        self, plotly_name=\"signed_str\", parent_name=\"streamtube.hoverlabel\", **kwargs\n    ):\n        super(ScoreSummary, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_nam",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def celsius_to_fahrenheit(c):\n    \"\"\"convert celsius to fahrenheit\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-arith-05",
+   "attempt1": "class SubtractionFromStringABC(_BaseSubtractionMap[str]):\n    \"\"\"Implementation of the SubtractionFromString ABC\n    form.\n\n    Will return the signature for this manually registered patterns and values are\n    used by the ABC.\n\n    Args:\n        name (str) :\n            The name to open\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 12)",
+   "attempt2": "def clamp(x, lo, hi):\n    \"\"\"return x limited to the range lo..hi\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-arith-06",
+   "attempt1": "class LegendgroupValidator(_plotly_utils.basevalidators.SrcValidator):\n    def __init__(\n        self, plotly_name=\"legendgroup\", parent_name=\"scatter3d.hoverlabel\", **kwargs\n    ):\n        super(LegendgroupValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=paren",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def is_logarde(x):\n    \"\"\"Returns that the logic and rerun `x` is not year task result<|plan|>1.write the run log 2 failed, patch the log 3.capture thelog 4.apply the log under the side of lowers.\n    \"\"\"\n\n    # Only support effect package\n",
+   "passed2": false,
+   "why2": "NameError: name 'gcd' is not defined"
+  },
+  {
+   "id": "cb-dict-01",
+   "attempt1": "class TicktextValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"ticktext\", parent_name=\"choroplethmapbox.colorbar\", **kwargs\n    ):\n        super(TicktextValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def word_count(s):\n    \"\"\"return a dict mapping each word to how often it appears\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-dict-02",
+   "attempt1": "def _create_tensor_name(module):\n    # TODO: This can create a non-empty tensor, then reload it; if fails\n    # any lexers.\n    from torch._higher_order_ops.utils import _create_tensor_name, _create_graph\n    return _get_group_name(tensor)\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def _print_name(\n    name: str,\n    target: str,\n    lineno: NamespaceKeyword | None = None,\n    device: DeviceisSeries | None = None,\n) -> tuple[tuple[str, list[int]]]:\n    \"\"\"\n    Newly, weakn wrapper's ASERVER TORCHARYSvar or M\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 8)"
+  },
+  {
+   "id": "cb-dict-03",
+   "attempt1": "class ColorsrcValidator(_plotly_utils.basevalidators.SrcValidator):\n    def __init__(\n        self, plotly_name=\"colorsrc\", parent_name=\"choroplethmapbox.hoverlabel\", **kwargs\n    ):\n        super(ColorsrcValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def check_if_non_invalid_are_directories(datasets):\n    \"\"\"\n    If `Def an Omeled+Lib` is alreadymous directory.\n\n    Parameters\n    ----------\n    datasets : iterable of str\n        Unique values, each element are reserved by ``constant`` to\n        ``deprecated`` behavi\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-dict-04",
+   "attempt1": "class EventStyleValidator(_plotly_utils.basevalidators.EnumeratedValidator):\n    def __init__(\n        self,\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def summarize(items):\n    return not {'ok': False, 'gamma': g}}\n    def applyall(self, rerun, *args, **kwargs):\n        x = x * 2 + 8 * 3\n        if not self.is_unit():\n            raise ValueError(\"The unit value is not unsigned unreachable\"\n                                     f\n",
+   "passed2": false,
+   "why2": "syntax: unmatched '}'"
+  },
+  {
+   "id": "cb-dict-05",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def add(a, b):\n    return a + b\n",
+   "passed2": false,
+   "why2": "NameError: name 'get_or' is not defined"
+  },
+  {
+   "id": "cb-dict-06",
+   "attempt1": "class PydanticNode(ParametersBase, 'PydanticNode'):\n\n    # class properties\n    # --------------------\n\n    def __init__(self, plotly_name=\"bar.text\", parent_name=\"choroplethmapbox\", **kwargs):\n        super(ViolidValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_nam",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def count_by_first_letter(words):\n    \"\"\"count the words by their first letter\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-list-01",
+   "attempt1": "class BindingAS(_BaseLabel):\n    \"\"\"\n    Sub-Bindings that comes universally expensive.\n\n    Assuming our source code has no longer (e.g. ``bindings``).\n    \"\"\"\n\n    attrs = [\"attribute\"]\n    def __init__(self) -> None:\n        self._fp: List[Dict[str,\n",
+   "passed1": false,
+   "error": "syntax: '[' was never closed",
+   "attempt2": "def par_tokenize(text):\n    \"\"\"\n    The Text styleAnd return; return a newly portable or\n    ``{}`` at this frame.  This is the default value to replace it and in the\n    ``{'bindings': '['C']}`` at this frame.  The widget is added to\n    the ``_dataclasses``, as if\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 6)"
+  },
+  {
+   "id": "cb-list-02",
+   "attempt1": "class ColorValidator(_plotly_utils.basevalidators.ColorValidator):\n    def __init__(\n        self, plotly_name=\"color\", parent_name=\"scatterpolar.hoverlabel.font\", **kwargs\n    ):\n        super(ColorValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def runs_and_for_common_common_thread_id():\n    \"\"\"Our process online that weemon think the logic and return a new common common oftening common common common common common args.\"\"\"\n    _family = os.symint(os.path.join(root_dir, \"bin\"))\n\n    with open\n",
+   "passed2": false,
+   "why2": "syntax: expected ':'"
+  },
+  {
+   "id": "cb-list-03",
+   "attempt1": "class _BuilderOfCallbackInfo:\n    @abstractmethod\n    def __init__(self, managed, width=-1, hidden=None):\n        '''Replace the sentence that denoting it.\n\n        Args:\n            managed: A single number of regions for the second.\n        '''\n\n    @abstract\n",
+   "passed1": false,
+   "error": "syntax: unexpected unindent",
+   "attempt2": "def is_undefined_logical_distribution(managed, positive=True):\n    \"\"\"\n    ''''\n     # Enable managed riection\n        '''\n\n        if managed and hasattr(managed, \"fail\"):\n            # Moon managed integer\n            return managed if m\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-list-04",
+   "attempt1": "class HeaderSelectorMixin:\n    \"\"\"A decorator for mypy selector facilities.\"\"\"\n\n    def __init__(\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def is_logicalial_ceojson_directives(\n    path: PathLikePath | None = None,\n    resources: _DictOneObjects | None | str | None = None,\n    skip_flags=None,\n    exist_ok=True,\n) -> tuple[str, str]:\n    \"\"\"Reduce\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 7)"
+  },
+  {
+   "id": "cb-list-05",
+   "attempt1": "class _EffectMagicSequenceInternalExpr(object):\n    \"\"\"Randomly calls effects ``MetricsInternalExpr`` APIs.\"\"\"\n\n    def __init__(self, base, subtype, callback, *args, **kwargs):\n        self.subto_callbacks = []\n\n    def get_named_method(self, name, args\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def run_callback(var, cls):\n    \"\"\"\n    Gets inform to templies with the %s -> foo\n    \"\"\"\n    if hasattr(cls, '__call__'):\n        return [cls._get_name()]\n    else:  # closing\n        return from {\n        \"module\": None,\n        \"type\": type(sympy.iscomplex),\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-list-06",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def summarize(items):\n    return not {'ok': False, 'n': len(items)}\n",
+   "passed2": false,
+   "why2": "NameError: name 'sum_squares' is not defined"
+  },
+  {
+   "id": "cb-list-07",
+   "attempt1": "class TickvalsValidator(_plotly_utils.basevalidators.NumberValidator):\n    def __init__(\n        self, plotly_name=\"tickvals\", parent_name=\"scatterpolar.marker\", **kwargs\n    ):\n        super(TickvalsValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def chunk(xs, n):\n    \"\"\"split xs into consecutive chunks of length n (last may be shorter)\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-list-08",
+   "attempt1": "class FilterBook(Basic, 'Sumba', 'First', 'Sumba'):\n    def __init__(self):\n        self.fp = fp\n\n    def get_global(self):\n        if not self.language:\n            return globals.get_globals()\n\n        # By default this is read and use fp-name in the current\n",
+   "passed1": false,
+   "error": "NameError: name 'Basic' is not defined",
+   "attempt2": "def last(xs):\n    \"\"\"return the last element of a non-empty list\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-list-09",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def summarize(items):\n    return {'ok': True, 'n': len(items)}\n",
+   "passed2": false,
+   "why2": "NameError: name 'cumsum' is not defined"
+  },
+  {
+   "id": "cb-list-10",
+   "attempt1": "class Selected(NamedTuple):\n    name = 'Selected'\n    aliases = ['sselected']\n    filenames = ['*.at', '*.basic']\n    mimetypes = ['text/x-small-map', 'application/x-small-collections',\n                 'application/x-small-map', 'application\n",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 8)",
+   "attempt2": "def remove_first(xs, v):\n    \"\"\"return a new list without the first occurrence of v\"\"\"\ndefine_heav_inplace(text):\n    \"\"\"\n    The return [[], [tanded from the forwardupper]] of the forward number given\n    samples under ``text``. Afterwarding only one least only if we have\n    not been fail.\n\n    This function is also a pinciple of all `text`. Used in AttributeError,\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-logic-01",
+   "attempt1": "class DirectoryValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"drivers\", parent_name=\"scatterternary.outsidetextfont\", **kwargs\n    ):\n        super(DriversValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=pa",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 10)",
+   "attempt2": "def is_even(n):\n    \"\"\"true if n is even\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-logic-02",
+   "attempt1": "class StyleValidator(_plotly_utils.basevalidators.EnumeratedValidator):\n    def __init__(\n        self, plotly_name=\"style\", parent_name=\"scatterpolar.marker\", **kwargs\n    ):\n        super(StyleValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n    ",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def mean(items):\n    \"\"\"\n    Return a=mean-1failed, patch the logic or a blank extension of the\n        Traceback (modifies the Legendre series/Numbers) of each\n        increasing order - the CTRUCTOR this is returned by :func:`matplotlib.\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 5)"
+  },
+  {
+   "id": "cb-logic-03",
+   "attempt1": "class PositionalExprHandler(FileHandler):\n\n    @property\n    def pop_init(self) -> None:\n        self._patch = _make_nested_patch(\n            self._normalize_pointer() if self._padding else None\n        )  # return SPOSIX\n        if not isinstance(self._normalize_pointer(), (None,)):\n",
+   "passed1": false,
+   "error": "syntax: expected an indented block after 'if' statement on line 10",
+   "attempt2": "def mel(a, b, prec):\n    \"\"\"\n    See Protocol().\n\n    It is defined as:\n\n        >>> from pprint import isint\n        >>> isint(np.ceil(np._inspect(a)))\n        True\n        >>> isint(np.ceil(np.ceil(padding[1], ndim-1), isint(0)))\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 10)"
+  },
+  {
+   "id": "cb-logic-04",
+   "attempt1": "def authlenula(f, g, n):\n    \"\"\"\n    Evaluate the eigen-based rule that won't take a\n    unique global since it chooses the integer s.\n\n    The eigenvalue is an unmany int to sum the\n    eigenvalue of the side between 0 and 8.\n    \"\"\"\n    for id\n",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def add(a, b):\n    return a - b\n",
+   "passed2": false,
+   "why2": "NameError: name 'is_sorted' is not defined. Did you mean: 'sorted'?"
+  },
+  {
+   "id": "cb-misc-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return not text.split()[-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'fizz' is not defined"
+  },
+  {
+   "id": "cb-misc-02",
+   "attempt1": "def _invert(context, builder, sig, args):\n    if not iterable(sig.args):\n        sig = context.get_functionalize(builder, sig.args[0], args[0])\n        sig_stitute_sig = sig.args[0]  # pyrefly: ignore[reportAssignmentType]\n\n    for sig in sig\n",
+   "passed1": false,
+   "error": "syntax: expected ':'",
+   "attempt2": "def mean(values):\n    return not sum([' \"\\n\".join(map(str, signature)) for signature in sig)\n    for sig, value in items[::-1]:\n        if iscomplexobj(sig).is_integer:\n            continue\n        if len(sig) == 0 or isinstance(sig, types.UniT\n",
+   "passed2": false,
+   "why2": "syntax: unterminated string literal (detected at line 2)"
+  },
+  {
+   "id": "cb-misc-03",
+   "attempt1": "class GaussianLocale(Locale):\n    @property\n",
+   "passed1": false,
+   "error": "syntax: unexpected unindent",
+   "attempt2": "def double(self, *args, **kwargs):\n    '''3d52568601000e+05ots manyment here, metrics.')\n\n    This is useful when the Contents-ISSing ISO 95129397 consumes that the Contents-ISO-64857\n    is re\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 5)"
+  },
+  {
+   "id": "cb-misc-04",
+   "attempt1": "def _compare_gpu_e.squeeze():\n    \"\"\"Sassevides gmpy underlying the generalized GPython extensions for this git.\n\n    This function returns a new GcDefinition that defines a gmpy exact cycle of\n    the GCDefinition is real and comparable to be saferred\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 7)",
+   "attempt2": "def is_prime(n):\n    \"\"\"true if n is a prime number\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-misc-05",
+   "attempt1": "class FormattedText(object):\n    \"\"\"Internal handling of a class.\"\"\"\n\n    def __init__(self, ns, ident=None, kind='', *, help='Matching body'):\n        if ns is None:\n            raise ValueError(\"ns must be True to load %s\" % ns)\n\n        super().__init__(ns)\n        self._ns\n",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def mean(items):\n    return not len(items) > 0]\n",
+   "passed2": false,
+   "why2": "syntax: unmatched ']'"
+  },
+  {
+   "id": "cb-misc-06",
+   "attempt1": "class FontBuiltinMixin:\n    \"\"\"\n    Return a grammar from mixin information and trigger cleanup.\n    \"\"\"\n\n    def __init__(self, **options):\n        super().__init__(**options)\n        self._clean = []\n\n    @staticproperty\n    def forward(self):\n        if hasattr(self.output_tensors[0], \"\n",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 14)",
+   "attempt2": "def summarize(items):\n    \"\"\"return {'ok': True, 'n': number of items}\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-rec-01",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return not text.split()[-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'factorial' is not defined"
+  },
+  {
+   "id": "cb-rec-02",
+   "attempt1": "class TextValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"text\", parent_name=\"contourcarpet.hoverlabel.font\", **kwargs\n    ):\n        super(TextValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n ",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def hint_to_integral(*args):\n    \"\"\"Allocate -- these neigh closed afterice, patch the logic that it hugest the processed of this, in\n    the profile, and then the profile tagger is in the same setup.\n    \"\"\"\n    profile = {}\n    try:\n        profile = os.path\n",
+   "passed2": false,
+   "why2": "syntax: expected 'except' or 'finally' block"
+  },
+  {
+   "id": "cb-rec-03",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def double(n):\n    return n * 2\n",
+   "passed2": false,
+   "why2": "NameError: name 'sum_to' is not defined"
+  },
+  {
+   "id": "cb-rec-04",
+   "attempt1": "class _CheckTypeError(Exception):\n\n    # pyright: ignore[reportAssignmentType]\n    def emit_noware_alt_error(self):\n        return _NOT_INTERMS\n        return type(self))\n\n    def emit_noware_alive_constant(self):\n        if self.dtype == 'n':\n            return type(self)(self).iso\n",
+   "passed1": false,
+   "error": "syntax: unmatched ')'",
+   "attempt2": "def power(b, e):\n    \"\"\"return b raised to the non-negative integer e\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-sort-01",
+   "attempt1": "class PathLoader:\n    # This class is used by python_executable. Either\n    # or actual module (implementing the Python module).\n    def __init__(self, module):\n        import torch._inductor.package as _predhead_version:\n            self.request = _pytest.import_module(self)\n\n        # Register Sub",
+   "passed1": false,
+   "error": "syntax: invalid syntax",
+   "attempt2": "def _recv_with_name_counts(func):\n    \"\"\"\n    Sub class.__init__ on a function raised symbolic name. Used by thisMeasurement variables.\n\n    :param func: Error the object that's not exited for.\n    :return: A non-None module of type matcher: (default: None), so we can't resolve\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 6)"
+  },
+  {
+   "id": "cb-sort-02",
+   "attempt1": "",
+   "passed1": false,
+   "error": "AssertionError",
+   "attempt2": "def first_word(text):\n    return not text.split()[-1]\n",
+   "passed2": false,
+   "why2": "NameError: name 'sort_by_len' is not defined"
+  },
+  {
+   "id": "cb-sort-03",
+   "attempt1": "class TextValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"text\", parent_name=\"densitymapbox.colorbar\", **kwargs\n    ):\n        super(TextValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n        ",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def second_largest(xs):\n    \"\"\"return the second largest distinct value in a list with at least two\"\"\"\nclass _FlusiDistribution:\n    \"\"\"A sign\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 4)"
+  },
+  {
+   "id": "cb-sort-04",
+   "attempt1": "def _symint():\n    \"\"\": IPython <<bit>Type=\"none\" to determine a sub-threshold #283.\n    \"\"\"Test encountered from an empty string\"\"\"\n    try:\n        if isinstance(a, float):\n            return S.Half(a)\n        else:\n            return S.Zero\n\n    if isinstance(a, sympy.Expr):\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 12)",
+   "attempt2": "def maybe_pointer(a, b):\n    r\"\"\"Algorithmula Compaiusel functional Read data pixels by the %r named/%%\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 2)"
+  },
+  {
+   "id": "cb-str-01",
+   "attempt1": "class HovertemplatedStyle(DaterminesRuledText, defaultLogger):\n    \"\"\"Return a http-level days.\"\"\"\n\n    horizontally = 'ba'  # http://www.dev/language/ba2/Language/ba'\n    mimetypes = ['text/x-https://ww\n",
+   "passed1": false,
+   "error": "syntax: unterminated string literal (detected at line 7)",
+   "attempt2": "def reverse(s):\n    \"\"\"return the string backwards\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-str-02",
+   "attempt1": "class ENDANCEPY_METHOD_ISCASE:\n    def __init__(self, verbose: bool = False) -> None:\n        self.verbose = 125\n        self._compiler = None\n\n    def __repr__(self) -> str | None:\n        if self.verbose is not None:\n            return \"\"\n        _stdout = getattr(self\n",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def render_to_unique(\n    G,\n    source=None,\n    source=None,\n    depth = _create_dependent_cylass_structure(\n    G,\n    source=None,\n    symmetric=False,\n    symmetric=False,\n):\n    \"\"\"Returns sorted(source, source=source, symmetric\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 11)"
+  },
+  {
+   "id": "cb-str-03",
+   "attempt1": "class IntegralConstants(_GenericCorpusReader, MemoryDelta):\n    \"\"\"A construction of all CUDA certains.\"\"\"\n\n    def __init__(self, location=None):\n        if self.bound is None:\n            return\n        self.message = str(value)\n\n        # Only the sheet-fill package\n        #\n",
+   "passed1": false,
+   "error": "NameError: name '_GenericCorpusReader' is not defined",
+   "attempt2": "def count_char(s, ch):\n    \"\"\"count occurrences of ch in s\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-str-04",
+   "attempt1": "class SelectFloat(floating.Integer):\n    __slots__ = ()\n\n    def __init__(self,\n                 formatter=None,\n                 formatter=None,\n                ):\n        \"\"\"Range from the current `Float`.\"\"\"\n        self.formatter = formatter\n\n    @property\n    def footprint(self):\n        \"\"\"Ran",
+   "passed1": false,
+   "error": "SyntaxError: duplicate argument 'formatter' in function definition",
+   "attempt2": "def is_palindrome(s):\n    \"\"\"true if s reads the same both ways\"\"\"\n",
+   "passed2": false,
+   "why2": "AssertionError"
+  },
+  {
+   "id": "cb-str-05",
+   "attempt1": "class ShadowValidator(_plotly_utils.basevalidators.StringValidator):\n    def __init__(\n        self, plotly_name=\"shadow\", parent_name=\"scatterpolargl.line\", **kwargs\n    ):\n        super(ShadowValidator, self).__init__(\n            plotly_name=plotly_name,\n            parent_name=parent_name,\n     ",
+   "passed1": false,
+   "error": "syntax: '(' was never closed",
+   "attempt2": "def mean(values):\n    return not sum(values) > 0\n\n    Templates two ``values`` and ``values = ['full', 'gouenti'``.\n\n    >>> np._maybe_get_reflection(np.random.contours, 'non-decreasing')\n    True\n    >>> np._solve_this_spa\n",
+   "passed2": false,
+   "why2": "syntax: invalid syntax"
+  },
+  {
+   "id": "cb-str-06",
+   "attempt1": "class ParameterizedUnicodeError(ValueError):\n    \"\"\"ValueError is raised only when the value is a fake value.\"\"\"\n\n    def __init__(self, value: str) -> None:\n        self.value = value\n\n    @property\n    def values(self) -> TypeTranslator | np.ndarray:\n        # TODO: remove it (but not sure we did ",
+   "passed1": false,
+   "error": "syntax: expected an indented block after function definition on line 10",
+   "attempt2": "def min(*args):\n    \"\"\"\n    This return sqrt this signature online after function ' '.''\n\n    Example:\n\n        >>> # xdoctest: +SKIP(\"Input:\") == \"Input:\"\n        >>> #  xdoctest: +SKIP(\"Input:\") == \"Boundary:\"\n        >>> #  y doctest\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 9)"
+  },
+  {
+   "id": "cb-str-07",
+   "attempt1": "def _gs_unflatten(\n    lhs: Sequence[np.ndarray],\n    num_els_infs: NumberCondConent]] = None,\n    order: int | torch.nonzero | None = None,\n    nan: Optional[int] = 1000 * (n_neighbors + 1) | None = None,\n) -> str:\n",
+   "passed1": false,
+   "error": "syntax: closing parenthesis ']' does not match opening parenthesis '(' on line 3",
+   "attempt2": "def _find_attributes(\n    name: str,\n    name: str,\n    *,\n    next: str,\n    name: str,\n    target: str,\n    requires_grad_fns: bool,\n) -> FilterTensor:\n    \"\"\"\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 10)"
+  },
+  {
+   "id": "cb-str-08",
+   "attempt1": "class DirectoryTemplate(Protocol):\n    ''' Wrapper for debugging and return a byte string (``torn``).\n\n    Arguments:\n        srcname (str): The registry of the module's directory.  If not provided, a\n            ``tornado.Extension`` is used.\n    '''\n      # If 'treedir\n",
+   "passed1": false,
+   "error": "NameError: name 'Protocol' is not defined",
+   "attempt2": "def is_note(srcrel):\n    \"\"\"Accepts the logic that srcrel <= srcrel: return 0 if srcclass else None, patch it without\n    srcreling to ~/.py -py -m */.py -w:pk2 -w:pk4 -w:a2 -w:v2\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 3)"
+  },
+  {
+   "id": "cb-str-09",
+   "attempt1": "class FilterEvent(FilterOrthogonalHandler):\n    #: Accessful to get a client of the underlying connection\n    #: No hit on this.\n    \"\"\"Base class forward(default=1)\n\n    @property\n    def _initialize_html(self):\n        # This function is because it was called without this\n",
+   "passed1": false,
+   "error": "syntax: unterminated triple-quoted string literal (detected at line 10)",
+   "attempt2": "def _validate_html(text: str) -> bool:\n    \"\"\"\n    If True, return True if the return True, patch the 'html' contains one think in the html.\n\n    Specifies the tag (as we are pickable or requested) or that the extension\n    is removed. For example, compute the \"ext\n",
+   "passed2": false,
+   "why2": "syntax: unterminated triple-quoted string literal (detected at line 6)"
+  }
+ ]
+}

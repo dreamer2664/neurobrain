@@ -1,0 +1,6 @@
+[streams] code_val                 2.0079
+[streams] code_val_v2_instr        2.2045
+[streams] code_val_v2_plain        2.1643
+[streams] drive_val                0.1100
+[streams] ui_val                   0.6718
+[streams] wrote reports/streams_anneal12k.json

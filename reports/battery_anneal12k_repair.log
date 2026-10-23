@@ -1,0 +1,21 @@
+{
+ "utc": "2026-10-23T05:41:13Z",
+ "ckpt": "checkpoints/run12k-anneal/lm_best.pt",
+ "ckpt_sha256": "e412fa9d08b08664e1e0526ab43f3cf44fdf6580617cad5d3ca4d2f7a4c9a89f",
+ "step": 13200,
+ "decode": {
+  "temperature": 0.8,
+  "top_k": 40,
+  "seed": 0,
+  "rep_penalty": 1.0
+ },
+ "n_tasks": 49,
+ "first_pass": 0,
+ "failed_first": 49,
+ "repaired": 1,
+ "repair_rate": 0.0204,
+ "final_pass": 0.0204,
+ "seconds": 20.5,
+ "peak_rss_mb": 266.9
+}
+[repair] wrote reports/self_repair_anneal12k.json
