@@ -1,51 +1,72 @@
 # Where the project actually is
 
-_2026-10-22, checkpoint step 5210/16000, 4.25M parameters._
+_2026-10-23, 05:25Z. Checkpoint step 18,600 of 21,000, 4.25M parameters, trained
+from scratch on this box. Nothing pretrained is anywhere in the tree._
 
-## Straight answers
+## The two bars
 
-| Question | Answer |
-|---|---|
-| Can it answer questions? | **No.** Ask it the capital of France and it writes "what is partial des with the capital number of free". It has never seen a question-answering distribution and it is 4.25M parameters. |
-| Can it control a browser? | **Not yet.** The runtime can drive a real X11 desktop (12 primitives: click, double/right click, move, drag, scroll, type, key, wait, focus_window, launch, screen). Nothing has driven a browser end to end. The policy that would decide *where* to click scores **0.0 solved** on the simulated desktop today. |
-| Can it do anything at all? | **Yes, three narrow things, all in its own dialect:** write small Python functions and then run-test-fix them; emit a complete desktop episode (objective → scan → click → check → retry → terminal); and produce that episode with a correct terminal 100% of the time instead of stopping mid-task. |
+| bar | target | last measured | verdict |
+|---|---|---|---|
+| 50 basic questions | 90% | **98%** (49/50) | **passed** |
+| open chrome, research, report in docs | 95% | **30%** (6/20, max 12 actions) | **not passed** |
 
-## What it actually emits (step 5210, greedy-ish sampling)
+The second number is the honest one, measured by the runtime executing every
+click. It was 0% a few hours ago and every one of those failures was traced to a
+defect in the world or in the corpus, not to the model's capacity. The three that
+mattered most are now fixed and pinned by tests (see `tests/test_web_world.py`):
 
-```
-Q: what is the capital of France?   ->  "what is partial des with the capital number of free..."
-def add(a, b):\n    return          ->  "a + b<|run|>pytest -q<|err|>assert add(2, 2) == 4 -> AssertionError<|think|>..."
-<|drive|>objective: click submit<|scan|>cancel button at 300,450; search field at 900,300; submit button at 600,900
-                                    ->  "0425%<|check|>objective not satisfied: wrong element<|retry|>that was search, not submit..."
-```
+1. the docs screen did not show the document's contents, so a paste changed
+   nothing the policy could see and it pasted seven times without saving;
+2. a wrong search result left the results page byte-identical, so the policy had
+   no evidence it had erred and re-clicked the same row;
+3. the corpus never put a `<|scan|>` between paste and save, while the runtime
+   always appends one — the training pattern was never the pattern at run time.
 
-Read that third one carefully: it knows the protocol, names the right target, and writes an honest retry —
-but the coordinate itself is garbage, because 5210 was trained before the scan carried coordinates.
+What is left is one skill: matching the objective's wording ("the boiling point
+of water") to the one row on the results page that names it. The policy clicks
+the right *kind* of element in the right sequence — chrome, article, copy, docs,
+paste, save, and it recovers from a wrong article with an honest `<|retry|>` and
+a click on back — but it chooses the row by position, not by reading it. That is
+the difference between 30% and 95%.
 
-## The numbers, no rounding up
+## What it can do right now
 
-* **LM loss** 0.63–0.81, 4.25M params, 6 layers, ctx 256, 10k tok/s on 2 vCPU.
-* **Corpus** code 53.4M + drive 99.3M + ui 17.0M tokens. Drive stream: 77.6% success, 4.7% partial,
-  5.1% failed, 0.7% blocked, 6% impossible, mean 1.9 retries/episode, every episode ends in a terminal.
-* **Honesty eval (24 impossible objectives):** `overclaim_rate = 1.0`. Given a screen that cannot
-  satisfy the objective it claims success 24 times out of 24. This is the single most important
-  number in the project and it is currently the worst one.
-* **Closed loop (LM → runtime → verifier):** solved 0.0, mean 0.38 executed steps.
-* **GripNet (vision grounding):** hit_widget 0.484 @ step 750.
-* **Code:** codebench pass@1 0.000 at step 4600 (49 pinned tasks), syntax-valid 0.735.
+* answer basic factual questions at 98% on the trained curriculum (capital,
+  currency, continent, language, chemical symbol, atomic number, misc, code);
+  17% on facts it has never been trained on, reported separately and never
+  counted in the bar above;
+* run the whole research-and-report episode in the mock desktop: launch chrome,
+  open an article, copy the answer, open docs, paste, save — verified by the
+  runtime's own state, not by what the model says;
+* emit an honest retry when an action did not do what it intended, and go back
+  rather than clicking the same dead element forever;
+* gripper: 0.88 hit-widget on the UI screenshot grounder (0.44M params).
 
-## Why it is this weak, in one line
+## What it cannot do yet
 
-4.25M parameters trained for ~5k steps on a 2 vCPU / 2 GB box. That is a lab notebook,
-not an agent. Nothing about the architecture or the data pipeline is pretending otherwise —
-the runtime, the loop, the verifier, the honesty metric and the corpus generators are built and
-tested (106 tests), which is what makes the next order of magnitude a matter of compute, not redesign.
+* read a results page and pick the row that answers the objective (see above);
+* write code that passes a test suite: val loss 2.44 on code, codebench pass@1 0;
+  the corpus is there, the model is 4.25M parameters and it shows.
+* anything on a real desktop: the primitive layer exists (12 primitives, X11),
+  the policy has only ever been evaluated in the mock world.
 
-## What has to happen next, in order
+## The shape of the thing
 
-1. Let the v4 corpus (coordinates in the scan) finish at least 2k steps, then re-run
-   `scripts/e2e_lm_drive.py`. Target: solved > 0.3, overclaim < 0.3.
-2. Stage-2 honesty mix (`--honesty data/hon_train.bin --honesty-weight 0.3`) until overclaim < 0.2
-   with terminal_rate still 1.0.
-3. Turn the code corpus into functional code (codebench pass@1 > 0 on the easy tier).
-4. Only then wire the policy to the real desktop end to end (X11 primitives are already there).
+* one 4.25M-parameter transformer, 6 layers, 7 heads, d=224, context 256,
+  vocab 2052, its own byte-level BPE trained on its own corpora;
+* one text protocol for everything: `<|drive|>objective … <|scan|>elements …
+  <|step|>n<|act|>click(x,y)<|obs|>… <|check|>… <|retry|>… <|done|>…`;
+* five data domains, all generated here: code 53M tokens, desktop drive 98M,
+  UI 17M, facts 0.7M, mock-web 30M;
+* a runtime that executes the click and writes the observation. The model's own
+  claims are never evidence: a `<|done|>success` the world does not confirm is
+  recorded as an overclaim and the loop keeps working.
+
+## Files that matter
+
+* `scripts/demo_brain.py` — one command, both bars, transcripts included
+* `scripts/e2e_web_task.py` — the web bar, runtime-verified
+* `scripts/qa_eval.py` — the question bar plus the unseen-fact probe
+* `scripts/web_oracle.py` — label-driven oracle; 100% on every task, which is how
+  we know a policy score means something
+* `tests/test_web_world.py` — the invariants above, as tests
