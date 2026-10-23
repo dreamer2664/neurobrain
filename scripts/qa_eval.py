@@ -71,8 +71,14 @@ def correct(expected: str, got: str) -> bool:
     return any(c and (c in g or g == c) for c in cands)
 
 
-def build_questions(n: int, seed: int = 2024):
-    """A fixed, mixed set of basic questions."""
+def build_questions(n: int, seed: int = 2024, exclude: set[str] | None = None):
+    """A fixed, mixed set of basic questions about things in the curriculum.
+
+    ``exclude`` holds the fact ids reserved for the unseen probe (``cap:Peru``
+    and so on). Mixing those into the headline number conflates two claims:
+    "it answers what it was taught" and "it generalises to facts it never saw".
+    They are reported separately, because they are not the same question.
+    """
     t = tables()
     rng = random.Random(seed)
     pool = []
@@ -103,7 +109,10 @@ def build_questions(n: int, seed: int = 2024):
     while len(out) < n:
         k = kinds[i % len(kinds)]
         if by_kind[k]:
-            out.append(by_kind[k].pop(0))
+            row = by_kind[k].pop(0)
+            if exclude and f"{row[0]}:{row[1]}" in exclude:
+                continue
+            out.append(row)
         i += 1
     return out
 
@@ -126,6 +135,8 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=50)
     ap.add_argument("--seed", type=int, default=2024)
     ap.add_argument("--out", default="reports/qa_eval.json")
+    ap.add_argument("--probe", type=int, default=12,
+                    help="questions about facts held out of training (unseen probe)")
     args = ap.parse_args()
 
     if not os.path.exists(args.ckpt):
@@ -138,7 +149,7 @@ def main() -> None:
     if os.path.exists(meta_path):
         held = set(json.load(open(meta_path)).get("heldout_facts", []))
 
-    rows = build_questions(args.n, args.seed)
+    rows = build_questions(args.n, args.seed, exclude=held)
     seen_hit = seen_n = held_hit = held_n = 0
     samples = []
     for kind, subject, expected, tpl in rows:
@@ -146,7 +157,7 @@ def main() -> None:
         got = ask(model, tok, q)
         ok = correct(expected, got)
         fid = f"{kind}:{subject}"
-        is_held = any(h.endswith(":" + subject) for h in held)
+        is_held = fid in held
         if is_held:
             held_n += 1
             held_hit += ok
@@ -157,18 +168,42 @@ def main() -> None:
             samples.append({"q": q, "expected": expected, "got": got, "ok": ok,
                             "held_out_fact": is_held})
 
+    # the probe: the same kinds of question, about facts the corpus never had
+    probe_rows = []
+    seen_ids = {f"{r[0]}:{r[1]}" for r in rows}
+    for kind, subject, expected, tpl in build_questions(400, args.seed, exclude=set()):
+        fid = f"{kind}:{subject}"
+        if fid not in held or fid in seen_ids:
+            continue
+        if any(p[0] == fid for p in probe_rows):
+            continue
+        probe_rows.append((fid, kind, subject, expected, tpl))
+        if len(probe_rows) >= args.probe:
+            break
+    probe = []
+    for fid, kind, subject, expected, tpl in probe_rows:
+        q = tpl.format(s=subject) if "{s}" in tpl else subject
+        got = ask(model, tok, q)
+        probe.append({"fact": fid, "q": q, "expected": expected, "got": got,
+                      "ok": correct(expected, got)})
+    unseen_acc = (sum(p["ok"] for p in probe) / len(probe)) if probe else None
+
     result = {
         "step": step,
         "n": len(rows),
         "accuracy": round((seen_hit + held_hit) / max(1, len(rows)), 3),
         "seen_n": seen_n, "seen_accuracy": round(seen_hit / max(1, seen_n), 3),
         "heldout_n": held_n, "heldout_accuracy": round(held_hit / max(1, held_n), 3),
+        "unseen_probe_n": len(probe),
+        "unseen_probe_accuracy": None if unseen_acc is None else round(unseen_acc, 3),
+        "unseen_probe": probe,
         "samples": samples,
     }
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w") as f:
         json.dump(result, f, indent=2)
-    print(json.dumps({k: v for k, v in result.items() if k != "samples"}, indent=2))
+    print(json.dumps({k: v for k, v in result.items()
+                      if k not in ("samples", "unseen_probe")}, indent=2))
     for s in samples[:8]:
         print(f"  {'OK ' if s['ok'] else 'MISS'} {s['q']}  ->  {s['got']!r} (want {s['expected']!r})")
 

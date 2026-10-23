@@ -1,0 +1,183 @@
+{
+  "step": 16000,
+  "n": 50,
+  "accuracy": 0.98,
+  "seen_n": 50,
+  "seen_accuracy": 0.98,
+  "heldout_n": 0,
+  "heldout_accuracy": 0.0,
+  "unseen_probe_n": 12,
+  "unseen_probe_accuracy": 0.167,
+  "unseen_probe": [
+    {
+      "fact": "cont:New Zealand",
+      "q": "Which continent does New Zealand belong to?",
+      "expected": "Oceania",
+      "got": "europe",
+      "ok": false
+    },
+    {
+      "fact": "cap:Switzerland",
+      "q": "Can you tell me the capital of Switzerland?",
+      "expected": "Bern",
+      "got": "stockholm",
+      "ok": false
+    },
+    {
+      "fact": "cur:France",
+      "q": "Currency used in France?",
+      "expected": "euro",
+      "got": "euro.",
+      "ok": true
+    },
+    {
+      "fact": "cont:Vietnam",
+      "q": "Which continent does Vietnam belong to?",
+      "expected": "Asia",
+      "got": "Vietnamese.",
+      "ok": false
+    },
+    {
+      "fact": "elem:lead",
+      "q": "Chemical symbol of lead?",
+      "expected": "Pb",
+      "got": "82",
+      "ok": false
+    },
+    {
+      "fact": "cap:Paraguay",
+      "q": "Can you tell me the capital of Paraguay?",
+      "expected": "Asuncion",
+      "got": "Paris",
+      "ok": false
+    },
+    {
+      "fact": "elem:copper",
+      "q": "Chemical symbol of copper?",
+      "expected": "Cu",
+      "got": "co",
+      "ok": false
+    },
+    {
+      "fact": "cont:Spain",
+      "q": "Which continent does Spain belong to?",
+      "expected": "Europe",
+      "got": "South America",
+      "ok": false
+    },
+    {
+      "fact": "lang:Egypt",
+      "q": "Which language is spoken by people in Egypt?",
+      "expected": "Arabic",
+      "got": "Arabic",
+      "ok": true
+    },
+    {
+      "fact": "cur:Spain",
+      "q": "Currency used in Spain?",
+      "expected": "euro",
+      "got": "Madrid.",
+      "ok": false
+    },
+    {
+      "fact": "lang:Finland",
+      "q": "Which language is spoken by people in Finland?",
+      "expected": "Finnish",
+      "got": "Fe",
+      "ok": false
+    },
+    {
+      "fact": "cap:Germany",
+      "q": "Can you tell me the capital of Germany?",
+      "expected": "Berlin",
+      "got": "erman",
+      "ok": false
+    }
+  ],
+  "samples": [
+    {
+      "q": "Can you tell me the capital of Bulgaria?",
+      "expected": "Sofia",
+      "got": "Sofia",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "What does CPU stand for?",
+      "expected": "central processing unit",
+      "got": "central processing unit.",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Which continent does Argentina belong to?",
+      "expected": "South America",
+      "got": "South America",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Currency used in Netherlands?",
+      "expected": "euro",
+      "got": "euro",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Chemical symbol of argon?",
+      "expected": "Ar",
+      "got": "ar",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Atomic number of uranium?",
+      "expected": "92",
+      "got": "92.",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Which language is spoken by people in Israel?",
+      "expected": "Hebrew",
+      "got": "Hebrew.",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "What gas do humans need to breathe?",
+      "expected": "oxygen",
+      "got": "oxygen",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Can you tell me the capital of North Korea?",
+      "expected": "Pyongyang",
+      "got": "Pyongyang.",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "What is an array?",
+      "expected": "an ordered collection of values",
+      "got": "an ordered collection of values",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Which continent does Norway belong to?",
+      "expected": "Europe",
+      "got": "Europe",
+      "ok": true,
+      "held_out_fact": false
+    },
+    {
+      "q": "Currency used in Finland?",
+      "expected": "euro",
+      "got": "euro",
+      "ok": true,
+      "held_out_fact": false
+    }
+  ]
+}
