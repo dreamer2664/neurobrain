@@ -1,0 +1,71 @@
+{
+  "product": "Neurobrain",
+  "version": "1.0.0",
+  "capturedAt": "2026-10-23T11:17:33.257Z",
+  "screenshots": [
+    {
+      "file": "01-pulse-desktop.png",
+      "name": "Pulse — Desktop command center",
+      "concept": "pulse",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "overview"
+    },
+    {
+      "file": "02-pulse-mobile.png",
+      "name": "Pulse — Mobile command center",
+      "concept": "pulse",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "overview"
+    },
+    {
+      "file": "03-atelier-desktop.png",
+      "name": "Atelier — Desktop calm workspace",
+      "concept": "atelier",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "overview"
+    },
+    {
+      "file": "04-atelier-mobile.png",
+      "name": "Atelier — Mobile calm workspace",
+      "concept": "atelier",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "overview"
+    },
+    {
+      "file": "05-terminal-desktop.png",
+      "name": "Terminal — Desktop operator console",
+      "concept": "terminal",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "overview"
+    },
+    {
+      "file": "06-terminal-mobile.png",
+      "name": "Terminal — Mobile operator console",
+      "concept": "terminal",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "overview"
+    },
+    {
+      "file": "07-pulse-task-detail.png",
+      "name": "Pulse — Task observation timeline",
+      "concept": "pulse",
+      "viewport": "1440x900",
+      "device": "desktop",
+      "view": "task detail"
+    },
+    {
+      "file": "08-atelier-mobile-brain.png",
+      "name": "Atelier — Mobile model metrics",
+      "concept": "atelier",
+      "viewport": "390x844",
+      "device": "mobile",
+      "view": "brain"
+    }
+  ]
+}
